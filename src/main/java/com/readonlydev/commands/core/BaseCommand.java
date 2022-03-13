@@ -10,6 +10,8 @@ import com.readonlydev.cmd.CommandEvent;
 import com.readonlydev.cmd.arg.CommandArgument;
 import com.readonlydev.cmd.arg.Optional;
 import com.readonlydev.cmd.arg.Required;
+import com.readonlydev.cmd.arg.parse.Argument;
+import com.readonlydev.cmd.arg.parse.ArgumentIndex;
 import com.readonlydev.logback.LogUtils;
 import com.readonlydev.util.StringUtils;
 
@@ -30,7 +32,7 @@ public abstract class BaseCommand extends BotCommand {
 	
 	@Override
 	public void execute(CommandEvent event) {
-		this.argumentIndex = new ArgumentIndex(event);
+		this.argumentIndex = event.getArgumentIndex();
 		this.event = event;
 		List<String> log = new ArrayList<>();
 		log.add(event.getAuthor().getAsTag() + " ran the " + StringUtils.capitalize(this.name) + " command");
@@ -42,7 +44,7 @@ public abstract class BaseCommand extends BotCommand {
 				return;
 			}
 		}
-		if(event.getArgs().equalsIgnoreCase("help")) {
+		if(getArgsAsString().equalsIgnoreCase("help")) {
 			temporaryReply(ResultLevel.SUCCESS, this.getHelpEmbed(), 30, TimeUnit.SECONDS);
 			event.getMessage().delete().queue();
 		} else {

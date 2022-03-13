@@ -7,6 +7,7 @@ import com.readonlydev.BotData;
 import com.readonlydev.GalacticBot;
 import com.readonlydev.annotation.GalacticCommand;
 import com.readonlydev.cmd.CommandEvent;
+import com.readonlydev.cmd.arg.Args;
 import com.readonlydev.cmd.arg.Required;
 import com.readonlydev.commands.core.BaseCommand;
 import com.readonlydev.commands.core.CommandCategory;
@@ -26,10 +27,8 @@ public class CommandManageAddonLinks extends BaseCommand {
 	private AddonObject addon;
 
 	static String[] actions = { "edit", "add", "delete" };
-
-	static Required action = Required.of(String.join("|", actions), "The desired action to take")
-			.isMultiOption();
-	static Required name = Required.of("addon_name", "Name of the Addon");
+	static Required action = Args.requiredMulti(String.join("|", actions), "The desired action to take");
+	static Required name = Args.required("addon_name", "Name of the Addon");
 
 	public CommandManageAddonLinks() {
 		super("addonlink", CommandCategory.SERVER_ADMIN);

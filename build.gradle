@@ -11,33 +11,35 @@ repositories {
 }
 
 ext {
-	// https://mvnrepository.com/artifact/com.readonlydev/jdatools
-	jdatools		= '2.1.0'
-	// https://mvnrepository.com/artifact/org.reflections/reflections
+	jdatools		= '2.1.1'
 	reflections 	= '0.10.2'
-	// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
 	okhttp 			= '5.0.0-alpha.2'
-	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
-	slf4jApi 		= '1.7.36'
-	// https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-	logback 		= '1.2.10'
-	// https://mvnrepository.com/artifact/club.minnced/discord-webhooks
-	webhooks 		= '0.7.5'
+	webhooks 		= '0.8.0'
     guava			= '30.1.1-jre'
     rethink 		= '2.4.4'
+	commons			= '2.11.0'
 }
 
 dependencies {
     implementation group: 'com.readonlydev', 		name: 'jdatools', 			version: jdatools
-	implementation group: 'org.reflections', 		name: 'reflections', 		version: reflections
-	implementation group: 'com.squareup.okhttp3', 	name: 'okhttp', 			version: okhttp
-	implementation group: 'org.slf4j', 				name: 'slf4j-api', 			version: slf4jApi
-    implementation group: 'ch.qos.logback', 		name: 'logback-classic', 	version: logback
-	implementation group: 'club.minnced', 			name: 'discord-webhooks', 	version: webhooks
-	implementation group: 'com.google.guava', 		name: 'guava', 				version: guava
-	implementation group: 'com.rethinkdb', 			name: 'rethinkdb-driver', 	version: rethink
-	// https://mvnrepository.com/artifact/commons-io/commons-io
-	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+	implementation("org.reflections:reflections:${reflections}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	implementation("com.squareup.okhttp3:okhttp:${okhttp}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	implementation("club.minnced:discord-webhooks:${webhooks}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	implementation("com.google.guava:guava:${guava}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	implementation("com.rethinkdb:rethinkdb-driver:${rethink}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	implementation("commons-io:commons-io:${commons}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
 	
     
    	compileOnly 'org.projectlombok:lombok:1.18.22'

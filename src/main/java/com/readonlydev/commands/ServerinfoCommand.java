@@ -3,7 +3,6 @@ package com.readonlydev.commands;
 import java.time.format.DateTimeFormatter;
 
 import com.readonlydev.annotation.GalacticCommand;
-import com.readonlydev.cmd.BotCommand;
 import com.readonlydev.cmd.CommandEvent;
 import com.readonlydev.commands.core.BaseCommand;
 import com.readonlydev.commands.core.CommandCategory;

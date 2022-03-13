@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.readonlydev.annotation.GalacticCommand;
-import com.readonlydev.cmd.BotCommand;
 import com.readonlydev.cmd.CommandEvent;
 import com.readonlydev.cmd.arg.Required;
 import com.readonlydev.commands.core.BaseCommand;
@@ -38,12 +37,12 @@ public class RoleinfoCommand extends BaseCommand
     public void onExecute(CommandEvent event)
     {
         Role role;
-        if(event.getArgs().isEmpty())
+        if(event.getArgumentIndex().isEmpty())
         {
             event.replyError("Please provide the name of a role!");
             return;
         }
-        List<Role> found = FinderUtil.findRoles(event.getArgs(), event.getGuild());
+        List<Role> found = FinderUtil.findRoles(getArgsAsString(), event.getGuild());
         if(found.isEmpty())
         {
             event.replyError("I couldn't find the role you were looking for!");
@@ -51,7 +50,7 @@ public class RoleinfoCommand extends BaseCommand
         }
         else if(found.size()>1)
         {
-            event.replyWarning(listOfRoles(found, event.getArgs()));
+            event.replyWarning(listOfRoles(found, getArgsAsString()));
             return;
         }
         else
