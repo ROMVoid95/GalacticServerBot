@@ -1,0 +1,115 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'maven-publish'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+repositories {
+	mavenCentral()
+}
+
+ext {
+	// https://mvnrepository.com/artifact/com.readonlydev/jdatools
+	jdatools		= '2.1.0'
+	// https://mvnrepository.com/artifact/org.reflections/reflections
+	reflections 	= '0.10.2'
+	// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+	okhttp 			= '5.0.0-alpha.2'
+	// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+	slf4jApi 		= '1.7.36'
+	// https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+	logback 		= '1.2.10'
+	// https://mvnrepository.com/artifact/club.minnced/discord-webhooks
+	webhooks 		= '0.7.5'
+    guava			= '30.1.1-jre'
+    rethink 		= '2.4.4'
+}
+
+dependencies {
+    implementation group: 'com.readonlydev', 		name: 'jdatools', 			version: jdatools
+	implementation group: 'org.reflections', 		name: 'reflections', 		version: reflections
+	implementation group: 'com.squareup.okhttp3', 	name: 'okhttp', 			version: okhttp
+	implementation group: 'org.slf4j', 				name: 'slf4j-api', 			version: slf4jApi
+    implementation group: 'ch.qos.logback', 		name: 'logback-classic', 	version: logback
+	implementation group: 'club.minnced', 			name: 'discord-webhooks', 	version: webhooks
+	implementation group: 'com.google.guava', 		name: 'guava', 				version: guava
+	implementation group: 'com.rethinkdb', 			name: 'rethinkdb-driver', 	version: rethink
+	// https://mvnrepository.com/artifact/commons-io/commons-io
+	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+	
+    
+   	compileOnly 'org.projectlombok:lombok:1.18.22'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+	
+	testCompileOnly 'org.projectlombok:lombok:1.18.22'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+mainClassName = "com.readonlydev.GalacticBot"
+group = 'com.readonlydev'
+def ver = new Version(major: 0, minor: 1, revision: 0)
+version ver.toString()
+description = 'ExampleBot'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+        vendor = JvmVendorSpec.ADOPTOPENJDK
+    }
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+def gitRevision() {
+    def gitVersion = new ByteArrayOutputStream()
+    exec {
+        commandLine("git", "rev-parse", "--short", "HEAD")
+        standardOutput = gitVersion
+    }
+
+    return gitVersion.toString().trim()
+}
+
+task sourcesForRelease(type: Copy) {
+    from ('src/main/java') {
+        include '**/GalacticBot.java'
+        filter(ReplaceTokens, tokens: [
+                version: ver.toString(),
+                revision: gitRevision().toString()
+        ])
+    }
+    into 'build/filteredSrc'
+
+    includeEmptyDirs = false
+}
+
+task generateJavaSources(type: SourceTask) {
+    def javaSources = sourceSets.main.allJava.filter {
+        it.name != 'GalacticBot.java'
+    }
+    source = javaSources + sourcesForRelease.destinationDir
+
+    dependsOn sourcesForRelease
+}
+
+compileJava {
+    source = generateJavaSources.source
+    classpath = sourceSets.main.compileClasspath
+
+    dependsOn generateJavaSources
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.incremental = true
+}
+
+class Version {
+    String major, minor, revision
+
+    String toString() {
+        "${major}.${minor}.${revision}"
+    }
+}
