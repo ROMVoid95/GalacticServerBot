@@ -9,19 +9,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.errorprone.annotations.CheckReturnValue;
-import com.readonlydev.BotData;
-import com.readonlydev.config.Config;
-import com.readonlydev.database.ManagedObject;
+import com.readonlydev.database.DBObject;
 import com.readonlydev.util.entity.Addon;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AddonObject implements ManagedObject {
+public class AddonObject implements DBObject {
     public static final String DB_TABLE = "addons";
     private final Addon data;
     private final String id;
     
-    @JsonIgnore
-    private final Config config = BotData.config();
+    //@JsonIgnore
+    //private final Config config = Accessors.config();
     
     @JsonCreator
     @ConstructorProperties({"id", "data"})

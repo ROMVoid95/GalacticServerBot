@@ -1,14 +1,15 @@
 package com.readonlydev.database.wrapper;
 
-import com.readonlydev.BotData;
+import com.readonlydev.core.Accessors;
+import com.readonlydev.core.config.Config;
 import com.readonlydev.logback.LogUtils;
 import com.rethinkdb.RethinkDB;
 import com.rethinkdb.net.Connection;
 
 public final class Rethink extends RethinkDB {
 
-	public static final RethinkDB Rethink = new RethinkDB();
-
+	public static final RethinkDB RethinkDB = new RethinkDB();
+	private static final Config.RethinkCredentials dbconfig = Accessors.rethinkCredentials();
 	private static Connection connection;
 
 	public static Connection connect() {
@@ -19,16 +20,19 @@ public final class Rethink extends RethinkDB {
 	}
 
 	private static Connection buildConnection() {
-		var config = BotData.config();
 		synchronized (Rethink.class) {
 			connection = getConnectionBuilder().connect();
-			String log = "Established first database connection to %s:%s (%s)".formatted(config.getDatabase().getHostname(), config.getDatabase().getPort(), config.getDatabase().getUser());
+			String log = "Established first database connection to %s:%s (%s)".formatted(
+					dbconfig.getHostname(),
+					dbconfig.getPort(),
+					dbconfig.getUser()
+				);
 			LogUtils.log("Database Initialization", log);
 		}
 		return connection;
 	}
 
 	private static Connection.Builder getConnectionBuilder() {
-		return BotData.config().getDatabase().buildConnection(new Connection.Builder());
+		return dbconfig.buildConnection(new Connection.Builder());
 	}
 }

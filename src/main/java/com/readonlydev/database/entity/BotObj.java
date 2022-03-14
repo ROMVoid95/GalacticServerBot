@@ -7,14 +7,14 @@ import javax.annotation.Nonnull;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.readonlydev.database.ManagedObject;
+import com.readonlydev.database.DBObject;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class BotObj implements ManagedObject {
+public class BotObj implements DBObject {
     public static final String DB_TABLE = "botgc";
     public static final String id = "botgc";
     public String linksChannelId;

@@ -1,17 +1,12 @@
 package com.readonlydev.commands;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.readonlydev.BotData;
-import com.readonlydev.GalacticBot;
 import com.readonlydev.annotation.GalacticCommand;
 import com.readonlydev.cmd.CommandEvent;
 import com.readonlydev.cmd.arg.Args;
 import com.readonlydev.cmd.arg.Required;
 import com.readonlydev.commands.core.BaseCommand;
 import com.readonlydev.commands.core.CommandCategory;
-import com.readonlydev.common.waiter.EventWaiter;
+import com.readonlydev.database.DatabaseAccessor;
 import com.readonlydev.database.entity.AddonObject;
 import com.readonlydev.util.TableBuilder;
 import com.readonlydev.util.TableBuilder.Borders;
@@ -20,10 +15,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 @GalacticCommand
 public class CommandManageAddonLinks extends BaseCommand {
-
-	private final Logger LOG = LoggerFactory.getLogger(CommandManageAddonLinks.class);
-
-	private EventWaiter eventWaiter = GalacticBot.getEventWaiter();
 	private AddonObject addon;
 
 	static String[] actions = { "edit", "add", "delete" };
@@ -41,8 +32,8 @@ public class CommandManageAddonLinks extends BaseCommand {
 		
 		
 		
-		String act = this.getArgValue(0);
-		addon = BotData.database().getAddonObject(this.getArgValue(1));
+		//String act = this.getArgValue(0);
+		addon = DatabaseAccessor.database().getAddonObject(this.getArgValue(1));
 		
 
 		runEditHelp(event);

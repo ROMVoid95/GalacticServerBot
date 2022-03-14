@@ -8,9 +8,9 @@ import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
 import com.google.common.collect.Sets;
-import com.readonlydev.BotData;
 import com.readonlydev.annotation.GalacticCommand;
 import com.readonlydev.cmd.BotCommand;
+import com.readonlydev.core.Accessors;
 
 import lombok.experimental.UtilityClass;
 
@@ -37,6 +37,6 @@ public class ReflectCommands {
 	}
 
 	static {
-		reflections = new Reflections(BotData.config().getCommandPackages(), Scanners.values());
+		reflections = new Reflections(Accessors.botInfo().getCommandPackages(), Scanners.values());
 	}
 }

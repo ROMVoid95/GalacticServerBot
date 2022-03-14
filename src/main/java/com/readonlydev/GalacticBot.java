@@ -33,7 +33,10 @@ import com.readonlydev.cmd.client.CommandClient;
 import com.readonlydev.cmd.client.CommandClientBuilder;
 import com.readonlydev.commands.slash.SuggestionSlashCommand;
 import com.readonlydev.common.waiter.EventWaiter;
-import com.readonlydev.config.Config;
+import com.readonlydev.core.Accessors;
+import com.readonlydev.core.config.Config;
+import com.readonlydev.database.DatabaseAccessor;
+import com.readonlydev.database.ManagedDatabase;
 import com.readonlydev.listener.SuggestionListener;
 import com.readonlydev.logback.LogFilter;
 import com.readonlydev.logback.LogUtils;
@@ -56,8 +59,12 @@ public class GalacticBot {
 	private static final Logger log = LoggerFactory.getLogger(GalacticBot.class);
 
 	private JDA jda;
+	private CommandClient client;
+	private Set<BotCommand> commandSet;
+	
 	private static GalacticBot _instance;
-	private final static Config config = BotData.config();
+	private final static Config config = Accessors.config();
+	private final static ManagedDatabase database = DatabaseAccessor.database();
 
 	private final EventWaiter eventWaiter = new EventWaiter();
 
@@ -84,33 +91,30 @@ public class GalacticBot {
 	private GalacticBot() throws Exception {
 		_instance = this;
 		preStart();
-		LogUtils.log("Startup",
-				"Starting up %s %s (Git: %s)".formatted(config.getBotname(), Info.VERSION, Info.GIT_REVISION));
+		LogUtils.log("Startup", "Starting up %s %s (Git: %s)".formatted(config.getBotname(), Info.VERSION, Info.GIT_REVISION));
 
-		BotData.configManager().save();
+		Accessors.configManager().save();
 
-		CommandClientBuilder clientBuilder = new CommandClientBuilder();
-
-		Set<BotCommand> commands = ReflectCommands.commands();
-
-		clientBuilder.setAllRepliesAsEmbed();
-		clientBuilder.addCommands(commands.toArray(new BotCommand[commands.size()]));
-		clientBuilder.addSlashCommand(new SuggestionSlashCommand());
-		clientBuilder.setOwnerId(config.getOwner());
-		clientBuilder.setPrefix(config.getPrefix());
-		clientBuilder.setHelpConsumer((event) -> {
+		client = new CommandClientBuilder()
+		.setAllRepliesAsEmbed()
+		.addCommands(ReflectCommands.commands())
+		.addSlashCommand(new SuggestionSlashCommand())
+		.setOwnerId(config.getBotInfo().getOwnerId())
+		.setCoOwnerIds(config.getBotInfo().getCoOwnersAsArray())
+		.setPrefixes(config.getBotInfo().getPrefixes())
+		.setHelpConsumer((event) -> {
 			StringBuilder builder = new StringBuilder("**" + event.getSelfUser().getName() + "** commands:\n\n");
 			Category category = null;
 			builder.append("[arg]   = Required Argument\n");
 			builder.append("<args>  = Optional Argument\n");
-			for (BotCommand command : commands) {
+			for (BotCommand command : commandSet) {
 				if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
 					if (!Objects.equals(category, command.getCategory())) {
 						category = command.getCategory();
 						builder.append("\n  __").append(category == null ? "No Category" : category.getName())
 								.append("__:\n");
 					}
-					builder.append("\n`").append(config.getPrefix()).append(command.getName());
+					builder.append("\n`").append(config.getBotInfo().getPrefixes().get(0)).append(command.getName());
 					for (CommandArgument<?> arg : command.getArguments()) {
 						if (arg instanceof Required) {
 							Required a = (Required) arg;
@@ -124,7 +128,7 @@ public class GalacticBot {
 					builder.append(" - ").append(command.getHelp());
 				}
 			}
-			User owner = event.getJDA().getUserById(config.getOwner());
+			User owner = event.getJDA().getUserById(config.getBotInfo().getOwnerId());
 			if (owner != null) {
 				builder.append("\n\nFor additional help, contact **").append(owner.getName()).append("**#")
 						.append(owner.getDiscriminator());
@@ -133,9 +137,7 @@ public class GalacticBot {
 				if (event.isFromType(ChannelType.TEXT))
 					event.reactSuccess();
 			}, t -> event.replyWarning("Help cannot be sent because you are blocking Direct Messages."));
-		});
-
-		CommandClient client = clientBuilder.build();
+		}).build();
 
 		List<String> registered = new ArrayList<>();
 		for (BotCommand cmd : client.getCommands()) {
@@ -150,10 +152,10 @@ public class GalacticBot {
 		EnumSet<CacheFlag> caches = EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE);
 
 		jda = JDABuilder.create(config.getToken(), intents).disableCache(caches)
-				.setActivity(Activity.playing("Init Stage")).addEventListeners(eventWaiter, clientBuilder.build(), new SuggestionListener())
+				.setActivity(Activity.playing("Init Stage")).addEventListeners(eventWaiter, client, new SuggestionListener())
 				.build().awaitReady();
 
-		BotData.database();
+		database.connect();
 	}
 
 	public static void main(String[] args) throws Exception {
