@@ -2,41 +2,89 @@ package com.readonlydev.util;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
 import com.google.common.collect.Sets;
-import com.readonlydev.annotation.GalacticCommand;
-import com.readonlydev.cmd.BotCommand;
-import com.readonlydev.core.Accessors;
+import com.readonlydev.Conf;
+import com.readonlydev.api.annotation.BotCommand;
+import com.readonlydev.command.Command;
+import com.readonlydev.command.CommandType;
+import com.readonlydev.command.slash.SlashCommand;
 
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class ReflectCommands {
+public class ReflectCommands
+{
 
-	private static Reflections reflections;
+    private static Reflections       reflections;
+    private static HashSet<Class<?>> commandClasses;
 
-	private static final HashSet<Class<?>> getCommandClasses() {
-		return Sets.newHashSet(reflections.getTypesAnnotatedWith(GalacticCommand.class));
-	}
+    private static HashSet<Class<?>> commandClasses()
+    {
+        if (commandClasses == null)
+        {
+            commandClasses = Sets.newHashSet(reflections.getTypesAnnotatedWith(BotCommand.class));
+        }
+        return commandClasses;
+    }
 
-	public static final Set<BotCommand> commands() {
-		return getCommandClasses().stream().map(c -> toInstance(c)).collect(Collectors.toSet());
-	}
+    public static final Set<Command> getConventionalCommands()
+    {
+        Set<Command> commandSet = new HashSet<>();
+        for (Class<?> clazz : commandClasses())
+        {
+            BotCommand cmd = clazz.getAnnotation(BotCommand.class);
+            if (cmd.value().equals(CommandType.CONVENTIONAL))
+            {
+                commandSet.add(newCommand(clazz));
+            }
+        }
+        return commandSet;
+    }
 
-	private static final BotCommand toInstance(Class<?> clazz) {
-		try {
-			return (BotCommand) clazz.getDeclaredConstructor().newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+    public static final Set<SlashCommand> getSlashCommandsCommands()
+    {
+        Set<SlashCommand> commandSet = new HashSet<>();
+        for (Class<?> clazz : commandClasses())
+        {
+            BotCommand cmd = clazz.getAnnotation(BotCommand.class);
+            if (cmd.value().equals(CommandType.SLASH))
+            {
+                commandSet.add(newSlashCommand(clazz));
+            }
+        }
+        return commandSet;
+    }
 
-	static {
-		reflections = new Reflections(Accessors.botInfo().getCommandPackages(), Scanners.values());
-	}
+    private static final SlashCommand newSlashCommand(Class<?> clazz)
+    {
+        try
+        {
+            return (SlashCommand) clazz.getDeclaredConstructor().newInstance();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    private static final Command newCommand(Class<?> clazz)
+    {
+        try
+        {
+            return (Command) clazz.getDeclaredConstructor().newInstance();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static
+    {
+        reflections = new Reflections(Conf.Bot().getCommandPackages(), Scanners.values());
+    }
 }

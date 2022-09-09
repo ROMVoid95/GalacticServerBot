@@ -3,52 +3,86 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id 'application'
+	id 'org.ajoberstar.grgit' version '4.1.1'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 repositories {
-	mavenCentral()
-	mavenLocal()
-}
-
-configurations {
-	dependency
-	dependency.exclude group: "org.slf4j", module: "slf4j-api"
-	implementation.extendsFrom(dependency)
+    maven {
+        url "https://jitpack.io"
+    }
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://repo.erdbeerbaerlp.de/repository/maven-public/" }
 }
 
 ext {
-	jdatools		= '2.1.3'
+	jdatools		= '3.0.1-SNAPSHOT2'
 	reflections 	= '0.10.2'
 	okhttp 			= '5.0.0-alpha.2'
 	webhooks 		= '0.8.0'
     guava			= '30.1.1-jre'
     rethink 		= '2.4.4'
 	commons			= '2.11.0'
+    fasterXmlVersion = '2.13.3'
+    dependencies {
+        jacksonDatabind     =   {"com.fasterxml.jackson.core:jackson-databind:${fasterXmlVersion}"}
+        jacksonCore         =   {"com.fasterxml.jackson.core:jackson-core:${fasterXmlVersion}"}
+        jacksonAnnotations  =   {"com.fasterxml.jackson.core:jackson-annotations:${fasterXmlVersion}"}
+    }
 }
 
 dependencies {
-    implementation group: 'com.readonlydev', name: 'jdatools', 	version: jdatools
-
-	dependency group: 'org.reflections', 		name: 'reflections', 		version: reflections
-	dependency group: 'com.squareup.okhttp3', 	name: 'okhttp', 			version: okhttp
-	dependency group: 'club.minnced', 			name: 'discord-webhooks', 	version: webhooks
-	dependency group: 'com.google.guava', 		name: 'guava', 				version: guava
-	dependency group: 'com.rethinkdb', 			name: 'rethinkdb-driver', 	version: rethink
-	dependency group: 'commons-io', 			name: 'commons-io', 		version: commons
-
-   	compileOnly 'org.projectlombok:lombok:1.18.22'
-	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+	implementation("net.dv8tion:JDA:5.0.0-alpha.17")
+    //implementation "com.readonlydev:jdatools:${jdatools}:lite"
+	implementation("org.reflections:reflections:${reflections}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	implementation("club.minnced:discord-webhooks:${webhooks}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	implementation("com.rethinkdb:rethinkdb-driver:${rethink}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+	implementation("commons-io:commons-io:${commons}") {
+		exclude group: 'org.slf4j', module: 'slf4j-api'
+	}
+    implementation 'com.typesafe:config:1.4.1'
+    implementation 'es.nitaur.markdown:txtmark:0.16'
+    implementation 'commons-cli:commons-cli:1.4'
+    implementation 'de.ErdbeerbaerLP:toml4j:cf5b4655'
+    implementation("de.erdbeerbaerlp:cfcore:1.0.1-SNAPSHOT"){
+        changing = true
+    }
+    implementation 'org.codehaus.groovy:groovy-jsr223:3.0.12'
+    implementation 'ch.vorburger.mariaDB4j:mariaDB4j:2.5.3'
+    implementation 'mysql:mysql-connector-java:8.0.30'
+    
+    implementation 'com.vladsch.flexmark:flexmark-html2md-converter:0.64.0'
+    
+    implementation jacksonCore()
+    implementation jacksonDatabind()
+    implementation jacksonAnnotations()
+    
+	implementation 'com.google.guava:guava:31.1-jre'
+	implementation 'com.google.code.gson:gson:2.9.0'
+	implementation 'org.slf4j:slf4j-api:1.7.36'
+	implementation 'ch.qos.logback:logback-classic:1.2.11'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-text:1.9'
+    
+   	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 	
-	testCompileOnly 'org.projectlombok:lombok:1.18.22'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 mainClassName = "com.readonlydev.GalacticBot"
 group = 'com.readonlydev'
 def ver = new Version(major: 0, minor: 1, revision: 0)
 version ver.toString()
-description = 'ExampleBot'
+description = 'Discord Bot for the Galacticraft Central Server'
 
 java {
     toolchain {
@@ -59,22 +93,12 @@ java {
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
-def gitRevision() {
-    def gitVersion = new ByteArrayOutputStream()
-    exec {
-        commandLine("git", "rev-parse", "--short", "HEAD")
-        standardOutput = gitVersion
-    }
-
-    return gitVersion.toString().trim()
-}
-
 task sourcesForRelease(type: Copy) {
     from ('src/main/java') {
         include '**/GalacticBot.java'
         filter(ReplaceTokens, tokens: [
                 version: ver.toString(),
-                revision: gitRevision().toString()
+                revision: grgit.head().abbreviatedId
         ])
     }
     into 'build/filteredSrc'

@@ -8,8 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.readonlydev.core.Accessors;
-import com.readonlydev.util.DateFormatting;
+import com.readonlydev.Conf;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
@@ -22,12 +21,12 @@ import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 public class LogUtils {
 	private static final Logger log = LoggerFactory.getLogger(LogUtils.class);
 
-	private final static String ICON_URL = Accessors.botInfo().getAvatarUrl();
+	private final static String ICON_URL = Conf.Bot().getAvatarUrl();
 	private static final String WEBHOOK_START = "https://discord.com/api/webhooks/";
 	public static WebhookClient LOGBACK_WEBHOOK;
 
 	static {
-		String webhook = Accessors.botInfo().getWebhookUrl().replace(WEBHOOK_START, "");
+		String webhook = Conf.Bot().getWebhookUrl().replace(WEBHOOK_START, "");
 		if (webhook != null) {
 			log.info(webhook);
 			var parts = webhook.split("/");
@@ -83,7 +82,7 @@ public class LogUtils {
 	}
 
 	public static @NotNull WebhookMessageBuilder msg() {
-		return new WebhookMessageBuilder().setUsername("%s Web Log".formatted(Accessors.config().getBotname()))
+		return new WebhookMessageBuilder().setUsername("%s Web Log".formatted(Conf.Bot().getBotname()))
 				.setAvatarUrl(ICON_URL);
 	}
 }

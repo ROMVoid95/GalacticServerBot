@@ -1,179 +1,162 @@
-/*
- * Copyright 2017 John Grosh (jagrosh).
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.readonlydev;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.readonlydev.cmd.BotCommand;
-import com.readonlydev.cmd.BotCommand.Category;
-import com.readonlydev.cmd.arg.CommandArgument;
-import com.readonlydev.cmd.arg.Optional;
-import com.readonlydev.cmd.arg.Required;
-import com.readonlydev.cmd.client.CommandClient;
-import com.readonlydev.cmd.client.CommandClientBuilder;
-import com.readonlydev.commands.slash.SuggestionSlashCommand;
+import com.google.common.eventbus.EventBus;
+import com.readonlydev.command.Command;
+import com.readonlydev.command.client.Client;
+import com.readonlydev.command.client.ClientBuilder;
+import com.readonlydev.command.client.ServerCommands;
+import com.readonlydev.command.slash.SlashCommand;
+import com.readonlydev.commands.member.CloseDiscussionThread;
+import com.readonlydev.commands.member.EditDescription;
+import com.readonlydev.commands.member.EditTitle;
+import com.readonlydev.commands.member.NewSuggestion;
+import com.readonlydev.commands.staff.Suggestions;
+import com.readonlydev.commands.staff.server.Server;
+import com.readonlydev.commands.staff.suggestions.devonly.DevServerPopularChannel;
+import com.readonlydev.commands.staff.suggestions.devonly.SuggestionSetStatus;
 import com.readonlydev.common.waiter.EventWaiter;
-import com.readonlydev.core.Accessors;
-import com.readonlydev.core.config.Config;
-import com.readonlydev.database.DatabaseAccessor;
-import com.readonlydev.database.ManagedDatabase;
-import com.readonlydev.listener.SuggestionListener;
+import com.readonlydev.core.GalacticEventListener;
+import com.readonlydev.core.GuildSettings;
 import com.readonlydev.logback.LogFilter;
-import com.readonlydev.logback.LogUtils;
 import com.readonlydev.util.ReflectCommands;
-import com.readonlydev.util.RuntimeOptions;
-import com.readonlydev.util.TracingPrintStream;
 
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-public class GalacticBot {
-	private static final Logger log = LoggerFactory.getLogger(GalacticBot.class);
+@Slf4j
+public class GalacticBot
+{
 
-	private JDA jda;
-	private CommandClient client;
-	private Set<BotCommand> commandSet;
-	
-	private static GalacticBot _instance;
-	private final static Config config = Accessors.config();
-	private final static ManagedDatabase database = DatabaseAccessor.database();
+    private static boolean     TESTING     = false;
 
-	private final EventWaiter eventWaiter = new EventWaiter();
+    private static JDA         jda;
+    private static EventWaiter eventWaiter = new EventWaiter();
+    private static EventBus    EVENT_BUS   = new EventBus("GalacticBot EventBus");
 
-	private void preStart() {
-		log.info("Starting up %s {}, Git revision: {}", "GalacticBot", Info.VERSION, Info.GIT_REVISION);
-		log.info("Reporting UA {} for HTTP requests.", Info.USER_AGENT);
+    private void preStart()
+    {
+        log.info("Starting up %s {}, Git revision: {}", "GalacticBot", Info.VERSION, Info.GIT_REVISION);
+        log.info("Reporting UA {} for HTTP requests.", Info.USER_AGENT);
 
-		if (RuntimeOptions.VERBOSE) {
-			System.setOut(new TracingPrintStream(System.out));
-			System.setErr(new TracingPrintStream(System.err));
-		}
+        RestAction.setPassContext(true);
+        RestAction.setDefaultFailure(ErrorResponseException.ignore(RestAction.getDefaultFailure(), ErrorResponse.UNKNOWN_MESSAGE));
 
-		RestAction.setPassContext(true);
-		if (RuntimeOptions.DEBUG) {
-			log.info("Running in debug mode!");
-		} else {
-			RestAction.setDefaultFailure(
-					ErrorResponseException.ignore(RestAction.getDefaultFailure(), ErrorResponse.UNKNOWN_MESSAGE));
-		}
+        log.info("Filtering all logs below {}", LogFilter.LEVEL);
+    }
 
-		log.info("Filtering all logs below {}", LogFilter.LEVEL);
-	}
+    private GalacticBot() throws Exception
+    {
+        preStart();
 
-	private GalacticBot() throws Exception {
-		_instance = this;
-		preStart();
-		LogUtils.log("Startup", "Starting up %s %s (Git: %s)".formatted(config.getBotname(), Info.VERSION, Info.GIT_REVISION));
+        Conf.saveBotConfigJson();
+        Conf.saveUpdateConfigJson();
 
-		Accessors.configManager().save();
+        ClientBuilder clientBuilder = new ClientBuilder();
 
-		client = new CommandClientBuilder()
-		.setAllRepliesAsEmbed()
-		.addCommands(ReflectCommands.commands())
-		.addSlashCommand(new SuggestionSlashCommand())
-		.setOwnerId(config.getBotInfo().getOwnerId())
-		.setCoOwnerIds(config.getBotInfo().getCoOwnersAsArray())
-		.setPrefixes(config.getBotInfo().getPrefixes())
-		.setHelpConsumer((event) -> {
-			StringBuilder builder = new StringBuilder("**" + event.getSelfUser().getName() + "** commands:\n\n");
-			Category category = null;
-			builder.append("[arg]   = Required Argument\n");
-			builder.append("<args>  = Optional Argument\n");
-			for (BotCommand command : commandSet) {
-				if (!command.isHidden() && (!command.isOwnerCommand() || event.isOwner())) {
-					if (!Objects.equals(category, command.getCategory())) {
-						category = command.getCategory();
-						builder.append("\n  __").append(category == null ? "No Category" : category.getName())
-								.append("__:\n");
-					}
-					builder.append("\n`").append(config.getBotInfo().getPrefixes().get(0)).append(command.getName());
-					for (CommandArgument<?> arg : command.getArguments()) {
-						if (arg instanceof Required) {
-							Required a = (Required) arg;
-							builder.append(" " + a.getArgumentForHelp());
-						} else if (arg instanceof Optional) {
-							Optional a = (Optional) arg;
-							builder.append(" " + a.getArgumentForHelp());
-						}
-					}
-					builder.append("`");
-					builder.append(" - ").append(command.getHelp());
-				}
-			}
-			User owner = event.getJDA().getUserById(config.getBotInfo().getOwnerId());
-			if (owner != null) {
-				builder.append("\n\nFor additional help, contact **").append(owner.getName()).append("**#")
-						.append(owner.getDiscriminator());
-			}
-			event.replyInDm(builder.toString(), unused -> {
-				if (event.isFromType(ChannelType.TEXT))
-					event.reactSuccess();
-			}, t -> event.replyWarning("Help cannot be sent because you are blocking Direct Messages."));
-		}).build();
+        Set<Command> conventionalCommands = ReflectCommands.getConventionalCommands();
+        ServerCommands devServerCommands = new ServerCommands("775251052517523467");
+        devServerCommands.addAllCommands(
+            new DevServerPopularChannel(),
+            new SuggestionSetStatus()
+        );
+        
+        ServerCommands communityServerCommands = new ServerCommands("449966345665249290");
+        communityServerCommands.addAllCommands(
+            new Suggestions(),
+            new Server(),
+            new NewSuggestion(),
+            new CloseDiscussionThread()
+        );
+        
+        clientBuilder.setAllRepliesAsEmbed();
+        clientBuilder.setBotTestingServerId("538530739017220107");
+        clientBuilder.addCommands(conventionalCommands);
+        clientBuilder.addGlobalSlashCommands(new EditDescription(), new EditTitle());
+        clientBuilder.addAllServerCommands(devServerCommands, communityServerCommands);
+        clientBuilder.setOwnerId(Conf.Bot().getOwner());
+        clientBuilder.setPrefix(Conf.Bot().getPrefix());
+        clientBuilder.setGuildSettingsManager(new GuildSettings());
+        
+        //@noformat
+        EnumSet<GatewayIntent> intents = EnumSet.of
+            (
+                GatewayIntent.GUILD_EMOJIS_AND_STICKERS, 
+                GatewayIntent.GUILD_MESSAGES, 
+                GatewayIntent.GUILD_PRESENCES, 
+                GatewayIntent.GUILD_MESSAGE_REACTIONS, 
+                GatewayIntent.MESSAGE_CONTENT
+            );
 
-		List<String> registered = new ArrayList<>();
-		for (BotCommand cmd : client.getCommands()) {
-			registered.add("`" + cmd.getName() + "`");
-		}
+        EnumSet<CacheFlag> caches = EnumSet.of
+            (
+                CacheFlag.ACTIVITY, 
+                CacheFlag.CLIENT_STATUS, 
+                CacheFlag.VOICE_STATE
+            );
 
-		LogUtils.log("Registered Commands", String.join(" ", registered));
+        Client client = clientBuilder.build();
 
-		EnumSet<GatewayIntent> intents = EnumSet.of(GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_MESSAGES,
-				GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_REACTIONS);
+       
+        GalacticBot.jda = JDABuilder.create(Conf.Bot().getToken(), intents)
+            .disableCache(caches)
+            .setActivity(Activity.playing("Init Stage"))
+            .addEventListeners(eventWaiter, client, new GalacticEventListener())
+            .build();
+        //@format
 
-		EnumSet<CacheFlag> caches = EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE);
+        //new Updates();
+        
+        log.info("Conventional Commands:  " + client.getCommands().size());
+    }
 
-		jda = JDABuilder.create(config.getToken(), intents).disableCache(caches)
-				.setActivity(Activity.playing("Init Stage")).addEventListeners(eventWaiter, client, new SuggestionListener())
-				.build().awaitReady();
+    public static void main(String[] args) throws Exception
+    {
+        new GalacticBot();
+    }
 
-		database.connect();
-	}
+    public static Set<CommandData> getAllSlashCommands()
+    {
+        return ReflectCommands.getSlashCommandsCommands().stream().map(SlashCommand::buildCommandData).collect(Collectors.toSet());
+    }
 
-	public static void main(String[] args) throws Exception {
-		new GalacticBot();
-	}
+    public static boolean isTesting()
+    {
+        return TESTING;
+    }
 
-	public static JDA getJda() {
-		return GalacticBot._instance.jda;
-	}
+    public static EventBus EventBus()
+    {
+        return EVENT_BUS;
+    }
 
-	public static EventWaiter getEventWaiter() {
-		return GalacticBot._instance.eventWaiter;
-	}
+    public static EventWaiter getEventWaiter()
+    {
+        return eventWaiter;
+    }
 
-	private static final class Info {
-		public static final String GITHUB_URL = "https://github.com/ROMVoid95/GalacticBot";
-		public static final String USER_AGENT = "%s/@version@/DiscordBot (%s)".formatted("GalacticBot", GITHUB_URL);
-		public static final String VERSION = "@version@";
-		public static final String GIT_REVISION = "@revision@";
-	}
+    public static JDA getJda()
+    {
+        return jda;
+    }
+
+    public static final class Info
+    {
+
+        public static final String GITHUB_URL   = "https://github.com/ROMVoid95/GalacticBot";
+        public static final String USER_AGENT   = "%s/@version@/DiscordBot (%s)".formatted("GalacticBot", GITHUB_URL);
+        public static final String VERSION      = "@version@";
+        public static final String GIT_REVISION = "@revision@";
+    }
 }

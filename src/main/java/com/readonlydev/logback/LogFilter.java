@@ -1,6 +1,6 @@
 package com.readonlydev.logback;
 
-import com.readonlydev.util.RuntimeOptions;
+import com.readonlydev.Conf;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -8,7 +8,7 @@ import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 
 public class LogFilter extends Filter<ILoggingEvent> {
-    public static final Level LEVEL = RuntimeOptions.TRACE_LOGS ? Level.TRACE : RuntimeOptions.DEBUG_LOGS ? Level.DEBUG : Level.INFO;
+    public static final Level LEVEL = Conf.Bot().getDebug() ? Level.DEBUG : Level.INFO;
 
     @Override
     public FilterReply decide(ILoggingEvent event) {

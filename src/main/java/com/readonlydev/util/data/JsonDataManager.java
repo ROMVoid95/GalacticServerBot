@@ -7,94 +7,113 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.json.JsonReadFeature;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
+public class JsonDataManager<T> implements DataManager<T>
+{
 
-public class JsonDataManager<T> implements DataManager<T> {
-	private static final Charset UTF8 = StandardCharsets.UTF_8;
-	private static final ObjectMapper mapper = new ObjectMapper()
-			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false) 
-			.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
-			.configure(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS.mappedFeature(), true);
-		
-	private static final Logger log = LoggerFactory.getLogger(JsonDataManager.class);
-	private final Path configPath;
-	private final T data;
+    private static final Charset UTF8 = StandardCharsets.UTF_8;
+    private static final Logger  log  = LoggerFactory.getLogger(JsonDataManager.class);
+    private final Path           configPath;
+    private final T              data;
+    private boolean              exitIfNotExist;
 
-	public JsonDataManager(Class<T> clazz, String file, Supplier<T> constructor) {
-		this.configPath = Paths.get(file);
+    public JsonDataManager(Class<T> clazz, String file, Supplier<T> constructor)
+    {
+        this(clazz, file, constructor, false);
+    }
 
-		if (!configPath.toFile().exists()) {
-			log.info("Could not find config file at " + configPath.toFile().getAbsolutePath()
-					+ ", creating a new one...");
-			try {
-				if (configPath.toFile().createNewFile()) {
-					log.info("Generated new config file at " + configPath.toFile().getAbsolutePath() + ".");
-					write(configPath, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(constructor.get()));
-					log.info("Please, fill the file with valid properties.");
-				} else {
-					log.warn("Could not create config file at " + file);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-				System.exit(1);
-			}
+    public JsonDataManager(Class<T> clazz, String file, Supplier<T> constructor, boolean exitIfNotExist)
+    {
+        this.configPath = Paths.get(file);
+        this.exitIfNotExist = exitIfNotExist;
 
-			System.exit(0);
-		}
+        if(createDirsIfNeeded(file))
+        {
+            if (!configPath.toFile().exists())
+            {
+                log.info("Could not find config file at " + configPath.toFile().getAbsolutePath() + ", creating a new one...");
+                try
+                {
+                    if (configPath.toFile().createNewFile())
+                    {
+                        log.info("Generated new config file at " + configPath.toFile().getAbsolutePath() + ".");
+                        write(configPath, Mapper.prettyPrintWriter().writeValueAsString(constructor.get()));
+                        log.info("Please, fill the file with valid properties.");
+                    } else
+                    {
+                        log.warn("Could not create config file at " + file);
+                    }
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
 
-		try {
-			this.data = fromJson(read(configPath), clazz);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
+                if (this.exitIfNotExist)
+                {
+                    System.exit(0);
+                }
+            }
+        }
+        try
+        {
+            this.data = Mapper.fromJson(read(configPath), clazz);
+        } catch (IOException e)
+        {
+            throw new UncheckedIOException(e);
+        }
+    }
 
-	@Override
-	public T get() {
-		return data;
-	}
+    private boolean createDirsIfNeeded(String file)
+    {
+        String[] split = file.split("/");        
+        if (split.length > 2)
+        {
+            Path dirs = Paths.get(split[0], Arrays.copyOfRange(split, 1, split.length - 1));
+            return dirs.toFile().mkdirs();
+        } else if (split.length == 2)
+        {
+            Path dir = Paths.get(split[0]);
+            return dir.toFile().mkdir();
+        } else if (split.length == 1)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
 
-	@Override
-	public void save() {
-		try {
-			write(configPath, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(data));
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
+    @Override
+    public T get()
+    {
+        return data;
+    }
 
-	public static <T> String toJson(T object) throws JsonProcessingException {
-		return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
-	}
+    @Override
+    public void save()
+    {
+        try
+        {
+            write(configPath, Mapper.prettyPrintWriter().writeValueAsString(data));
+        } catch (IOException e)
+        {
+            throw new UncheckedIOException(e);
+        }
+    }
 
-	public static <T> T fromJson(String json, Class<T> clazz) throws JsonProcessingException {
-		return mapper.readValue(json, clazz);
-	}
+    private String read(Path path) throws IOException
+    {
+        return Files.readString(path, UTF8);
+    }
 
-	public static <T> T fromJson(String json, TypeReference<T> type) throws JsonProcessingException {
-		return mapper.readValue(json, type);
-	}
-
-	public static <T> T fromJson(String json, JavaType type) throws JsonProcessingException {
-		return mapper.readValue(json, type);
-	}
-
-	private String read(Path path) throws IOException {
-		return Files.readString(path, UTF8);
-	}
-
-	private void write(Path path, String contents) throws IOException {
-		Files.writeString(path, contents, UTF8);
-	}
+    private void write(Path path, String contents) throws IOException
+    {
+        Files.writeString(path, contents, UTF8);
+    }
 }
