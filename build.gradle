@@ -141,34 +141,18 @@ shadowJar {
 distributions {
     shadow {
         distributionBaseName.set('galacticbot')
-        contents {
-            from "${projectDir}/config"
-        }
     }
 }
 
-import org.gradle.internal.os.OperatingSystem
-
-def onLinux() {
-    OperatingSystem.current().isLinux()
+task copyConfigs(type: Copy) {
+    from 'configs'
+    into "${buildDir}/install/${applicationName}/lib/configs"
 }
 
 task runInstall {
     dependsOn 'installShadowDist'
-    
-    doLast {
-        if(onLinux())
-        {
-            exec {
-                commandLine "ln -s /root/git/GalacticServerBot/build/install/${applicationName} /opt/${applicationName}"
-            }
-        }
-    }
-}
-
-task printDist {
-    project.distributions.each {
-        println it.name
+    configure { 
+        finalizedBy copyConfigs 
     }
 }
 
