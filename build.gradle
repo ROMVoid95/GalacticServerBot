@@ -160,8 +160,7 @@ task runInstall {
         if(onLinux())
         {
             exec {
-                workingDir '.'
-                commandLine "ln -s ${buildDir}/install/${applicationName} /opt/${applicationName}"
+                commandLine "ln -s /root/git/GalacticServerBot/build/install/${applicationName} /opt/${applicationName}"
             }
         }
     }
