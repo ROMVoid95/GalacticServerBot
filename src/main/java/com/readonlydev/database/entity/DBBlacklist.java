@@ -58,6 +58,11 @@ public class DBBlacklist implements ManagedObject
             return false;
         }
     }
+    
+    public boolean isBlacklisted(String userId)
+    {
+        return this.getUsers().contains(userId);
+    }
 
     @Override
     public String getId()

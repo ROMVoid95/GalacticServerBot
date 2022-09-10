@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import com.readonlydev.BotData;
-import com.readonlydev.GalacticBot;
 import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
 import com.readonlydev.common.utils.ResultLevel;
@@ -35,9 +34,16 @@ public class EditDescription extends SlashCommand
     @Override
     protected void execute(SlashCommandEvent event)
     {
-        if (!event.getChannel().getType().equals(ChannelType.PRIVATE) && !GalacticBot.isTesting())
+        if (!event.getChannel().getType().equals(ChannelType.PRIVATE))
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in Private Channels");
+            return;
+        }
+        
+        boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getMember().getId());
+        if(isBlacklisted)
+        {
+            Reply.EphemeralReply(event, ResultLevel.ERROR, "You have been blacklisted and cannot edit your suggestions, Contact staff if you believe this is an error");
             return;
         }
 
