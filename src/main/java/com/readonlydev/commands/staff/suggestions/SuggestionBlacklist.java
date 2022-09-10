@@ -27,9 +27,9 @@ public class SuggestionBlacklist extends SlashCommand
         this.help = "Add or remove a member from suggestions blacklist";
         this.options = Arrays.asList(
             new OptionData(OptionType.STRING, "action", "What action to take", true).addChoices(
-                new Command.Choice("Add", "add"),
-                new Command.Choice("Remove", "remove")),
-            new OptionData(OptionType.USER, "user", "User", true),
+                new Command.Choice("Add", "add"), 
+                new Command.Choice("Remove", "remove")), 
+            new OptionData(OptionType.USER, "user", "User", true), 
             new OptionData(OptionType.STRING, "reason", "reason for the action taken", true)
         );
     }
@@ -37,7 +37,7 @@ public class SuggestionBlacklist extends SlashCommand
     @Override
     protected void execute(SlashCommandEvent event)
     {
-        
+
         boolean canRun = Check.staffRoles(event);
 
         if (!canRun)
@@ -48,53 +48,53 @@ public class SuggestionBlacklist extends SlashCommand
 
         String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionsChannelId();
         TextChannel txtChannel = event.getGuild().getTextChannelById(channelId);
-        
+
         if (!event.getChannel().asTextChannel().equals(txtChannel))
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, "command must be performed in " + txtChannel.getAsMention());
             return;
         }
-        
+
         RootLogChannel logChannel = ((ServerSettings) event.getClient().getSettingsFor(event.getGuild())).getRootLogger();
         final User user = event.getOptionsByType(OptionType.USER).get(0).getAsUser();
         final String action = event.getOption("action").getAsString();
         final String reason = event.getOption("reason").getAsString();
-        
-        if(action.equals("add"))
+
+        if (action.equals("add"))
         {
             boolean wasAdded = this.add(user.getId());
-            if(wasAdded)
+            if (wasAdded)
             {
                 logChannel.sendBlacklistedLog(event.getJDA(), event.getMember(), action, user, reason);
                 Reply.EphemeralReply(event, ResultLevel.SUCCESS, "User %s is now blacklisted".formatted(user.getAsMention()));
                 return;
-            } else {
+            } else
+            {
                 Reply.EphemeralReply(event, ResultLevel.ERROR, "User %s is already blacklisted".formatted(user.getAsMention()));
                 return;
             }
-        }
-        
-        if(action.equals("remove"))
+        } else
         {
             boolean wasRemoved = this.remove(user.getId());
-            if(wasRemoved)
+            if (wasRemoved)
             {
                 logChannel.sendBlacklistedLog(event.getJDA(), event.getMember(), action, user, reason);
                 Reply.EphemeralReply(event, ResultLevel.SUCCESS, "User %s is no longer blacklisted".formatted(user.getAsMention()));
                 return;
-            } else {
+            } else
+            {
                 Reply.EphemeralReply(event, ResultLevel.ERROR, "User %s is not blacklisted".formatted(user.getAsMention()));
                 return;
             }
         }
     }
-    
+
     private boolean add(String userId)
     {
         final DBBlacklist blackList = BotData.database().blacklist();
         return blackList.addToBlacklist(userId);
     }
-    
+
     private boolean remove(String userId)
     {
         final DBBlacklist blackList = BotData.database().blacklist();
