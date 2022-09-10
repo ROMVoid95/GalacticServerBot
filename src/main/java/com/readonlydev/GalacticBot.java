@@ -19,6 +19,7 @@ import com.readonlydev.commands.staff.server.Server;
 import com.readonlydev.commands.staff.suggestions.devonly.DevServerPopularChannel;
 import com.readonlydev.commands.staff.suggestions.devonly.SuggestionSetStatus;
 import com.readonlydev.common.waiter.EventWaiter;
+import com.readonlydev.core.ClientListener;
 import com.readonlydev.core.GalacticEventListener;
 import com.readonlydev.core.GuildSettings;
 import com.readonlydev.logback.LogFilter;
@@ -87,6 +88,9 @@ public class GalacticBot
         clientBuilder.addAllServerCommands(devServerCommands, communityServerCommands);
         clientBuilder.setOwnerId(Conf.Bot().getOwner());
         clientBuilder.setPrefix(Conf.Bot().getPrefix());
+        clientBuilder.setActivity(Activity.watching("for Suggestions & stuff"));
+        clientBuilder.useHelpBuilder(false);
+        clientBuilder.setListener(new ClientListener());
         clientBuilder.setGuildSettingsManager(new GuildSettings());
         
         //@noformat
