@@ -1,13 +1,12 @@
 package com.readonlydev;
 
 import com.readonlydev.config.BotConfig;
-import com.readonlydev.config.UpdateConfig;
 import com.readonlydev.util.data.JsonDataManager;
 
 public final class Conf
 {
     private static JsonDataManager<BotConfig> botConfig;    
-    private static JsonDataManager<UpdateConfig> updateConfig;
+    //private static JsonDataManager<UpdateConfig> updateConfig;
     
     private static JsonDataManager<BotConfig> jsonBotConfig() {
         if (botConfig == null) {
@@ -17,31 +16,31 @@ public final class Conf
         return botConfig;
     }
     
-    private static JsonDataManager<UpdateConfig> jsonUpdateConfig() {
-        if (updateConfig == null) {
-            updateConfig = new JsonDataManager<>(UpdateConfig.class, "configs/update.json", UpdateConfig::new);
-        }
-
-        return updateConfig;
-    }
+//    private static JsonDataManager<UpdateConfig> jsonUpdateConfig() {
+//        if (updateConfig == null) {
+//            updateConfig = new JsonDataManager<>(UpdateConfig.class, "configs/update.json", UpdateConfig::new);
+//        }
+//
+//        return updateConfig;
+//    }
 
     public static void saveBotConfigJson()
     {
         jsonBotConfig().save();
     }
     
-    public static void saveUpdateConfigJson()
-    {
-        jsonUpdateConfig().save();
-    }
+//    public static void saveUpdateConfigJson()
+//    {
+//        jsonUpdateConfig().save();
+//    }
     
     public static BotConfig Bot()
     {
         return jsonBotConfig().get();
     }
 
-    public static UpdateConfig Update()
-    {
-        return jsonUpdateConfig().get();
-    }
+//    public static UpdateConfig Update()
+//    {
+//        return jsonUpdateConfig().get();
+//    }
 }

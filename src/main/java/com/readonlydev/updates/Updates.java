@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import com.readonlydev.Conf;
 import com.readonlydev.updates.storage.DatabaseInterface;
 
 import ch.vorburger.exec.ManagedProcessException;
@@ -19,7 +18,7 @@ public class Updates {
     
     public Updates() throws ClassNotFoundException, SQLException, ManagedProcessException, InterruptedException
     {
-        CFCoreAPI.setApiKey(Conf.Update().CurseForge().getApiKey());
+        //CFCoreAPI.setApiKey(Conf.Update().CurseForge().getApiKey());
         ifa = new DatabaseInterface();
 
         final ArrayList<CurseforgeProject.CFChannel> allChannels = ifa.getAllChannels();

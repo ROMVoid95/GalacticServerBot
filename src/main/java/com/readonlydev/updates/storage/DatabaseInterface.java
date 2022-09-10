@@ -36,7 +36,7 @@ public class DatabaseInterface implements AutoCloseable
     private Connection        conn;
     public Gson               gson = new GsonBuilder().create();
     private DB                db;
-    private final UpdateConfig.EmbeddedServer config = Conf.Update().EmbeddedSerer();
+    private final UpdateConfig.EmbeddedServer config = null;//Conf.Update().EmbeddedSerer();
 
     public DatabaseInterface() throws SQLException, ClassNotFoundException, ManagedProcessException
     {
@@ -83,7 +83,7 @@ public class DatabaseInterface implements AutoCloseable
         DBConfigurationBuilder configBuilder;
 
         boolean isPresent;
-        File dataDir = new File(Conf.Update().EmbeddedSerer().getDataDir());
+        File dataDir = null;//new File(Conf.Update().EmbeddedSerer().getDataDir());
         if (!dataDir.exists())
         {
             isPresent = dataDir.mkdir();

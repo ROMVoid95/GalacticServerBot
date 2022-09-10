@@ -61,7 +61,7 @@ public class GalacticBot
         preStart();
 
         Conf.saveBotConfigJson();
-        Conf.saveUpdateConfigJson();
+        //Conf.saveUpdateConfigJson();
 
         ClientBuilder clientBuilder = new ClientBuilder();
 
