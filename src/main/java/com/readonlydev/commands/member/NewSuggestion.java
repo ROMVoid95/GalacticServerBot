@@ -32,6 +32,13 @@ public class NewSuggestion extends SlashCommand
     {
         String mention = event.getMember().getAsMention();
 
+        boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getMember().getId());
+        if(isBlacklisted)
+        {
+            Reply.EphemeralReply(event, ResultLevel.ERROR, "You have been blacklisted and cannot make new suggestions, Contact staff if you believe this is an error");
+            return;
+        }
+        
         String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionsChannelId();
         // Just in case some stupid stuff is going on
         if (channelId.isBlank())

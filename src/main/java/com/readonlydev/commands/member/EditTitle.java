@@ -39,6 +39,13 @@ public class EditTitle extends SlashCommand
             Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in Private Channels");
             return;
         }
+        
+        boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getMember().getId());
+        if(isBlacklisted)
+        {
+            Reply.EphemeralReply(event, ResultLevel.ERROR, "You have been blacklisted and cannot edit your suggestions, Contact staff if you believe this is an error");
+            return;
+        }
 
         String id = event.getOption("id").getAsString();
         Optional<Suggestion> suggestionToEdit = BotData.database().botDatabase().getSuggestionFromUniqueId(id);
