@@ -27,12 +27,9 @@
         <file>logs/current.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>logs/%d{yyyy-MM-dd}.log</fileNamePattern>
-
-            <!-- keep 30 days' worth of history capped at 3GB total size -->
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
-
+            <fileNamePattern>logs/%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+            <totalSizeCap>10MB</totalSizeCap>
+			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.RollOnStartupPolicy" />
         </rollingPolicy>
 
         <encoder>
