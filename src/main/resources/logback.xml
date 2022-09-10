@@ -26,12 +26,11 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/current.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>logs/%d{yyyy-MM-dd}-%i.log</fileNamePattern>
-            <totalSizeCap>10MB</totalSizeCap>
-			<TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.RollOnStartupPolicy" />
+            <fileNamePattern>logs/%d{MM-dd-yyyy}-%i.log</fileNamePattern>
+        <TimeBasedFileNamingAndTriggeringPolicy class="com.readonlydev.logback.SessionTriggeringPolicy">
+            <MaxFileSize>250MB</MaxFileSize> 
+        </TimeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
-
         <encoder>
             <pattern>[%d{HH:mm:ss}] [%level] [%logger{0}]: %msg%n</pattern>
         </encoder>
