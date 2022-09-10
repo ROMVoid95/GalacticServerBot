@@ -10,21 +10,21 @@ public enum SetChannel
 {
     POST
     (
-        BotData.database().getSuggestionOptions().getSuggestionsChannelId(),
+        BotData.database().botDatabase().getSuggestionOptions().getSuggestionsChannelId(),
         BotData.communityServer(),
         BotData.botDevServer()
     ),
     
     POPULAR
     (
-        BotData.database().getSuggestionOptions().getPopularChannelId(),
+        BotData.database().botDatabase().getSuggestionOptions().getPopularChannelId(),
         BotData.communityServer(),
         BotData.botDevServer()
     ),
     
     DEV_POPULAR
     (
-        BotData.database().getSuggestionOptions().getDevServerPopularChannelId(),
+        BotData.database().botDatabase().getSuggestionOptions().getDevServerPopularChannelId(),
         BotData.devServer(),
         BotData.botDevDevServer()
     );

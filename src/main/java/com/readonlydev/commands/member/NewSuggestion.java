@@ -32,7 +32,7 @@ public class NewSuggestion extends SlashCommand
     {
         String mention = event.getMember().getAsMention();
 
-        String channelId = BotData.database().getSuggestionOptions().getSuggestionsChannelId();
+        String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionsChannelId();
         // Just in case some stupid stuff is going on
         if (channelId.isBlank())
         {
@@ -63,7 +63,7 @@ public class NewSuggestion extends SlashCommand
             return;
         }
 
-        int number = BotData.database().getManager().getCount() + 1;
+        int number = BotData.database().botDatabase().getManager().getCount() + 1;
         String title = getTitle(event);
 
         //@noformat

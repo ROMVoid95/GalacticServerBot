@@ -41,7 +41,7 @@ public class GalacticEventListener extends ListenerAdapter
     {
         if (DiscordUtils.areGuildsTheSame(event.getGuild(), BotData.communityServer()))
         {
-            SuggestionOptions options = BotData.database().getSuggestionOptions();
+            SuggestionOptions options = BotData.database().botDatabase().getSuggestionOptions();
             MessageChannel channel = event.getChannel();
             
             if(options.getSuggestionsChannelId().equals(channel.getId()))

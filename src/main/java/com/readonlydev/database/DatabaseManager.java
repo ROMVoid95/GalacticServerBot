@@ -5,10 +5,8 @@ import static com.readonlydev.database.Rethink.Rethink;
 import javax.annotation.CheckReturnValue;
 import javax.annotation.Nonnull;
 
+import com.readonlydev.database.entity.DBBlacklist;
 import com.readonlydev.database.entity.DBGalacticBot;
-import com.readonlydev.database.impl.SuggestionManager;
-import com.readonlydev.database.impl.options.HasteOptions;
-import com.readonlydev.database.impl.options.SuggestionOptions;
 import com.rethinkdb.net.Connection;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,24 +32,11 @@ public class DatabaseManager
 
     @Nonnull
     @CheckReturnValue
-    public HasteOptions getHasteOptions()
+    public DBBlacklist blacklist()
     {
-        return botDatabase().getHasteOptions();
+        DBBlacklist obj = Rethink.table(DBBlacklist.DB_TABLE).get("blacklist").runAtom(conn, DBBlacklist.class);
+        return obj == null ? DBBlacklist.create() : obj;
     }
-
-    @Nonnull
-    @CheckReturnValue
-    public SuggestionOptions getSuggestionOptions()
-    {
-        return botDatabase().getSuggestionOptions();
-    }
-
-    @Nonnull
-    @CheckReturnValue
-    public SuggestionManager getManager()
-    {
-        return botDatabase().getManager();
-    }    
     
     public void save(@Nonnull ManagedObject object)
     {

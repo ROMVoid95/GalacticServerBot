@@ -73,7 +73,7 @@ public class SuggestionsHelper
                 suggestion.setUpvotes(reactionCount);
                 suggestions.saveUpdateAsync();
 
-                SuggestionOptions options = BotData.database().getSuggestionOptions();
+                SuggestionOptions options = BotData.database().botDatabase().getSuggestionOptions();
 
                 if (suggestion.getUpvotes() == options.getStarRequirement())
                 {

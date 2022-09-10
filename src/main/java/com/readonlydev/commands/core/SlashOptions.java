@@ -60,7 +60,7 @@ public class SlashOptions
         public static OptionData getSuggestionOptions()
         {
             List<Command.Choice> choices = new ArrayList<>();
-            for(Entry<String, Integer> entry : BotData.database().getManager().getMap().entrySet())
+            for(Entry<String, Integer> entry : BotData.database().botDatabase().getManager().getMap().entrySet())
             {
                 choices.add(new Choice("#" + entry.getValue(), entry.getKey()));
             }

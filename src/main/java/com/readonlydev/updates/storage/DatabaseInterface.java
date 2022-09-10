@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.readonlydev.Conf;
 import com.readonlydev.config.UpdateConfig;
 import com.readonlydev.updates.CurseforgeProject;
 import com.readonlydev.updates.Updates;
