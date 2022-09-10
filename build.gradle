@@ -144,9 +144,27 @@ distributions {
     }
 }
 
+import org.gradle.internal.os.OperatingSystem
+
+def onLinux() {
+    OperatingSystem.current().isLinux()
+}
+
+def outputDir() {
+    if(onLinux()) {
+        "/opt/${applicationName}"
+    } else {
+        "${projectDir}/opt/${applicationName}"
+    }
+}
+
 task copyConfigs(type: Copy) {
     from 'configs'
-    into "${buildDir}/install/${applicationName}/lib/configs"
+    into outputDir() + "/lib/configs"
+}
+
+tasks.named('installShadowDist') {
+    destinationDir = file(outputDir())
 }
 
 task runInstall {
