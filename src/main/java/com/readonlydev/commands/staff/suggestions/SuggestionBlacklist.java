@@ -5,12 +5,14 @@ import java.util.Arrays;
 import com.readonlydev.BotData;
 import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.common.utils.ResultLevel;
 import com.readonlydev.core.guildlogger.RootLogChannel;
 import com.readonlydev.core.guildlogger.ServerSettings;
 import com.readonlydev.database.entity.DBBlacklist;
 import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
 
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -27,7 +29,7 @@ public class SuggestionBlacklist extends SlashCommand
             new OptionData(OptionType.STRING, "action", "What action to take", true).addChoices(
                 new Command.Choice("Add", "add"),
                 new Command.Choice("Remove", "remove")),
-            new OptionData(OptionType.STRING, "user_id", "the Users ID", true),
+            new OptionData(OptionType.USER, "user", "User", true),
             new OptionData(OptionType.STRING, "reason", "reason for the action taken", true)
         );
     }
@@ -44,64 +46,45 @@ public class SuggestionBlacklist extends SlashCommand
             return;
         }
 
+        String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionsChannelId();
+        TextChannel txtChannel = event.getGuild().getTextChannelById(channelId);
+        
+        if (!event.getChannel().asTextChannel().equals(txtChannel))
+        {
+            Reply.EphemeralReply(event, ResultLevel.ERROR, "command must be performed in " + txtChannel.getAsMention());
+            return;
+        }
+        
         RootLogChannel logChannel = ((ServerSettings) event.getClient().getSettingsFor(event.getGuild())).getRootLogger();
-        final String userId = event.getOption("user_id").getAsString();
+        final User user = event.getOptionsByType(OptionType.USER).get(0).getAsUser();
         final String action = event.getOption("action").getAsString();
         final String reason = event.getOption("reason").getAsString();
         
         if(action.equals("add"))
         {
-            boolean wasAdded = this.add(userId);
+            boolean wasAdded = this.add(user.getId());
             if(wasAdded)
             {
-                logChannel.sendBlacklistedLog(event.getJDA(), event.getMember(), action, userId, reason);
-                User user = event.getJDA().getUserById(userId);
-                if(user != null)
-                {
-                    Reply.Success(event, "User %s is now blacklisted".formatted(user.getAsMention()));
-                    return;
-                } else {
-                    Reply.Success(event, "User with ID `%s` is now blacklisted".formatted(userId));
-                    return;
-                }
+                logChannel.sendBlacklistedLog(event.getJDA(), event.getMember(), action, user, reason);
+                Reply.EphemeralReply(event, ResultLevel.SUCCESS, "User %s is now blacklisted".formatted(user.getAsMention()));
+                return;
             } else {
-                User user = event.getJDA().getUserById(userId);
-                if(user != null)
-                {
-                    Reply.Error(event, "User %s is already blacklisted".formatted(user.getAsMention()));
-                    return;
-                } else {
-                    Reply.Error(event, "User with ID `%s`  is already blacklisted".formatted(userId));
-                    return;
-                }
+                Reply.EphemeralReply(event, ResultLevel.ERROR, "User %s is already blacklisted".formatted(user.getAsMention()));
+                return;
             }
         }
         
         if(action.equals("remove"))
         {
-            boolean wasRemoved = this.remove(userId);
+            boolean wasRemoved = this.remove(user.getId());
             if(wasRemoved)
             {
-                logChannel.sendBlacklistedLog(event.getJDA(), event.getMember(), action, userId, reason);
-                User user = event.getJDA().getUserById(userId);
-                if(user != null)
-                {
-                    Reply.Success(event, "User %s is no longer blacklisted".formatted(user.getAsMention()));
-                    return;
-                } else {
-                    Reply.Success(event, "User with ID `%s` is no longer blacklisted".formatted(userId));
-                    return;
-                }
+                logChannel.sendBlacklistedLog(event.getJDA(), event.getMember(), action, user, reason);
+                Reply.EphemeralReply(event, ResultLevel.SUCCESS, "User %s is no longer blacklisted".formatted(user.getAsMention()));
+                return;
             } else {
-                User user = event.getJDA().getUserById(userId);
-                if(user != null)
-                {
-                    Reply.Error(event, "User %s is not blacklisted".formatted(user.getAsMention()));
-                    return;
-                } else {
-                    Reply.Error(event, "User with ID `%s`  is not blacklisted".formatted(userId));
-                    return;
-                }
+                Reply.EphemeralReply(event, ResultLevel.ERROR, "User %s is not blacklisted".formatted(user.getAsMention()));
+                return;
             }
         }
     }

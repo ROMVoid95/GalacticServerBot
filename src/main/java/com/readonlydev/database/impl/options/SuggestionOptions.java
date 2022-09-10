@@ -13,9 +13,9 @@ import lombok.Setter;
 public class SuggestionOptions
 {
 
-    private String               suggestionsChannelId      = "";
-    private String               popularChannelId          = "";
-    private String               devServerPopularChannelId = "";
+    private String               suggestionsChannelId      = "1017836524374589460";
+    private String               popularChannelId          = "1017836571090768033";
+    private String               devServerPopularChannelId = "988628452267671642";
     private boolean              suggestionsLocked         = false;
     private int                  starRequirement           = 10;
 

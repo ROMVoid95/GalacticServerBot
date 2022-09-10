@@ -3,6 +3,7 @@ package com.readonlydev.core.guildlogger;
 import java.awt.Color;
 import java.time.Instant;
 
+import com.readonlydev.GalacticBot;
 import com.readonlydev.command.slash.SlashCommandEvent;
 import com.readonlydev.database.impl.Suggestion;
 
@@ -52,32 +53,27 @@ public class RootLogChannel
         this.channel.sendMessageEmbeds(builder.build()).queue();
     }
     
-    public final void sendBlacklistedLog(JDA jda, Member member, String action, String userId, String reason)
+    public final void sendBlacklistedLog(JDA jda, Member member, String action, User user, String reason)
     {
-        EmbedBuilder builder = new EmbedBuilder();
-        User user = jda.getUserById(userId);
-        
-        String actionTaken;
-        if(action.equals("add"))
+        if(!GalacticBot.isTesting())
         {
-            actionTaken = "Added To";
-        } else {
-            actionTaken = "Removed From";
+            EmbedBuilder builder = new EmbedBuilder();
+            
+            String actionTaken;
+            if(action.equals("add"))
+            {
+                actionTaken = "Added To";
+            } else {
+                actionTaken = "Removed From";
+            }
+
+            builder.setTitle("User %s Blacklist".formatted(actionTaken));
+            builder.setDescription("User: **%s**".formatted(user.getAsMention()));
+            builder.addField("Staff Member", member.getAsMention(), false);
+            builder.addField("Reason", reason, false);
+            builder.setColor(Color.RED);
+            
+            this.channel.sendMessageEmbeds(builder.build()).queue();   
         }
-        String mentionOrId;
-        if(user != null)
-        {
-            mentionOrId = user.getAsMention();
-        } else {
-            mentionOrId = "with ID " + userId;
-        }
-        
-        builder.setTitle("User %s Blacklist".formatted(actionTaken));
-        builder.setDescription("User: **%s**".formatted(mentionOrId));
-        builder.addField("Staff Member", member.getAsMention(), false);
-        builder.addField("Reason", reason, false);
-        builder.setColor(Color.RED);
-        
-        this.channel.sendMessageEmbeds(builder.build()).queue();
     }
 }
