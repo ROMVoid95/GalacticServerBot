@@ -158,20 +158,12 @@ def outputDir() {
     }
 }
 
-task copyConfigs(type: Copy) {
-    from 'configs'
-    into outputDir() + "/lib/configs"
-}
-
 tasks.named('installShadowDist') {
     destinationDir = file(outputDir())
 }
 
 task runInstall {
     dependsOn 'installShadowDist'
-    configure { 
-        finalizedBy copyConfigs 
-    }
 }
 
 class Version {
