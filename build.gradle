@@ -15,6 +15,7 @@ repositories {
     }
     mavenLocal()
     mavenCentral()
+    maven { url "https://repo.erdbeerbaerlp.de/repository/maven-public/" }
 }
 
 ext {
@@ -36,7 +37,6 @@ ext {
 dependencies {
 	implementation("net.dv8tion:JDA:5.0.0-alpha.19")
     implementation "com.readonlydev:jdatools:${jdatools}:lite"
-    implementation 'com.github.ROMVoid95:JavaUtilities:3.0.2'
 	implementation("org.reflections:reflections:${reflections}") {
 		exclude group: 'org.slf4j', module: 'slf4j-api'
 	}
@@ -49,16 +49,28 @@ dependencies {
 	implementation("commons-io:commons-io:${commons}") {
 		exclude group: 'org.slf4j', module: 'slf4j-api'
 	}
-    implementation 'io.github.matyrobbrt:curseforgeapi:1.7.3'
+    implementation 'com.typesafe:config:1.4.1'
+    implementation 'es.nitaur.markdown:txtmark:0.16'
+    implementation 'commons-cli:commons-cli:1.4'
+    implementation 'de.ErdbeerbaerLP:toml4j:cf5b4655'
+    implementation("de.erdbeerbaerlp:cfcore:1.0.1-SNAPSHOT"){
+        changing = true
+    }
     implementation 'org.codehaus.groovy:groovy-jsr223:3.0.12'
+    implementation 'ch.vorburger.mariaDB4j:mariaDB4j:2.5.3'
+    implementation 'mysql:mysql-connector-java:8.0.30'
+    
+    implementation 'com.vladsch.flexmark:flexmark-html2md-converter:0.64.0'
     
     implementation jacksonCore()
     implementation jacksonDatabind()
     implementation jacksonAnnotations()
     
 	implementation 'com.google.guava:guava:31.1-jre'
+	implementation 'com.google.code.gson:gson:2.9.1'
 	implementation 'org.slf4j:slf4j-api:1.7.36'
 	implementation 'ch.qos.logback:logback-classic:1.2.11'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.apache.commons:commons-text:1.9'
     
    	compileOnly 'org.projectlombok:lombok:1.18.24'

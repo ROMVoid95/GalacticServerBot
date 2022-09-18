@@ -40,21 +40,21 @@ public class DatabaseManager
     
     public void save(@Nonnull ManagedObject object)
     {
-        log.info("Saving {} {}:{} to rethink (replacing)", object.getClass().getSimpleName(), object.getTableName(), object.getDatabaseId());
+        //log.info("Saving {} {}:{} to rethink (replacing)", object.getClass().getSimpleName(), object.getTableName(), object.getDatabaseId());
 
         Rethink.table(object.getTableName()).insert(object).optArg("conflict", "replace").runNoReply(conn);
     }
 
     public void saveUpdating(@Nonnull ManagedObject object)
     {
-        log.info("Saving {} {}:{} to rethink (updating)", object.getClass().getSimpleName(), object.getTableName(), object.getDatabaseId());
+        //log.info("Saving {} {}:{} to rethink (updating)", object.getClass().getSimpleName(), object.getTableName(), object.getDatabaseId());
 
         Rethink.table(object.getTableName()).insert(object).optArg("conflict", "update").runNoReply(conn);
     }
 
     public void delete(@Nonnull ManagedObject object)
     {
-        log.info("Deleting {} {}:{} from rethink", object.getClass().getSimpleName(), object.getTableName(), object.getDatabaseId());
+        //log.info("Deleting {} {}:{} from rethink", object.getClass().getSimpleName(), object.getTableName(), object.getDatabaseId());
 
         Rethink.table(object.getTableName()).get(object.getId()).delete().runNoReply(conn);
     }

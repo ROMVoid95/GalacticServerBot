@@ -11,7 +11,6 @@ import com.readonlydev.Conf;
 import com.readonlydev.api.annotation.BotCommand;
 import com.readonlydev.command.Command;
 import com.readonlydev.command.CommandType;
-import com.readonlydev.command.slash.SlashCommand;
 
 import lombok.experimental.UtilityClass;
 

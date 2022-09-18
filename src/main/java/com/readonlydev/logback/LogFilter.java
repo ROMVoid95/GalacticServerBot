@@ -16,7 +16,7 @@ public class LogFilter extends Filter<ILoggingEvent> {
             return FilterReply.NEUTRAL;
         }
 
-        if (event.getLevel().isGreaterOrEqual(LEVEL)) {
+        if (event.getLevel().isGreaterOrEqual(Level.DEBUG)) {
             return FilterReply.NEUTRAL;
         } else {
             return FilterReply.DENY;
