@@ -16,9 +16,9 @@ import net.dv8tion.jda.api.entities.User;
 public class BotConfig
 {
 
-    private String              botname         = "ReadOnlyBot";
     private String              avatarUrl       = "https://i.imgur.com/S7CqwYg.png";
     private String              token           = "TOKEN";
+    private String              apiKey          = "API_KEY";
     private String              prefix          = "PREFIX";
     private String              clientId        = "CLIENTID";
     private String              secret          = "SECRET";

@@ -20,19 +20,19 @@ public enum SuggestionStatus
     (
         Color.BLUE,
         "Considered",
-        "This has been considered by the developers.\n\nOnce a final decision is made this message will change \nto either ***APPROVED*** or ***REJECTED***"
+        "This has been considered by the developers"
     ),
     REJECTED
     (
         Color.RED,
         "Rejected",
-        "This has been rejected by the developers.\n\nIf reversed this message will change to ***APPROVED***.\nDuplicate suggestions made after will be deleted"
+        "This has been rejected by the developers"
     ),
     APPROVED
     (
         Color.GREEN,
         "Approved",
-        "This has been approved by the developers.\n\nOnce fully implemented this message will change to ***IMPLEMENTED***.\nNo ETA will be given or hinted towards"
+        "This has been approved by the developers"
     ),
     IMPLEMENTED
     (

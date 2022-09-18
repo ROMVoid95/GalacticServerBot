@@ -14,7 +14,7 @@ public class Factory
     {
         return Executors.newScheduledThreadPool(poolSize, newThreadFactory(threadName, isDaemon));
     }
-    
+
     public static ThreadFactory newThreadFactory(String threadName, boolean isdaemon)
     {
         return (r) ->

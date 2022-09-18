@@ -2,35 +2,35 @@ package com.readonlydev;
 
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.eventbus.EventBus;
 import com.readonlydev.command.Command;
 import com.readonlydev.command.client.Client;
 import com.readonlydev.command.client.ClientBuilder;
 import com.readonlydev.command.client.ServerCommands;
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.commands.member.CloseDiscussionThread;
 import com.readonlydev.commands.member.EditDescription;
 import com.readonlydev.commands.member.EditTitle;
 import com.readonlydev.commands.member.NewSuggestion;
+import com.readonlydev.commands.owner.MaintanenceModeCommand;
 import com.readonlydev.commands.staff.Suggestions;
 import com.readonlydev.commands.staff.server.Server;
 import com.readonlydev.commands.staff.suggestions.devonly.DevServerPopularChannel;
 import com.readonlydev.commands.staff.suggestions.devonly.SuggestionSetStatus;
 import com.readonlydev.common.waiter.EventWaiter;
+import com.readonlydev.core.BusListener;
 import com.readonlydev.core.ClientListener;
 import com.readonlydev.core.GalacticEventListener;
 import com.readonlydev.core.GuildSettings;
 import com.readonlydev.logback.LogFilter;
 import com.readonlydev.util.ReflectCommands;
 
+import io.github.matyrobbrt.curseforgeapi.CurseForgeAPI;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -44,6 +44,7 @@ public class GalacticBot
 
     private static JDA         jda;
     private static EventWaiter eventWaiter = new EventWaiter();
+    private static CurseForgeAPI curseApi;
     private static EventBus    EVENT_BUS   = new EventBus("GalacticBot EventBus");
 
     private void preStart()
@@ -67,6 +68,7 @@ public class GalacticBot
         ClientBuilder clientBuilder = new ClientBuilder();
 
         Set<Command> conventionalCommands = ReflectCommands.getConventionalCommands();
+        
         ServerCommands devServerCommands = new ServerCommands("775251052517523467");
         devServerCommands.addAllCommands(
             new DevServerPopularChannel(),
@@ -78,7 +80,8 @@ public class GalacticBot
             new Suggestions(),
             new Server(),
             new NewSuggestion(),
-            new CloseDiscussionThread()
+            new CloseDiscussionThread(),
+            new MaintanenceModeCommand()
         );
         
         clientBuilder.setAllRepliesAsEmbed();
@@ -119,20 +122,18 @@ public class GalacticBot
             .addEventListeners(eventWaiter, client, new GalacticEventListener())
             .build();
         //@format
+        GalacticBot.curseApi = CurseForgeAPI.builder()
+            .apiKey(Conf.Bot().getApiKey())
+            .build();
 
         //new Updates();
-        
+        EVENT_BUS.register(new BusListener());
         log.info("Conventional Commands:  " + client.getCommands().size());
     }
 
     public static void main(String[] args) throws Exception
     {
         new GalacticBot();
-    }
-
-    public static Set<CommandData> getAllSlashCommands()
-    {
-        return ReflectCommands.getSlashCommandsCommands().stream().map(SlashCommand::buildCommandData).collect(Collectors.toSet());
     }
 
     public static boolean isTesting()
@@ -150,6 +151,11 @@ public class GalacticBot
         return eventWaiter;
     }
 
+    public static CurseForgeAPI getCurseAPI()
+    {
+        return curseApi;
+    }
+    
     public static JDA getJda()
     {
         return jda;

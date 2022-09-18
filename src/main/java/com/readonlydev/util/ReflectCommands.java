@@ -45,32 +45,6 @@ public class ReflectCommands
         return commandSet;
     }
 
-    public static final Set<SlashCommand> getSlashCommandsCommands()
-    {
-        Set<SlashCommand> commandSet = new HashSet<>();
-        for (Class<?> clazz : commandClasses())
-        {
-            BotCommand cmd = clazz.getAnnotation(BotCommand.class);
-            if (cmd.value().equals(CommandType.SLASH))
-            {
-                commandSet.add(newSlashCommand(clazz));
-            }
-        }
-        return commandSet;
-    }
-
-    private static final SlashCommand newSlashCommand(Class<?> clazz)
-    {
-        try
-        {
-            return (SlashCommand) clazz.getDeclaredConstructor().newInstance();
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
     private static final Command newCommand(Class<?> clazz)
     {
         try

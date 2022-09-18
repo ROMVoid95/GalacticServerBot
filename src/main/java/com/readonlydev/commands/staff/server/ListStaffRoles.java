@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.readonlydev.BotData;
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.commands.core.RoleType;
 import com.readonlydev.database.entity.DBGalacticBot;
 import com.readonlydev.util.Check;
@@ -18,7 +18,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
-public class ListStaffRoles extends SlashCommand
+public class ListStaffRoles extends GalacticSlashCommand
 {    
     public ListStaffRoles()
     {
@@ -34,7 +34,7 @@ public class ListStaffRoles extends SlashCommand
     }
 
     @Override
-    protected void execute(SlashCommandEvent event)
+    protected void onExecute(SlashCommandEvent event)
     {
         
         boolean canRun = Check.staffRoles(event);

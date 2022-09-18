@@ -1,5 +1,8 @@
 package com.readonlydev.util.discord;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.readonlydev.BotData;
 import com.readonlydev.GalacticBot;
 import com.readonlydev.database.entity.DBGalacticBot;
@@ -11,12 +14,18 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 @UtilityClass
 public class SuggestionsHelper
 {
+    
+    public List<String> getAllAuthors() 
+    {
+        DBGalacticBot db = BotData.database().botDatabase();
+        return db.getManager().getList().stream().map(Suggestion::getAuthorId).collect(Collectors.toList());
+    }
 
     public static Message setStatus(SuggestionStatus status, Suggestion suggestion)
     {

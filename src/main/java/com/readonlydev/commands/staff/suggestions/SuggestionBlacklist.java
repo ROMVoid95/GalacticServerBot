@@ -3,8 +3,8 @@ package com.readonlydev.commands.staff.suggestions;
 import java.util.Arrays;
 
 import com.readonlydev.BotData;
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.common.utils.ResultLevel;
 import com.readonlydev.core.guildlogger.RootLogChannel;
 import com.readonlydev.core.guildlogger.ServerSettings;
@@ -12,13 +12,13 @@ import com.readonlydev.database.entity.DBBlacklist;
 import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
 
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class SuggestionBlacklist extends SlashCommand
+public class SuggestionBlacklist extends GalacticSlashCommand
 {
 
     public SuggestionBlacklist()
@@ -35,7 +35,7 @@ public class SuggestionBlacklist extends SlashCommand
     }
 
     @Override
-    protected void execute(SlashCommandEvent event)
+    protected void onExecute(SlashCommandEvent event)
     {
 
         boolean canRun = Check.staffRoles(event);

@@ -2,11 +2,13 @@ package com.readonlydev.util.rec;
 
 import java.util.Optional;
 
-import com.readonlydev.util.discord.SuggestionEmbed;
+import com.readonlydev.util.discord.entity.SuggestionEmbed;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
+import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 public record LinkedMessagesRecord(
     Optional<Message> postMsg, 
@@ -15,19 +17,23 @@ public record LinkedMessagesRecord(
 )
 {
 
-    public MessageAction editMessages(SuggestionEmbed embed)
+    public MessageEditAction editMessages(SuggestionEmbed embed)
     {
+        MessageEditBuilder builder = new MessageEditBuilder()
+            .setEmbeds(embed.toEmbedBuilder().build());
+        
+        MessageEditData editData = builder.build();
         
         if(communityMsg().isPresent())
         {
-            communityMsg().get().editMessageEmbeds(embed.toEmbedBuilder().build()).queue();
+            communityMsg().get().editMessage(editData).queue();
         }
         if(devMsg().isPresent())
         {
-            devMsg().get().editMessageEmbeds(embed.toEmbedBuilder().build()).queue();
+            devMsg().get().editMessage(editData).queue();
         }
         
-        return postMsg().get().editMessageEmbeds(embed.toEmbedBuilder().build());
+        return postMsg().get().editMessage(editData);
     }
     
     public AuditableRestAction<Void> deleteMessages()

@@ -6,53 +6,53 @@ import com.readonlydev.command.event.CommandEvent;
 import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
 import com.readonlydev.logback.LogUtils;
+import com.readonlydev.util.discord.DiscordUtils;
 
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 
 @Slf4j
 public class ClientListener implements CommandListener
 {
-
     @Override
-    public void onCommand(CommandEvent event, Command command)
+    public void onCompletedCommand(CommandEvent event, Command command)
     {
-        String asTag = event.getAuthor().getAsTag();
+        String asTag = DiscordUtils.getUser(event).getAsTag();
         String id = event.getAuthor().getId();
         String content = event.getMessage().getContentRaw();
 
-        String output;
-        
-        if (event.getChannelType().equals(ChannelType.PRIVATE))
-        {
-            output = "%s(%s) invoked Command %s in Private Channel".formatted(asTag, id, content);
-        } else
-        {
-            output = "[%s] %s(%s) invoked Command %s in Channel %s".formatted(event.getGuild().getName(), asTag, id, content, event.getChannel().getName());
-        }
-        
-        LogUtils.log("CommandEvent", output);
-        log.info(output);
+        LogUtils.log("CommandEvent", webhookContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
+        log.info(logContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommand command)
+    public void onCompletedSlashCommand(SlashCommandEvent event, SlashCommand command)
     {
-        String asTag = event.getMember().getUser().getAsTag();
+        String asTag = DiscordUtils.getUser(event).getAsTag();
         String id = event.getMember().getId();
         String content = event.getCommandPath();
-        
-        String output;
 
-        if (event.getChannelType().equals(ChannelType.PRIVATE))
+        LogUtils.log("SlashCommandEvent", webhookContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
+        log.info(logContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
+    }
+
+    private String webhookContent(ChannelType channelType, String command, String guildName, String tag, String id, String content, String channelName)
+    {
+        if(channelType.equals(ChannelType.PRIVATE))
         {
-            output = "%s(%s) invoked Slash Command %s in Private Channel".formatted(asTag, id, content);
-        } else
-        {
-            output = "[%s] %s(%s) invoked Slash Command %s in Channel %s".formatted(event.getGuild().getName(), asTag, id, content, event.getChannel().getName());
+            return "**%s** (*%s*)\n\ninvoked %s %s in Private Channel".formatted(tag, id, command, content);
+        } else {
+            return "**[%s]**\n\n**%s** (*%s*)\n\ninvoked %s %s in Channel %s".formatted(guildName, tag, id, command, content, channelName);
         }
-        
-        LogUtils.log("SlashCommandEvent", output);
-        log.info(output);
+    }
+    
+    private String logContent(ChannelType channelType, String command, String guildName, String tag, String id, String content, String channelName)
+    {
+        if(channelType.equals(ChannelType.PRIVATE))
+        {
+            return "%s (%s) | invoked %s %s in Private Channel".formatted(tag, id, command, content);
+        } else {
+            return "[%s] | %s (%s) | invoked %s %s in Channel %s".formatted(guildName, tag, id, command, content, channelName);
+        }
     }
 }

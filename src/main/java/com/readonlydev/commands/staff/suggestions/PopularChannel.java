@@ -4,20 +4,20 @@ import java.awt.Color;
 import java.util.Arrays;
 
 import com.readonlydev.BotData;
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.database.entity.DBGalacticBot;
 import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class PopularChannel extends SlashCommand
+public class PopularChannel extends GalacticSlashCommand
 {
 
     public PopularChannel()
@@ -28,7 +28,7 @@ public class PopularChannel extends SlashCommand
     }
 
     @Override
-    protected void execute(SlashCommandEvent event)
+    protected void onExecute(SlashCommandEvent event)
     {
         if (event.getOptions().isEmpty())
         {

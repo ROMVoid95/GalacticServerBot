@@ -1,6 +1,9 @@
-package com.readonlydev.util.discord;
+package com.readonlydev.util.discord.entity;
 
 import java.awt.Color;
+
+import com.readonlydev.commands.core.EditType;
+import com.readonlydev.util.discord.SuggestionStatus;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -63,14 +66,19 @@ public class SuggestionEmbed
         this.title = title;
     }
     
-    public void setDescription(String description)
+    public void setDescription(EditType editType, String description)
     {
-        this.description = new MessageEmbed.Field("Description", description, false);
+        if(editType.equals(EditType.APPEND))
+        {
+            String existing = this.description.getValue() + ". ";
+            this.description = new MessageEmbed.Field("Description", existing + description, false);
+        } else {
+            this.description = new MessageEmbed.Field("Description", description, false);
+        }
     }
 
     public EmbedBuilder toEmbedBuilder()
     {
-
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(title).setAuthor(type).setDescription(numberAndAuthor).addField(description).setColor(embedColor);
         if(status != null)
@@ -79,6 +87,5 @@ public class SuggestionEmbed
         }
         
         return builder;
-
     }
 }

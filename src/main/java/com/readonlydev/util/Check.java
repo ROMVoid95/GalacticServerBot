@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.readonlydev.BotData;
+import com.readonlydev.Conf;
 import com.readonlydev.command.slash.SlashCommandEvent;
 import com.readonlydev.database.impl.Suggestion;
 
@@ -14,6 +15,11 @@ import net.dv8tion.jda.api.entities.Role;
 
 public class Check
 {
+    
+    public static boolean isOwner(SlashCommandEvent event)
+    {
+        return Conf.Bot().isOwner(event.getUser());
+    }
 
     private static boolean isFromBotDevServer(SlashCommandEvent event)
     {

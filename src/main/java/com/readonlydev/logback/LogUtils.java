@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.readonlydev.Conf;
+import com.readonlydev.GalacticBot;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
@@ -28,7 +29,6 @@ public class LogUtils {
 	static {
 		String webhook = Conf.Bot().getWebhookUrl().replace(WEBHOOK_START, "");
 		if (webhook != null) {
-			log.info(webhook);
 			var parts = webhook.split("/");
 			long id = Long.valueOf(parts[0]);
 			String token = parts[1];
@@ -82,7 +82,7 @@ public class LogUtils {
 	}
 
 	public static @NotNull WebhookMessageBuilder msg() {
-		return new WebhookMessageBuilder().setUsername("%s Web Log".formatted(Conf.Bot().getBotname()))
+		return new WebhookMessageBuilder().setUsername("%s Web Log".formatted(GalacticBot.getJda().getSelfUser().getName()))
 				.setAvatarUrl(ICON_URL);
 	}
 }

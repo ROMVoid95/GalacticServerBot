@@ -23,7 +23,7 @@ public class Reply
     public static void InvalidPermissions(SlashCommandEvent event)
     {        
         event.replyEmbeds(
-            simpleEmbed(event.getMember().getAsMention() + ", you do not have the required permissions/roles to run this command. This has been logged", Color.RED)
+            simpleEmbed(event.getMember().getAsMention() + ", you do not have the required permissions/roles to run this command.\n\n**This attempt has been logged**", Color.RED)
         ).setEphemeral(true).queue(s -> {
             ((ServerSettings) event.getClient().getSettingsFor(event.getGuild())).getRootLogger().sendLogMessage(event);
         });

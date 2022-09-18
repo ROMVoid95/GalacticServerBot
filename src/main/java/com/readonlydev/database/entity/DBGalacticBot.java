@@ -30,31 +30,33 @@ import com.readonlydev.database.impl.options.ServerOptions;
 import com.readonlydev.database.impl.options.SuggestionOptions;
 import com.readonlydev.util.rec.ListPair;
 
-import lombok.Data;
+import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 
-@Data
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DBGalacticBot implements ManagedObject
 {
 
     public static final String       DB_TABLE = "galacticbot";
+    private boolean                  maintenanceMode;
     private Map<Long, ServerOptions> guilds;
     private SuggestionOptions        suggestionOptions;
     private HasteOptions             hasteOptions;
     private SuggestionManager        manager;
-    
 
     //@noformat
     @JsonCreator
-    @ConstructorProperties({"guilds", "suggestionOptions", "hasteOptions", "manager"})
+    @ConstructorProperties({"maintenanceMode", "guilds", "suggestionOptions", "hasteOptions", "manager"})
     public DBGalacticBot(
+        @JsonProperty("maintenanceMode") boolean maintenanceMode,
         @JsonProperty("guilds") Map<Long, ServerOptions> guilds, 
         @JsonProperty("suggestionOptions") SuggestionOptions suggestionOptions,
         @JsonProperty("hasteOptions") HasteOptions hasteOptions,
         @JsonProperty("manager") SuggestionManager manager)
     {
+        this.maintenanceMode = maintenanceMode;
         this.guilds = guilds;
         this.suggestionOptions = suggestionOptions;
         this.hasteOptions = hasteOptions;
@@ -64,9 +66,15 @@ public class DBGalacticBot implements ManagedObject
 
     public static DBGalacticBot create()
     {
-        DBGalacticBot botObj = new DBGalacticBot(new LinkedHashMap<>(), new SuggestionOptions(), new HasteOptions(), new SuggestionManager());
+        DBGalacticBot botObj = new DBGalacticBot(false, new LinkedHashMap<>(), new SuggestionOptions(), new HasteOptions(), new SuggestionManager());
         botObj.save();
         return botObj;
+    }
+    
+    public void setMaintenanceMode(boolean maintenanceMode)
+    {
+        this.maintenanceMode = maintenanceMode;
+        this.saveUpdating();
     }
 
     public ServerOptions createServerOptionsIfMissing(Guild guild)
@@ -117,18 +125,18 @@ public class DBGalacticBot implements ManagedObject
         }
         return roles;
     }
-    
+
     @JsonIgnore
     public List<String> getAllSuggestionMessageIds()
     {
         return this.getManager().getList().stream().map(Suggestion::postMsgId).toList();
     }
-    
+
     public void addNewPopularLinkedMessages(String communityServerMsgId, String devMsgId, Suggestion suggestion)
     {
         LinkedMessages messages = suggestion.getMessages();
-        
-        if(messages.getCommunityPopularMsgId().isEmpty())
+
+        if (messages.getCommunityPopularMsgId().isEmpty())
         {
             messages.setDevPopularMsgId(devMsgId);
             messages.setCommunityPopularMsgId(communityServerMsgId);
@@ -143,19 +151,19 @@ public class DBGalacticBot implements ManagedObject
         LinkedHashMap<String, Integer> newMap = this.getManager().getMap();
 
         String returnId = null;
-        
+
         if (newList.add(suggestion))
         {
             String[] uuid = UUID.randomUUID().toString().split("-");
             returnId = uuid[uuid.length - 1];
             suggestion.set_id(returnId);
-            
+
             newMap.put(suggestion.postMsgId(), newList.indexOf(suggestion));
             this.getManager().setList(newList);
             this.getManager().setMap(newMap);
             this.saveUpdating();
         }
-        
+
         return returnId;
     }
 
@@ -176,21 +184,21 @@ public class DBGalacticBot implements ManagedObject
     {
         return (Suggestion) this.getManager().getList().get(this.getManager().getMap().get(messageId));
     }
-    
+
     public Optional<Suggestion> getSuggestionFromUniqueId(String id)
     {
         Optional<Suggestion> suggestion = Optional.empty();
         List<Suggestion> suggestions = this.getManager().getList();
-        for(Suggestion s : suggestions)
+        for (Suggestion s : suggestions)
         {
-            if(s.get_id().equalsIgnoreCase(id))
+            if (s.get_id().equalsIgnoreCase(id))
             {
                 suggestion = Optional.of(s);
             }
         }
         return suggestion;
     }
-    
+
     public void clearMessageIdsFromSuggestion(int number)
     {
         LinkedMessages linked = this.getSuggestionFromNumber(number).getMessages();
@@ -199,7 +207,7 @@ public class DBGalacticBot implements ManagedObject
         linked.setDevPopularMsgId("");
         this.saveUpdating();
     }
-    
+
     public void clearSuggestionDatabase()
     {
         SuggestionManager manager = this.getManager();

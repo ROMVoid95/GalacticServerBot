@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.Arrays;
 
 import com.readonlydev.BotData;
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.database.entity.DBGalacticBot;
 import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
-public class UpvoteRequirement extends SlashCommand
+public class UpvoteRequirement extends GalacticSlashCommand
 {
 
     public UpvoteRequirement()
@@ -28,7 +28,7 @@ public class UpvoteRequirement extends SlashCommand
     }
 
     @Override
-    protected void execute(SlashCommandEvent event)
+    protected void onExecute(SlashCommandEvent event)
     {
         if (event.getOptions().isEmpty())
         {

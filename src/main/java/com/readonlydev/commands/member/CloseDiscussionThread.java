@@ -1,14 +1,14 @@
 package com.readonlydev.commands.member;
 
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.common.utils.ResultLevel;
 import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
 
-import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 
-public class CloseDiscussionThread extends SlashCommand
+public class CloseDiscussionThread extends GalacticSlashCommand
 {
     
     public CloseDiscussionThread()
@@ -18,7 +18,7 @@ public class CloseDiscussionThread extends SlashCommand
     }
 
     @Override
-    protected void execute(SlashCommandEvent event)
+    protected void onExecute(SlashCommandEvent event)
     {
         if(!event.getChannel().getType().equals(ChannelType.GUILD_PUBLIC_THREAD))
         {

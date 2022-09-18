@@ -7,11 +7,15 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import com.readonlydev.GalacticBot;
+import com.readonlydev.command.event.CommandEvent;
+import com.readonlydev.command.slash.SlashCommandEvent;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 public class DiscordUtils
@@ -30,6 +34,16 @@ public class DiscordUtils
     public static final int MAGENTA     = 0xFFFF00FF;
     public static final int TRANSPARENT = 0;
 
+    public static User getUser(SlashCommandEvent event)
+    {
+        return (event.getChannelType() == ChannelType.PRIVATE) ? event.getUser() : event.getMember().getUser();
+    }
+    
+    public static User getUser(CommandEvent event)
+    {
+        return (event.getChannelType() == ChannelType.PRIVATE) ? event.getAuthor() : event.getMember().getUser();
+    }
+    
     public static Boolean areGuildsTheSame(Guild guild1, Guild guild2)
     {
         return guild1.equals(guild2);

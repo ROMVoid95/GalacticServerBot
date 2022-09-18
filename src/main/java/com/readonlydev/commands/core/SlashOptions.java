@@ -44,8 +44,8 @@ public class SlashOptions
                 new Command.Choice("Do Not Make Suggestions For Existing Addons", "existing")
              );
         //@format
-        private static OptionData TitleOption       = new OptionData(OptionType.STRING, "title", "Short generalized title for your suggestion", true);
-        private static OptionData DescriptionOption = new OptionData(OptionType.STRING, "description", "Describe in detail your suggestion", true);
+        private static OptionData TitleOption       = new OptionData(OptionType.STRING, "title", "Short generalized title for your suggestion", true).setMaxLength(64);
+        private static OptionData DescriptionOption = new OptionData(OptionType.STRING, "description", "Describe in detail your suggestion", true).setMaxLength(1024);
         
         public static  List<OptionData> OptionsList()
         {

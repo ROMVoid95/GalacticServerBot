@@ -4,7 +4,7 @@ import com.readonlydev.BotData;
 import com.readonlydev.GalacticBot;
 
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public enum SetChannel
 {

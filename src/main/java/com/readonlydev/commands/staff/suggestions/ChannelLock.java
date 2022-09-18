@@ -4,17 +4,17 @@ import java.util.Collection;
 import java.util.EnumSet;
 
 import com.readonlydev.BotData;
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.database.entity.DBGalacticBot;
 import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
-public class ChannelLock extends SlashCommand
+public class ChannelLock extends GalacticSlashCommand
 {
 
     public ChannelLock()
@@ -24,7 +24,7 @@ public class ChannelLock extends SlashCommand
     }
 
     @Override
-    protected void execute(SlashCommandEvent event)
+    protected void onExecute(SlashCommandEvent event)
     {
         
         boolean canRun = Check.adminRoles(event);

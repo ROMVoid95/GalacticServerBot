@@ -4,20 +4,21 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import com.readonlydev.BotData;
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.EditType;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.common.utils.ResultLevel;
 import com.readonlydev.database.impl.Suggestion;
 import com.readonlydev.util.discord.Reply;
-import com.readonlydev.util.discord.SuggestionEmbed;
 import com.readonlydev.util.discord.SuggestionStatus;
+import com.readonlydev.util.discord.entity.SuggestionEmbed;
 import com.readonlydev.util.rec.LinkedMessagesRecord;
 
-import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class EditDescription extends SlashCommand
+public class EditDescription extends GalacticSlashCommand
 {
 
     public EditDescription()
@@ -25,14 +26,15 @@ public class EditDescription extends SlashCommand
         this.name = "edit-description";
         this.help = "Fully replaces the description of your suggestion";
         this.options = Arrays.asList(
-            new OptionData(OptionType.STRING, "id", "The Unique ID provided to you by the Bot in DM's", true), 
-            new OptionData(OptionType.STRING, "description", "Your new description", true)
+            new OptionData(OptionType.STRING, "id", "The Unique ID provided to you by the Bot in DM's", true),
+            new OptionData(OptionType.STRING, "type", "Replace or append", true).addChoices(EditType.toChoices()),
+            new OptionData(OptionType.STRING, "description", "Your new description", true).setMaxLength(1024)
         );
         this.guildOnly = false;
     }
 
     @Override
-    protected void execute(SlashCommandEvent event)
+    protected void onExecute(SlashCommandEvent event)
     {
         if (!event.getChannel().getType().equals(ChannelType.PRIVATE))
         {
@@ -62,7 +64,10 @@ public class EditDescription extends SlashCommand
 
             LinkedMessagesRecord lmr = suggestion.getMessages().getLinkedMessagesRecord();
             SuggestionEmbed embed = SuggestionEmbed.fromEmbed(lmr.postMsg().get().getEmbeds().get(0));
-            embed.setDescription(event.getOption("description").getAsString());
+            
+            EditType editType = EditType.getEditType(event.getOption("type").getAsString());
+            
+            embed.setDescription(editType, event.getOption("description").getAsString());
 
             lmr.editMessages(embed).queue(s -> 
             {

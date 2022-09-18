@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.readonlydev.BotData;
-import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.database.entity.DBGalacticBot;
 import com.readonlydev.database.impl.Suggestion;
 import com.readonlydev.util.Check;
@@ -20,7 +20,7 @@ import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-public class SuggestionSetStatus extends SlashCommand
+public class SuggestionSetStatus extends GalacticSlashCommand
 {
 
     public SuggestionSetStatus()
@@ -40,7 +40,7 @@ public class SuggestionSetStatus extends SlashCommand
     }
     
     @Override
-    protected void execute(SlashCommandEvent event)
+    protected void onExecute(SlashCommandEvent event)
     {
         boolean canRun = Check.forRole(event, "775251491463364661");
 

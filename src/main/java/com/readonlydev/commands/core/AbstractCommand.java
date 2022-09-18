@@ -19,6 +19,7 @@ import com.readonlydev.util.StringUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 public abstract class AbstractCommand extends Command
 {
@@ -26,6 +27,12 @@ public abstract class AbstractCommand extends Command
     private ArgumentIndex argumentIndex;
     private CommandEvent  event;
 
+    public AbstractCommand(String name, String... aliases)
+    {
+        this.name = name;
+        this.aliases = aliases;
+    }
+    
     public AbstractCommand(String name)
     {
         this.name = name;
@@ -94,7 +101,7 @@ public abstract class AbstractCommand extends Command
     protected void replySuccess(Message message)
     {
         event.getMessage().delete().queue();
-        event.reply(message);
+        event.reply(MessageCreateData.fromMessage(message));
     }
 
     protected void replySuccess(EmbedBuilder embed)
