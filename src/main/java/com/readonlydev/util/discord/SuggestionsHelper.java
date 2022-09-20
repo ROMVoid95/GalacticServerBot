@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEmojiEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 
 @UtilityClass
 public class SuggestionsHelper
@@ -68,9 +68,21 @@ public class SuggestionsHelper
         message.editMessageEmbeds(builder.build()).queue();
     }
     
-    public static void handleSuggestionDownvoteEvent(MessageReactionRemoveEmojiEvent event)
+    public static void handleSuggestionDownvoteEvent(MessageReactionRemoveEvent event)
     {
-        
+        DBGalacticBot suggestions = BotData.database().botDatabase();
+        if (suggestions.getAllSuggestionMessageIds().contains(event.getMessageId()))
+        {
+            Suggestion suggestion = suggestions.getSuggestionFromMessageId(event.getMessageId());
+            Message message = DiscordUtils.getMessageOrNull(event);
+            
+            if(message != null)
+            {
+                int reactionCount = message.getReactions().get(0).getCount() - 1;
+                suggestion.setUpvotes(reactionCount);
+                suggestions.saveUpdateAsync();
+            }
+        }
     }
 
     public static void handleSuggestionUpvoteEvent(MessageReactionAddEvent event)

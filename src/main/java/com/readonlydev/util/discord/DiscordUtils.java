@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.GenericMessageReactionEvent;
 
 public class DiscordUtils
 {
@@ -49,7 +49,7 @@ public class DiscordUtils
         return guild1.equals(guild2);
     }
     
-    public static Message getMessageOrNull(MessageReactionAddEvent event)
+    public static Message getMessageOrNull(GenericMessageReactionEvent event)
     {
         try
         {
