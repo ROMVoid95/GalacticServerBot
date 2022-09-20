@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEmojiEvent;
 
 @UtilityClass
 public class SuggestionsHelper
@@ -66,6 +67,11 @@ public class SuggestionsHelper
 
         message.editMessageEmbeds(builder.build()).queue();
     }
+    
+    public static void handleSuggestionDownvoteEvent(MessageReactionRemoveEmojiEvent event)
+    {
+        
+    }
 
     public static void handleSuggestionUpvoteEvent(MessageReactionAddEvent event)
     {
@@ -91,18 +97,21 @@ public class SuggestionsHelper
 
                 if (suggestion.getUpvotes() == options.getStarRequirement())
                 {
-                    TextChannel popularChannel = GalacticBot.getJda().getTextChannelById(options.getPopularChannelId());
-                    TextChannel devPopularChannel = GalacticBot.getJda().getTextChannelById(options.getDevServerPopularChannelId());
-
-                    popularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(s1 ->
+                    if(suggestion.getMessages().getCommunityPopularMsgId().isEmpty())
                     {
-                        String communityServerMsgId = s1.getId();
-                        devPopularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(s2 ->
+                        TextChannel popularChannel = GalacticBot.getJda().getTextChannelById(options.getPopularChannelId());
+                        TextChannel devPopularChannel = GalacticBot.getJda().getTextChannelById(options.getDevServerPopularChannelId());
+
+                        popularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(s1 ->
                         {
-                            String devServerMsgId = s2.getId();
-                            suggestions.addNewPopularLinkedMessages(communityServerMsgId, devServerMsgId, suggestion);
+                            String communityServerMsgId = s1.getId();
+                            devPopularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(s2 ->
+                            {
+                                String devServerMsgId = s2.getId();
+                                suggestions.addNewPopularLinkedMessages(communityServerMsgId, devServerMsgId, suggestion);
+                            });
                         });
-                    });
+                    }
                 }
             }
         }
