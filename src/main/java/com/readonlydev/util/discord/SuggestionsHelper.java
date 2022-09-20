@@ -75,8 +75,8 @@ public class SuggestionsHelper
         {
             Suggestion suggestion = suggestions.getSuggestionFromMessageId(event.getMessageId());
             Message message = DiscordUtils.getMessageOrNull(event);
-
-            if (message != null)
+            
+            if (message != null && !event.getUser().getId().equals(suggestion.getAuthorId()))
             {
                 int reactionCount = message.getReactions().get(0).getCount() - 1;
                 suggestion.setUpvotes(reactionCount);
