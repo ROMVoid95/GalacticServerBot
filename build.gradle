@@ -49,6 +49,7 @@ dependencies {
 	implementation("commons-io:commons-io:${commons}") {
 		exclude group: 'org.slf4j', module: 'slf4j-api'
 	}
+    implementation 'io.github.matyrobbrt:curseforgeapi:1.7.3'
     implementation 'org.codehaus.groovy:groovy-jsr223:3.0.12'
     implementation jacksonCore()
     implementation jacksonDatabind()
