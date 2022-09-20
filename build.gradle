@@ -49,19 +49,7 @@ dependencies {
 	implementation("commons-io:commons-io:${commons}") {
 		exclude group: 'org.slf4j', module: 'slf4j-api'
 	}
-    implementation 'com.typesafe:config:1.4.1'
-    implementation 'es.nitaur.markdown:txtmark:0.16'
-    implementation 'commons-cli:commons-cli:1.4'
-    implementation 'de.ErdbeerbaerLP:toml4j:cf5b4655'
-    implementation("de.erdbeerbaerlp:cfcore:1.0.1-SNAPSHOT"){
-        changing = true
-    }
     implementation 'org.codehaus.groovy:groovy-jsr223:3.0.12'
-    implementation 'ch.vorburger.mariaDB4j:mariaDB4j:2.5.3'
-    implementation 'mysql:mysql-connector-java:8.0.30'
-    
-    implementation 'com.vladsch.flexmark:flexmark-html2md-converter:0.64.0'
-    
     implementation jacksonCore()
     implementation jacksonDatabind()
     implementation jacksonAnnotations()
