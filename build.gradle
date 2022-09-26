@@ -15,11 +15,10 @@ repositories {
     }
     mavenLocal()
     mavenCentral()
-    maven { url "https://repo.erdbeerbaerlp.de/repository/maven-public/" }
 }
 
 ext {
-	jdatools		= '3.0.2-SNAPSHOT'
+	jdatools		= '3.0.2-SNAPSHOT.2'
 	reflections 	= '0.10.2'
 	okhttp 			= '5.0.0-alpha.2'
 	webhooks 		= '0.8.2'
@@ -35,8 +34,8 @@ ext {
 }
 
 dependencies {
-	implementation("net.dv8tion:JDA:5.0.0-alpha.19")
-    implementation "com.readonlydev:jdatools:${jdatools}:lite"
+	//implementation("net.dv8tion:JDA:5.0.0-alpha.19")
+    implementation "com.readonlydev:jdatools:3.0.2-SNAPSHOT5"
 	implementation("org.reflections:reflections:${reflections}") {
 		exclude group: 'org.slf4j', module: 'slf4j-api'
 	}

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.readonlydev.BotData;
 import com.readonlydev.GalacticBot;
+import com.readonlydev.common.utils.ResultLevel;
 import com.readonlydev.database.entity.DBGalacticBot;
 import com.readonlydev.database.impl.Suggestion;
 import com.readonlydev.database.impl.Suggestion.LinkedMessages;
@@ -67,7 +68,7 @@ public class SuggestionsHelper
 
         message.editMessageEmbeds(builder.build()).queue();
     }
-    
+
     public static void handleSuggestionDownvoteEvent(MessageReactionRemoveEvent event)
     {
         DBGalacticBot suggestions = BotData.database().botDatabase();
@@ -75,8 +76,8 @@ public class SuggestionsHelper
         {
             Suggestion suggestion = suggestions.getSuggestionFromMessageId(event.getMessageId());
             Message message = DiscordUtils.getMessageOrNull(event);
-            
-            if(message != null)
+
+            if (message != null)
             {
                 int reactionCount = message.getReactions().get(0).getCount() - 1;
                 suggestion.setUpvotes(reactionCount);
@@ -87,11 +88,11 @@ public class SuggestionsHelper
 
     public static void handleSuggestionUpvoteEvent(MessageReactionAddEvent event)
     {
-        DBGalacticBot suggestions = BotData.database().botDatabase();
+        DBGalacticBot database = BotData.database().botDatabase();
 
-        if (suggestions.getAllSuggestionMessageIds().contains(event.getMessageId()))
+        if (database.getAllSuggestionMessageIds().contains(event.getMessageId()))
         {
-            Suggestion suggestion = suggestions.getSuggestionFromMessageId(event.getMessageId());
+            Suggestion suggestion = database.getSuggestionFromMessageId(event.getMessageId());
             Message message = DiscordUtils.getMessageOrNull(event);
 
             if (event.getUser().getId().equals(suggestion.getAuthorId()))
@@ -103,26 +104,36 @@ public class SuggestionsHelper
             {
                 int reactionCount = message.getReactions().get(0).getCount() - 1;
                 suggestion.setUpvotes(reactionCount);
-                suggestions.saveUpdateAsync();
+                database.saveUpdateAsync();
 
-                SuggestionOptions options = BotData.database().botDatabase().getSuggestionOptions();
+                SuggestionOptions options = database.getSuggestionOptions();
 
-                if (suggestion.getUpvotes() == options.getStarRequirement())
+                if (suggestion.getUpvotes() >= options.getStarRequirement())
                 {
-                    if(suggestion.getMessages().getCommunityPopularMsgId().isEmpty())
+                    if (suggestion.getMessages().getCommunityPopularMsgId().isEmpty())
                     {
                         TextChannel popularChannel = GalacticBot.getJda().getTextChannelById(options.getPopularChannelId());
-                        TextChannel devPopularChannel = GalacticBot.getJda().getTextChannelById(options.getDevServerPopularChannelId());
-
-                        popularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(s1 ->
-                        {
-                            String communityServerMsgId = s1.getId();
-                            devPopularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(s2 ->
-                            {
-                                String devServerMsgId = s2.getId();
-                                suggestions.addNewPopularLinkedMessages(communityServerMsgId, devServerMsgId, suggestion);
+                        popularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(
+                            success -> {
+                                database.addNewCommunityPopularMessage(success.getId(), suggestion);
+                            }, 
+                            failure -> {
+                                String conent = "Error occured sending new Popular Message for Suggestion #" + database.getSuggestionNumber(suggestion);
+                                SettingsHelper.getRootLogChannel(popularChannel.getGuild()).sendMessage(conent, ResultLevel.ERROR);
                             });
-                        });
+                    }
+                    
+                    if (suggestion.getMessages().getDevPopularMsgId().isEmpty())
+                    {
+                        TextChannel devPopularChannel = GalacticBot.getJda().getTextChannelById(options.getDevServerPopularChannelId());
+                        devPopularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(
+                            success -> {
+                                database.addNewDevServerPopularMessage(success.getId(), suggestion);
+                            }, 
+                            failure -> {
+                                String conent = "Error occured sending new Popular Message for Suggestion #" + database.getSuggestionNumber(suggestion);
+                                SettingsHelper.getRootLogChannel(devPopularChannel.getGuild()).sendMessage(conent, ResultLevel.ERROR);
+                            });
                     }
                 }
             }

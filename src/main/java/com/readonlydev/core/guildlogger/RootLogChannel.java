@@ -5,6 +5,7 @@ import java.time.Instant;
 
 import com.readonlydev.GalacticBot;
 import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.common.utils.ResultLevel;
 import com.readonlydev.database.impl.Suggestion;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,6 +23,17 @@ public class RootLogChannel
         this.channel = channel;
     }
     
+    public final void sendMessage(String content, ResultLevel level)
+    {
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setAuthor("Root Log");
+        builder.setColor(level.getColor());
+        builder.setDescription(content);
+        builder.setTimestamp(Instant.now());
+        
+        this.channel.sendMessageEmbeds(builder.build()).queue();
+    }
+    
     public final void sendLogMessage(SlashCommandEvent event)
     {
         StringBuilder sb = new StringBuilder();
@@ -29,8 +41,8 @@ public class RootLogChannel
         sb.append("In Channel: %s".formatted(event.getChannel().getName()));
         
         EmbedBuilder builder = new EmbedBuilder();
+        builder.setAuthor("Root Log");
         builder.setColor(Color.RED);
-        builder.setTitle("Root Log");
         builder.setDescription("Command invoked by member without valid Permissions");
         builder.addField("Invoked: %s".formatted(event.getCommandPath()), sb.toString(), false);
         builder.setTimestamp(Instant.now());
@@ -44,11 +56,13 @@ public class RootLogChannel
         StringBuilder sb = new StringBuilder();
         sb.append("Title: %s".formatted(suggestion.getTitle()));
 
+        builder.setAuthor("Root Log");
         builder.setTitle("Suggestion Deleted");
         builder.setDescription(sb.toString());
         builder.setColor(Color.RED);
         builder.addField("Deleted By", member.getAsMention(), false);
         builder.addField("Reason", reason, false);
+        builder.setTimestamp(Instant.now());
         
         this.channel.sendMessageEmbeds(builder.build()).queue();
     }
@@ -67,11 +81,13 @@ public class RootLogChannel
                 actionTaken = "Removed From";
             }
 
+            builder.setAuthor("Root Log");
             builder.setTitle("User %s Blacklist".formatted(actionTaken));
             builder.setDescription("User: **%s**".formatted(user.getAsMention()));
             builder.addField("Staff Member", member.getAsMention(), false);
             builder.addField("Reason", reason, false);
             builder.setColor(Color.RED);
+            builder.setTimestamp(Instant.now());
             
             this.channel.sendMessageEmbeds(builder.build()).queue();   
         }

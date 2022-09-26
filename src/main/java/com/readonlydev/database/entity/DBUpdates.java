@@ -8,9 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.readonlydev.database.ManagedObject;
-import com.readonlydev.database.impl.updates.ExistingCurseMod;
 import com.readonlydev.database.impl.updates.Mod;
-import com.readonlydev.util.discord.update.ModHelper;
 
 import lombok.Data;
 
@@ -35,23 +33,23 @@ public class DBUpdates implements ManagedObject
         return updates;
     }
     
-    public Mod addNewMod(int modId, String updateChannelId)
-    {
-        if(getMods().containsKey(modId))
-        {
-            return ExistingCurseMod.fromMod(getMods().get(modId));
-        }
-        
-        Mod newMod = Mod.builder()
-            .fileId(ModHelper.getLastestFileId(modId))
-            .updateChannelId(updateChannelId)
-            .build();
-        
-        this.getMods().put(modId, newMod);
-        this.saveUpdating();
-        
-        return newMod;
-    }
+//    public Mod addNewMod(int modId, String updateChannelId)
+//    {
+//        if(getMods().containsKey(modId))
+//        {
+//            return ExistingCurseMod.fromMod(getMods().get(modId));
+//        }
+//        
+//        Mod newMod = Mod.builder()
+//            .fileId(ModHelper.getLastestFileId(modId))
+//            .updateChannelId(updateChannelId)
+//            .build();
+//        
+//        this.getMods().put(modId, newMod);
+//        this.saveUpdating();
+//        
+//        return newMod;
+//    }
     
     public Mod getMod(int modId)
     {

@@ -18,6 +18,7 @@ import com.readonlydev.commands.staff.server.Server;
 import com.readonlydev.commands.staff.suggestions.devonly.DevServerPopularChannel;
 import com.readonlydev.commands.staff.suggestions.devonly.SuggestionSetStatus;
 import com.readonlydev.common.waiter.EventWaiter;
+import com.readonlydev.context.PasteContextMenu;
 import com.readonlydev.core.BusListener;
 import com.readonlydev.core.ClientListener;
 import com.readonlydev.core.GalacticEventListener;
@@ -25,7 +26,6 @@ import com.readonlydev.core.GuildSettings;
 import com.readonlydev.logback.LogFilter;
 import com.readonlydev.util.ReflectCommands;
 
-import io.github.matyrobbrt.curseforgeapi.CurseForgeAPI;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -43,9 +43,10 @@ public class GalacticBot
     private static boolean     TESTING     = false;
 
     private static JDA         jda;
+    private static Client      client;
     private static EventWaiter eventWaiter = new EventWaiter();
-    private static CurseForgeAPI curseApi;
     private static EventBus    EVENT_BUS   = new EventBus("GalacticBot EventBus");
+
 
     private void preStart()
     {
@@ -83,6 +84,7 @@ public class GalacticBot
             new CloseDiscussionThread(),
             new MaintanenceModeCommand()
         );
+        communityServerCommands.addContextMenus(new PasteContextMenu());
         
         clientBuilder.setAllRepliesAsEmbed();
         clientBuilder.setBotTestingServerId("538530739017220107");
@@ -113,7 +115,7 @@ public class GalacticBot
                 CacheFlag.VOICE_STATE
             );
 
-        Client client = clientBuilder.build();
+        GalacticBot.client = clientBuilder.build();
 
        
         GalacticBot.jda = JDABuilder.create(Conf.Bot().getToken(), intents)
@@ -122,9 +124,6 @@ public class GalacticBot
             .addEventListeners(eventWaiter, client, new GalacticEventListener())
             .build();
         //@format
-        GalacticBot.curseApi = CurseForgeAPI.builder()
-            .apiKey(Conf.Bot().getApiKey())
-            .build();
 
         //new Updates();
         EVENT_BUS.register(new BusListener());
@@ -151,9 +150,9 @@ public class GalacticBot
         return eventWaiter;
     }
 
-    public static CurseForgeAPI getCurseAPI()
+    public static Client getClient()
     {
-        return curseApi;
+        return client;
     }
     
     public static JDA getJda()

@@ -70,7 +70,7 @@ public class DBGalacticBot implements ManagedObject
         botObj.save();
         return botObj;
     }
-    
+
     public void setMaintenanceMode(boolean maintenanceMode)
     {
         this.maintenanceMode = maintenanceMode;
@@ -132,14 +132,24 @@ public class DBGalacticBot implements ManagedObject
         return this.getManager().getList().stream().map(Suggestion::postMsgId).toList();
     }
 
-    public void addNewPopularLinkedMessages(String communityServerMsgId, String devMsgId, Suggestion suggestion)
+    public void addNewDevServerPopularMessage(String messageId, Suggestion suggestion)
     {
         LinkedMessages messages = suggestion.getMessages();
+        // Even though we checked this before calling, make sure it really is empty before setting it
+        if (messages.getDevPopularMsgId().isEmpty())
+        {
+            messages.setDevPopularMsgId(messageId);
+            this.saveUpdating();
+        }
+    }
 
+    public void addNewCommunityPopularMessage(String messageId, Suggestion suggestion)
+    {
+        LinkedMessages messages = suggestion.getMessages();
+        // Even though we checked this before calling, make sure it really is empty before setting it
         if (messages.getCommunityPopularMsgId().isEmpty())
         {
-            messages.setDevPopularMsgId(devMsgId);
-            messages.setCommunityPopularMsgId(communityServerMsgId);
+            messages.setCommunityPopularMsgId(messageId);
             this.saveUpdating();
         }
     }
@@ -177,7 +187,11 @@ public class DBGalacticBot implements ManagedObject
         {
             return null;
         }
-
+    }
+    
+    public int getSuggestionNumber(Suggestion suggestion)
+    {
+        return this.getManager().getMap().get(suggestion.getMessages().getPostMsgId());
     }
 
     public Suggestion getSuggestionFromMessageId(String messageId)
