@@ -8,12 +8,16 @@ import com.readonlydev.database.impl.SuggestionManager;
 import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
 
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
+
 public class DatabaseCommand extends GalacticSlashCommand
 {
 
     public DatabaseCommand()
     {
         this.name = "clear-database";
+        this.help = "Clears the content in the database";
+        this.subcommandGroup = new SubcommandGroupData("owner", "Owner Only Commands");
         this.isOwnerCommand();
         this.isHidden();
     }
