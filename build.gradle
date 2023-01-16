@@ -117,7 +117,7 @@ distributions {
     shadow {
         contents {
             from 'configs'
-            into '/libs/configs'
+            into 'libs/configs'
         }
     }
 }
