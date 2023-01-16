@@ -113,6 +113,18 @@ shadowJar {
     classifier = ''
 }
 
+distributions {
+    shadow {
+        contents {
+            from 'configs'
+        }
+    }
+}
+
+tasks.named('installShadowDist').configure {
+    destinationDir = file('/opt/galacticbot2')
+}
+
 task copyConfigs(type: Copy) {
     from 'configs'
     into layout.buildDirectory.dir("/libs/configs")
