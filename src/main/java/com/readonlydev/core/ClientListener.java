@@ -30,7 +30,7 @@ public class ClientListener implements CommandListener
     {
         String asTag = DiscordUtils.getUser(event).getAsTag();
         String id = event.getMember().getId();
-        String content = event.getCommandPath();
+        String content = event.getFullCommandName();
 
         LogUtils.log("SlashCommandEvent", webhookContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
         log.info(logContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));

@@ -2,7 +2,10 @@ package com.readonlydev.core;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.eventbus.Subscribe;
 import com.readonlydev.BotData;
+import com.readonlydev.GalacticBot;
+import com.readonlydev.core.event.JDAEvent;
 import com.readonlydev.database.impl.options.ServerOptions;
 import com.readonlydev.database.impl.options.SuggestionOptions;
 import com.readonlydev.util.discord.DiscordUtils;
@@ -13,9 +16,9 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.Presence;
 
@@ -23,9 +26,12 @@ import net.dv8tion.jda.api.managers.Presence;
 public class GalacticEventListener extends ListenerAdapter
 {
 
+	@Subscribe
     @Override
     public void onReady(@Nonnull ReadyEvent event)
     {
+    	GalacticBot.EventBus().post(new JDAEvent<ReadyEvent>(event));
+    	
         event.getJDA().getGuilds().forEach(guild ->
         {
             ServerOptions options = BotData.database().botDatabase().createServerOptionsIfMissing(guild);
@@ -54,7 +60,7 @@ public class GalacticEventListener extends ListenerAdapter
             SuggestionOptions options = BotData.database().botDatabase().getSuggestionOptions();
             MessageChannel channel = event.getChannel();
             
-            if(options.getSuggestionsChannelId().equals(channel.getId()))
+            if(options.getSuggestionChannel().equals(channel.getId()))
             {
                 MessageType type = event.getMessage().getType();
                 if(type != MessageType.SLASH_COMMAND)

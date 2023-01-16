@@ -1,27 +1,37 @@
 package com.readonlydev.database.impl.updates;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
+import lombok.experimental.Accessors;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@Accessors(fluent = true)
 public class Mod
 {
-    private int fileId;
+    private final Modrinth modrinth;
+    private final Curseforge curseforge;
     private String updateChannelId;
-    @Singular
-    private List<Long> pingRoles;
+    private List<Long> pingRoles = new ArrayList<>();;
     
-    public boolean isFileNewer(int fileId)
+    public Mod(String modrinthProjectSlug, long curseforgeProjectId)
     {
-        return fileId > this.getFileId();
+    	this.modrinth = new Modrinth(modrinthProjectSlug);
+    	this.curseforge = new Curseforge(curseforgeProjectId);
+    }
+    
+    @Data
+    public class Modrinth {
+    	private final String slug;
+    	private int versionCount;
+    	private String latestVersionId;
+    }
+    
+    @Data
+    public class Curseforge {
+    	private final long projectId;
+    	private long latestFileId;
     }
 }
 

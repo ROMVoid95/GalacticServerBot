@@ -2,10 +2,10 @@ package com.readonlydev.commands.staff.server;
 
 import com.readonlydev.commands.core.ParentSlashCommand;
 
-public class Server extends ParentSlashCommand
+public class ServerStaff extends ParentSlashCommand
 {
 
-    public Server()
+    public ServerStaff()
     {
         super("server");
         subCommands(

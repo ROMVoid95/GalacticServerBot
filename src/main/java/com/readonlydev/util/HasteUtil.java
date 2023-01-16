@@ -1,4 +1,4 @@
-package com.readonlydev.util.haste;
+package com.readonlydev.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

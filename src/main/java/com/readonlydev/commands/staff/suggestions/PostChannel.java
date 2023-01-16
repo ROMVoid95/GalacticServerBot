@@ -41,7 +41,7 @@ public class PostChannel extends GalacticSlashCommand
             }
 
             final DBGalacticBot db = BotData.database().botDatabase();
-            String suggestionsChannelId = db.getSuggestionOptions().getSuggestionsChannelId();
+            String suggestionsChannelId = db.getSuggestionOptions().getSuggestionChannel();
             TextChannel suggestionsChannel = event.getGuild().getTextChannelById(suggestionsChannelId);
 
             //@noformat
@@ -71,7 +71,7 @@ public class PostChannel extends GalacticSlashCommand
                 return;
             }
             final DBGalacticBot db = BotData.database().botDatabase();
-            String suggestionsChannelId = db.getSuggestionOptions().getSuggestionsChannelId();
+            String suggestionsChannelId = db.getSuggestionOptions().getSuggestionChannel();
             TextChannel oldChannel = event.getGuild().getTextChannelById(suggestionsChannelId);
             TextChannel newChannel = channelOption.getAsChannel().asTextChannel();
 

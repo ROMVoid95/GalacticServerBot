@@ -81,7 +81,7 @@ public class SuggestionsHelper
             {
                 int reactionCount = message.getReactions().get(0).getCount() - 1;
                 suggestion.setUpvotes(reactionCount);
-                suggestions.saveUpdateAsync();
+                suggestions.saveUpdating();
             }
         }
     }
@@ -104,7 +104,7 @@ public class SuggestionsHelper
             {
                 int reactionCount = message.getReactions().get(0).getCount() - 1;
                 suggestion.setUpvotes(reactionCount);
-                database.saveUpdateAsync();
+                database.saveUpdating();
 
                 SuggestionOptions options = database.getSuggestionOptions();
 
@@ -125,7 +125,7 @@ public class SuggestionsHelper
                     
                     if (suggestion.getMessages().getDevPopularMsgId().isEmpty())
                     {
-                        TextChannel devPopularChannel = GalacticBot.getJda().getTextChannelById(options.getDevServerPopularChannelId());
+                        TextChannel devPopularChannel = GalacticBot.getJda().getTextChannelById(options.getDevServerPopularChannel());
                         devPopularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(
                             success -> {
                                 database.addNewDevServerPopularMessage(success.getId(), suggestion);

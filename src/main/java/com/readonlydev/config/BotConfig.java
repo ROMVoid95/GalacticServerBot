@@ -25,6 +25,7 @@ public class BotConfig
     private Boolean             debug           = false;
     private String              owner           = "owner-id";
     private String              webhookUrl      = "URL";
+    private String				curseApiKey		= "";
     private String[]            commandPackages = new String[] {};
     private RethinkDataseConfig database        = new RethinkDataseConfig();
 

@@ -46,7 +46,7 @@ public class NewSuggestion extends GalacticSlashCommand
             return;
         }
         
-        String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionsChannelId();
+        String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionChannel();
         // Just in case some stupid stuff is going on
         if (channelId.isBlank())
         {

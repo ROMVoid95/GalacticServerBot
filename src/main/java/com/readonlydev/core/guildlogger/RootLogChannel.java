@@ -44,7 +44,7 @@ public class RootLogChannel
         builder.setAuthor("Root Log");
         builder.setColor(Color.RED);
         builder.setDescription("Command invoked by member without valid Permissions");
-        builder.addField("Invoked: %s".formatted(event.getCommandPath()), sb.toString(), false);
+        builder.addField("Invoked: %s".formatted(event.getFullCommandName()), sb.toString(), false);
         builder.setTimestamp(Instant.now());
         
         this.channel.sendMessageEmbeds(builder.build()).queue();

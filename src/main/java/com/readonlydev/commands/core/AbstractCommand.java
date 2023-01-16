@@ -89,7 +89,8 @@ public abstract class AbstractCommand extends Command
     {
         return event.getMessage().getContentDisplay()
             .replace(event.getPrefix(), "")
-            .replace(event.getCommand().getName(), "");
+            .replace(event.getCommand().getName(), "")
+            .stripLeading();
     }
 
     protected void replySuccess(String message)

@@ -1,5 +1,6 @@
 package com.readonlydev.database.impl.options;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.readonlydev.GalacticBot;
 import com.readonlydev.util.Development;
 
@@ -19,7 +20,8 @@ public class SuggestionOptions
     private boolean              suggestionsLocked         = false;
     private int                  starRequirement           = 10;
 
-    public String getSuggestionsChannelId()
+    @JsonIgnore
+    public String getSuggestionChannel()
     {
         if (GalacticBot.isTesting())
         {
@@ -29,7 +31,8 @@ public class SuggestionOptions
         return suggestionsChannelId;
     }
 
-    public String getPopularChannelId()
+    @JsonIgnore
+    public String getPopularSuggestionChannel()
     {
         if (GalacticBot.isTesting())
         {
@@ -39,7 +42,8 @@ public class SuggestionOptions
         return popularChannelId;
     }
 
-    public String getDevServerPopularChannelId()
+    @JsonIgnore
+    public String getDevServerPopularChannel()
     {
         if (GalacticBot.isTesting())
         {

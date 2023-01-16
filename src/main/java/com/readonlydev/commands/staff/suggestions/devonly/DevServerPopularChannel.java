@@ -43,7 +43,7 @@ public class DevServerPopularChannel extends GalacticSlashCommand
             }
 
             final DBGalacticBot db = BotData.database().botDatabase();
-            String popularChannelId = db.getSuggestionOptions().getDevServerPopularChannelId();
+            String popularChannelId = db.getSuggestionOptions().getDevServerPopularChannel();
             TextChannel popularChannel = event.getGuild().getTextChannelById(popularChannelId);
 
             Reply.Success(event, new EmbedBuilder().setColor(Color.ORANGE).setTitle("Suggestions").addField("Current Dev Server Popular Channel", popularChannel.getAsMention(), false));
@@ -66,7 +66,7 @@ public class DevServerPopularChannel extends GalacticSlashCommand
                 return;
             }
             final DBGalacticBot db = BotData.database().botDatabase();
-            String popularChannelId = db.getSuggestionOptions().getDevServerPopularChannelId();
+            String popularChannelId = db.getSuggestionOptions().getDevServerPopularChannel();
             TextChannel oldChannel = event.getGuild().getTextChannelById(popularChannelId);
             TextChannel newChannel = channelOption.getAsChannel().asTextChannel();
 

@@ -46,7 +46,7 @@ public class SuggestionBlacklist extends GalacticSlashCommand
             return;
         }
 
-        String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionsChannelId();
+        String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionChannel();
         TextChannel txtChannel = event.getGuild().getTextChannelById(channelId);
 
         if (!event.getChannel().asTextChannel().equals(txtChannel))
