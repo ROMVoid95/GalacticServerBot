@@ -119,7 +119,7 @@ tasks.named('installShadowDist').configure {
 
 task copyConfigs(type: Copy) {
     from 'configs'
-    into file('/opt/galacticbot2/libs/configs')
+    into file('/opt/galacticbot2/lib/configs')
 }
 
 task fullBuild {
