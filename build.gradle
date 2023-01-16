@@ -114,12 +114,12 @@ shadowJar {
 }
 
 tasks.named('installShadowDist').configure {
-    destinationDir = file('/opt/galacticbot2')
+    destinationDir = file("${installDir}")
 }
 
 task copyConfigs(type: Copy) {
     from 'configs'
-    into file('/opt/galacticbot2/lib/configs')
+    into file("${installDir}/lib/configs")
 }
 
 task fullBuild {
