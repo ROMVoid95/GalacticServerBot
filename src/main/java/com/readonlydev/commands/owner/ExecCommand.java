@@ -4,39 +4,52 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
 
 import com.google.common.base.Throwables;
-import com.readonlydev.api.annotation.BotCommand;
-import com.readonlydev.command.event.CommandEvent;
-import com.readonlydev.commands.core.AbstractCommand;
+import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.common.utils.ResultLevel;
+import com.readonlydev.util.Check;
+import com.readonlydev.util.discord.Reply;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-@BotCommand
-public class ExecCommand extends AbstractCommand
+public class ExecCommand extends GalacticSlashCommand
 {
 	Message message;
 
 	public ExecCommand()
 	{
-		super("exec");
-		aliases("run", "cmd");
+		this.name = "exec";
 		this.help = "Runs a command on the underlying system";
+		options = Arrays.asList(new OptionData(OptionType.STRING, "cmd", "", true).setMaxLength(1024));
 		this.guildOnly = true;
 		this.ownerCommand = true;
 	}
 
+    @Override
+    protected void execute(SlashCommandEvent event)
+    {
+        if(!Check.isOwner(event))
+        {
+            Reply.InvalidPermissions(event);
+            return;
+        }
+        super.execute(event);
+    }
+	
 	@Override
-	public void onExecute(CommandEvent event)
+	public void onExecute(SlashCommandEvent event)
 	{
-		if (getMessageContent().isBlank())
+		if (event.optString("cmd").isBlank())
 		{
-			temporaryReply(ResultLevel.ERROR, "No command was provided", 20, TimeUnit.SECONDS);
+			Reply.EphemeralReply(event, ResultLevel.ERROR, "No command was provided");
 		}
 
-		ProcessBuilder builder = new ProcessBuilder(getMessageContent().stripTrailing().split("\\s+")).redirectErrorStream(true);
+		ProcessBuilder builder = new ProcessBuilder(event.optString("cmd").stripTrailing().split("\\s+")).redirectErrorStream(true);
 		try
 		{
 			Process systemProcess = builder.start();
@@ -55,11 +68,11 @@ public class ExecCommand extends AbstractCommand
 				output = "Command returned no output";
 			}
 			
-			replySuccess(output);
+			Reply.Success(event, output);
 			
 		} catch (IOException e)
 		{
-			replyError("```\n" + "%s\n" + "```".formatted(Throwables.getStackTraceAsString(e)));
+			Reply.Error(event, "```\n" + "%s\n" + "```".formatted(Throwables.getStackTraceAsString(e)));
 
 			e.printStackTrace();
 		}

@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 public class Reply
 {
@@ -34,6 +35,11 @@ public class Reply
         event.replyEmbeds(simpleEmbed(message, level.getColor())).setEphemeral(true).queue();
     }
 
+    public static ReplyCallbackAction EphemeralReplyCallback(SlashCommandEvent event, MessageCreateData data)
+    {
+        return event.replyEmbeds(simpleEmbed(data.getContent(), ResultLevel.SUCCESS.getColor())).setEphemeral(true);
+    }
+    
     public static ReplyCallbackAction EphemeralReplyCallback(SlashCommandEvent event, String message)
     {
         return event.replyEmbeds(simpleEmbed(message, ResultLevel.SUCCESS.getColor())).setEphemeral(true);

@@ -1,26 +1,36 @@
 package com.readonlydev.commands.owner;
 
 import com.readonlydev.BotData;
-import com.readonlydev.api.annotation.BotCommand;
-import com.readonlydev.command.event.CommandEvent;
-import com.readonlydev.commands.core.AbstractCommand;
+import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
 import com.readonlydev.database.entity.DBGalacticBot;
 import com.readonlydev.database.impl.SuggestionManager;
+import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
 
-@BotCommand
-public class DatabaseCommand extends AbstractCommand
+public class DatabaseCommand extends GalacticSlashCommand
 {
 
     public DatabaseCommand()
     {
-        super("database");
+        this.name = "clear-database";
         this.isOwnerCommand();
         this.isHidden();
     }
 
     @Override
-    protected void onExecute(CommandEvent event)
+    protected void execute(SlashCommandEvent event)
+    {
+        if(!Check.isOwner(event))
+        {
+            Reply.InvalidPermissions(event);
+            return;
+        }
+        super.execute(event);
+    }
+
+    @Override
+    protected void onExecute(SlashCommandEvent event)
     {
         DBGalacticBot database = BotData.database().botDatabase();
         

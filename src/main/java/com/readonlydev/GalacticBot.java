@@ -13,6 +13,9 @@ import com.readonlydev.commands.member.CloseDiscussionThread;
 import com.readonlydev.commands.member.EditDescription;
 import com.readonlydev.commands.member.EditTitle;
 import com.readonlydev.commands.member.NewSuggestion;
+import com.readonlydev.commands.owner.DatabaseCommand;
+import com.readonlydev.commands.owner.EvalCommand;
+import com.readonlydev.commands.owner.ExecCommand;
 import com.readonlydev.commands.owner.MaintanenceModeCommand;
 import com.readonlydev.commands.staff.Suggestions;
 import com.readonlydev.commands.staff.server.ServerStaff;
@@ -74,6 +77,9 @@ public class GalacticBot
 
 		Set<Command> conventionalCommands = ReflectCommands.getConventionalCommands();
 
+		ServerCommands botServerCommands = new ServerCommands("538530739017220107");
+		botServerCommands.addAllCommands(new DatabaseCommand(), new EvalCommand(), new ExecCommand());
+		
 		ServerCommands devServerCommands = new ServerCommands("775251052517523467");
 		devServerCommands.addAllCommands(new DevServerPopularChannel(), new SuggestionSetStatus());
 
@@ -85,10 +91,10 @@ public class GalacticBot
 		clientBuilder.addCommands(conventionalCommands);
 		clientBuilder.addContextMenus(new PasteContextMenu());
 		clientBuilder.addGlobalSlashCommands(new EditDescription(), new EditTitle());
-		clientBuilder.addAllServerCommands(devServerCommands, communityServerCommands);
+		clientBuilder.addAllServerCommands(devServerCommands, communityServerCommands, botServerCommands);
 		clientBuilder.setOwnerId(Conf.Bot().getOwner());
 		clientBuilder.setPrefix(Conf.Bot().getPrefix());
-		clientBuilder.setActivity(Activity.watching("for Suggestions & stuff"));
+		clientBuilder.setActivity(Activity.watching("for Suggestion"));
 		clientBuilder.useHelpBuilder(false);
 		clientBuilder.setListener(new ClientListener());
 		clientBuilder.setGuildSettingsManager(new GuildSettings());
