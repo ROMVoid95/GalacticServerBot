@@ -141,3 +141,4 @@ class Version {
 }
 
 tasks.fullBuild.finalizedBy 'copyConfigs'
+tasks.installShadowDist.finalizedBy 'copyConfigs'
