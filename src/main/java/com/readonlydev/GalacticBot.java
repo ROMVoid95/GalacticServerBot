@@ -1,11 +1,7 @@
 package com.readonlydev;
 
-import java.util.EnumSet;
-import java.util.Set;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.readonlydev.command.Command;
 import com.readonlydev.command.client.Client;
 import com.readonlydev.command.client.ClientBuilder;
 import com.readonlydev.command.client.ServerCommands;
@@ -22,15 +18,12 @@ import com.readonlydev.commands.staff.server.ServerStaff;
 import com.readonlydev.commands.staff.suggestions.devonly.DevServerPopularChannel;
 import com.readonlydev.commands.staff.suggestions.devonly.SuggestionSetStatus;
 import com.readonlydev.common.waiter.EventWaiter;
-import com.readonlydev.context.PasteContextMenu;
 import com.readonlydev.core.BusListener;
 import com.readonlydev.core.ClientListener;
 import com.readonlydev.core.GalacticEventListener;
 import com.readonlydev.core.GuildSettings;
 import com.readonlydev.core.event.JDAEvent;
-import com.readonlydev.database.impl.updates.Mod.Curseforge;
 import com.readonlydev.logback.LogFilter;
-import com.readonlydev.util.ReflectCommands;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -39,9 +32,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 @Slf4j
 public class GalacticBot
@@ -53,7 +44,6 @@ public class GalacticBot
 	private static Client		client;
 	private static EventWaiter	eventWaiter	= new EventWaiter();
 	private static EventBus		EVENT_BUS	= new EventBus("GalacticBot EventBus");
-	private static Curseforge	curseforge;
 
 	private void preStart()
 	{
@@ -71,25 +61,19 @@ public class GalacticBot
 		preStart();
 
 		Conf.saveBotConfigJson();
-		// Conf.saveUpdateConfigJson();
 
 		ClientBuilder clientBuilder = new ClientBuilder();
 
-		Set<Command> conventionalCommands = ReflectCommands.getConventionalCommands();
-
 		ServerCommands botServerCommands = new ServerCommands("538530739017220107");
 		botServerCommands.addAllCommands(new DatabaseCommand(), new EvalCommand(), new ExecCommand());
-		
+
 		ServerCommands devServerCommands = new ServerCommands("775251052517523467");
 		devServerCommands.addAllCommands(new DevServerPopularChannel(), new SuggestionSetStatus());
 
 		ServerCommands communityServerCommands = new ServerCommands("449966345665249290");
 		communityServerCommands.addAllCommands(new Suggestions(), new ServerStaff(), new NewSuggestion(), new CloseDiscussionThread(), new MaintanenceModeCommand());
-		communityServerCommands.addContextMenus(new PasteContextMenu());
 
 		clientBuilder.setAllRepliesAsEmbed();
-		clientBuilder.addCommands(conventionalCommands);
-		clientBuilder.addContextMenus(new PasteContextMenu());
 		clientBuilder.addGlobalSlashCommands(new EditDescription(), new EditTitle());
 		clientBuilder.addAllServerCommands(devServerCommands, communityServerCommands, botServerCommands);
 		clientBuilder.setOwnerId(Conf.Bot().getOwner());
@@ -100,26 +84,30 @@ public class GalacticBot
 		clientBuilder.setGuildSettingsManager(new GuildSettings());
 
 		// @noformat
-		EnumSet<GatewayIntent> intents = EnumSet.of(GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT);
-
-		EnumSet<CacheFlag> caches = EnumSet.of(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE);
-
 		GalacticBot.client = clientBuilder.build();
 
-		GalacticBot.jda = JDABuilder.create(Conf.Bot().getToken(), intents).disableCache(caches).setActivity(Activity.playing("Init Stage")).addEventListeners(eventWaiter, client, new GalacticEventListener()).build();
+		GalacticBot.jda = JDABuilder.create(Conf.Bot().getToken(), BotData.JDA.INTENTS)
+			.disableCache(BotData.JDA.DISABLED_CACHE_FLAGS)
+			.setActivity(Activity.playing("Init Stage"))
+			.addEventListeners(eventWaiter, client, new GalacticEventListener())
+			.build();
 		// @format
 
-		//GalacticBot.curseforge = new Curseforge(CurseForgeAPI.builder().apiKey(Conf.Bot().getApiKey()).build());
-
-		// new Updates();
 		EVENT_BUS.register(new BusListener());
 		EVENT_BUS.register(this);
-		log.info("Conventional Commands:  " + client.getCommands().size());
 	}
 
 	public static void main(String[] args) throws Exception
 	{
+		Runtime.getRuntime().addShutdownHook(new Thread(GalacticBot::shutdown));
 		new GalacticBot();
+	}
+
+	private static void shutdown()
+	{
+		BotData.galacticExecutor().shutdown();
+		BotData.database().getConnection().close();
+		getJda().shutdownNow();
 	}
 
 	public static boolean isTesting()
@@ -131,11 +119,6 @@ public class GalacticBot
 	{
 		return EVENT_BUS;
 	}
-
-//	public static Curseforge getCurseforge()
-//	{
-//		return curseforge;
-//	}
 
 	public static EventWaiter getEventWaiter()
 	{

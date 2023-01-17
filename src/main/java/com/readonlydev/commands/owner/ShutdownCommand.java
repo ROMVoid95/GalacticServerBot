@@ -1,31 +1,32 @@
 package com.readonlydev.commands.owner;
 
-import com.readonlydev.BotData;
-import com.readonlydev.api.annotation.BotCommand;
-import com.readonlydev.command.event.CommandEvent;
-import com.readonlydev.commands.core.AbstractCommand;
+import com.readonlydev.command.slash.SlashCommandEvent;
+import com.readonlydev.commands.core.GalacticSlashCommand;
+import com.readonlydev.util.Check;
+import com.readonlydev.util.discord.Reply;
 
-import net.dv8tion.jda.api.entities.Message;
-
-@BotCommand
-public class ShutdownCommand extends AbstractCommand
+public class ShutdownCommand extends GalacticSlashCommand
 {
-    Message message;
-
     public ShutdownCommand()
     {
-        super("shutdown");
-        aliases("abort");
+        this.name = "shutdown";
         this.help = "safely shuts off the bot";
-        this.guildOnly = false;
-        this.ownerCommand = true;
+    }
+    
+    @Override
+    protected void execute(SlashCommandEvent event)
+    {
+        if(!Check.isOwner(event))
+        {
+            Reply.InvalidPermissions(event);
+            return;
+        }
+        super.execute(event);
     }
 
     @Override
-    public void onExecute(CommandEvent event)
+    public void onExecute(SlashCommandEvent event)
     {
-        BotData.database().getConnection().close();
-        event.getJDA().shutdown();
         System.exit(0);
     }
 

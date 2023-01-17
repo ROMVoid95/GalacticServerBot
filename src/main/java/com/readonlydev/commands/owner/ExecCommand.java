@@ -13,23 +13,15 @@ import com.readonlydev.common.utils.ResultLevel;
 import com.readonlydev.util.Check;
 import com.readonlydev.util.discord.Reply;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
 public class ExecCommand extends GalacticSlashCommand
 {
-	Message message;
-
 	public ExecCommand()
 	{
 		this.name = "exec";
-		this.help = "Runs a command on the underlying system";
 		options = Arrays.asList(new OptionData(OptionType.STRING, "cmd", "", true).setMaxLength(1024));
-        this.subcommandGroup = new SubcommandGroupData("owner", "Owner Only Commands");
-        this.isOwnerCommand();
-        this.isHidden();
 	}
 
     @Override

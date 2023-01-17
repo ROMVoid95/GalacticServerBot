@@ -16,7 +16,6 @@ import com.readonlydev.util.eval.EvalEngine;
 
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.SplitUtil.Strategy;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -28,11 +27,6 @@ public class EvalCommand extends GalacticSlashCommand
 	{
 		this.name = "eval";
 		options = Arrays.asList(new OptionData(OptionType.STRING, "ev", "", true).setMaxLength(1024));
-        this.help = "Eval";
-        this.subcommandGroup = new SubcommandGroupData("owner", "Owner Only Commands");
-		this.isGuildOnly();
-		this.isOwnerCommand();
-		this.isHidden();
 	}
 
     @Override

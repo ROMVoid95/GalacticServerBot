@@ -12,7 +12,6 @@ import com.readonlydev.database.Rethink;
 import com.readonlydev.util.Factory;
 
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -26,6 +25,7 @@ public class BotData
 
 	private static final Server	gcc		= new Server(449966345665249290L);
 	private static final Server	tgc		= new Server(775251052517523467L);
+	private static final Server	bds		= new Server(538530739017220107L);
 	static final List<Server>	servers	= new ArrayList<>();
 
 	static
@@ -34,34 +34,19 @@ public class BotData
 		servers.add(tgc);
 	}
 
-	public static Guild botDevServer()
+	public static Server botDevServer()
 	{
-		return GalacticBot.getJda().getGuildById(538530739017220107L);
+		return bds;
 	}
 
-	public static Guild botDevDevServer()
-	{
-		return GalacticBot.getJda().getGuildById(695532548410834964L);
-	}
-
-	public static Server galacticraftCentral()
+	public static Server galacticraftCentralServer()
 	{
 		return gcc;
 	}
 
-	public static Server teamGalacticraft()
+	public static Server teamGalacticraftServer()
 	{
 		return tgc;
-	}
-
-	public static Guild communityServer()
-	{
-		return GalacticBot.getJda().getGuildById(449966345665249290L);
-	}
-
-	public static Guild devServer()
-	{
-		return GalacticBot.getJda().getGuildById(775251052517523467L);
 	}
 
 	public static DatabaseManager database()

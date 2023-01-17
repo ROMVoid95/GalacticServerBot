@@ -5,10 +5,10 @@ import javax.annotation.Nonnull;
 import com.google.common.eventbus.Subscribe;
 import com.readonlydev.BotData;
 import com.readonlydev.GalacticBot;
+import com.readonlydev.Server;
 import com.readonlydev.core.event.JDAEvent;
 import com.readonlydev.database.impl.options.ServerOptions;
 import com.readonlydev.database.impl.options.SuggestionOptions;
-import com.readonlydev.util.discord.DiscordUtils;
 import com.readonlydev.util.discord.SuggestionsHelper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +55,7 @@ public class GalacticEventListener extends ListenerAdapter
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event)
     {
-        if (DiscordUtils.areGuildsTheSame(event.getGuild(), BotData.communityServer()))
+        if (new Server(event.getGuild()).equals(BotData.galacticraftCentralServer()))
         {
             SuggestionOptions options = BotData.database().botDatabase().getSuggestionOptions();
             MessageChannel channel = event.getChannel();

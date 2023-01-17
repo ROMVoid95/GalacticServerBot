@@ -10,7 +10,6 @@ import com.readonlydev.GalacticBot;
 import com.readonlydev.command.event.CommandEvent;
 import com.readonlydev.command.slash.SlashCommandEvent;
 
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
@@ -43,12 +42,7 @@ public class DiscordUtils
     {
         return (event.getChannelType() == ChannelType.PRIVATE) ? event.getAuthor() : event.getMember().getUser();
     }
-    
-    public static Boolean areGuildsTheSame(Guild guild1, Guild guild2)
-    {
-        return guild1.equals(guild2);
-    }
-    
+
     public static Message getMessageOrNull(GenericMessageReactionEvent event)
     {
         try

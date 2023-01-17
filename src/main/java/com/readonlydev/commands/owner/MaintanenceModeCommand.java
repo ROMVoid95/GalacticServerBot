@@ -22,8 +22,6 @@ public class MaintanenceModeCommand extends GalacticSlashCommand
     public MaintanenceModeCommand()
     {
         this.name = "maintanence-mode";
-        this.isOwnerCommand();
-        this.isHidden();
         this.options = Arrays.asList(
             new OptionData(OptionType.STRING, "mode", "On or Off", true).addChoices(
                new Command.Choice("ON", "on"),
