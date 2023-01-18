@@ -55,7 +55,7 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
-mainClassName = "com.readonlydev.GalacticBot"
+mainClassName = "io.github.romvoid95.GalacticBot"
 group = 'com.readonlydev'
 def ver = new Version(major: 0, minor: 1, revision: 0)
 version ver.toString()
