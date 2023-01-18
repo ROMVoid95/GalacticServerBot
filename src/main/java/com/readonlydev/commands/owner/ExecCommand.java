@@ -21,7 +21,7 @@ public class ExecCommand extends GalacticSlashCommand
 	public ExecCommand()
 	{
 		this.name = "exec";
-		options = Arrays.asList(new OptionData(OptionType.STRING, "cmd", "", true).setMaxLength(1024));
+		options = Arrays.asList(new OptionData(OptionType.STRING, "cmd", "command to execute", true).setMaxLength(1024));
 	}
 
     @Override

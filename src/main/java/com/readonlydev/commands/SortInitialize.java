@@ -7,8 +7,6 @@ import com.readonlydev.BotData;
 import com.readonlydev.command.client.ClientBuilder;
 import com.readonlydev.command.slash.SlashCommand;
 import com.readonlydev.commands.member.CloseDiscussionThread;
-import com.readonlydev.commands.member.EditDescription;
-import com.readonlydev.commands.member.EditTitle;
 import com.readonlydev.commands.member.NewSuggestion;
 import com.readonlydev.commands.owner.DatabaseCommand;
 import com.readonlydev.commands.owner.EvalCommand;
@@ -30,14 +28,8 @@ public class SortInitialize
 		clientBuilder.addServerCommands(BotData.botDevServer().getServerCommands());
 		clientBuilder.addServerCommands(BotData.galacticraftCentralServer().getServerCommands());
 		clientBuilder.addServerCommands(BotData.teamGalacticraftServer().getServerCommands());
-		clientBuilder.addGlobalSlashCommands(SortInitialize.globalCommands());
 	}
 
-	private static final List<SlashCommand> globalCommands()
-	{
-		return Arrays.asList(new EditDescription(), new EditTitle());
-	}
-	
 	private static final List<SlashCommand> centralServerCommands()
 	{
 		return Arrays.asList(new Suggestions(), new ServerStaff(), new NewSuggestion(), new CloseDiscussionThread());

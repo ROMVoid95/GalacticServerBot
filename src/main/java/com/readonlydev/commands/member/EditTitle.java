@@ -28,7 +28,7 @@ public class EditTitle extends GalacticSlashCommand
             new OptionData(OptionType.STRING, "id", "The Unique ID provided to you by the Bot in DM's", true), 
             new OptionData(OptionType.STRING, "title", "Your new title", true).setMaxLength(64)
         );
-        this.guildOnly = false;
+        this.directMessagesAllowed();
     }
 
     @Override

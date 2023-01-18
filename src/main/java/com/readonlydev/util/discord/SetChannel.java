@@ -36,6 +36,6 @@ public enum SetChannel
     
     public MessageChannel getChannel()
     {
-    	return server.getGuild().getTextChannelById(channelId);
+    	return server.getGuild().get().getTextChannelById(channelId);
     }
 }

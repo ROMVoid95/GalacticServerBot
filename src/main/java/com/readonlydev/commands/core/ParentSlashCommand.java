@@ -8,7 +8,6 @@ public abstract class ParentSlashCommand extends SlashCommand
     
     public ParentSlashCommand()
     {
-        
     }
     
     public ParentSlashCommand(String name)

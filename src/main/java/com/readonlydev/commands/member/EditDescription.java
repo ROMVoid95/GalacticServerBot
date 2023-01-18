@@ -24,13 +24,13 @@ public class EditDescription extends GalacticSlashCommand
     public EditDescription()
     {
         this.name = "edit-description";
-        this.help = "Fully replaces the description of your suggestion";
+        this.help = "[DM ONLY] Edit the description of your Suggestion";
         this.options = Arrays.asList(
             new OptionData(OptionType.STRING, "id", "The Unique ID provided to you by the Bot in DM's", true),
             new OptionData(OptionType.STRING, "type", "Replace or append", true).addChoices(EditType.toChoices()),
             new OptionData(OptionType.STRING, "description", "Your new description", true).setMaxLength(1024)
         );
-        this.guildOnly = false;
+        this.directMessagesAllowed();
     }
 
     @Override

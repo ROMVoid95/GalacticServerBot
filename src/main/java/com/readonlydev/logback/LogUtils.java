@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.readonlydev.Conf;
-import com.readonlydev.GalacticBot;
 
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
@@ -82,7 +81,7 @@ public class LogUtils {
 	}
 
 	public static @NotNull WebhookMessageBuilder msg() {
-		return new WebhookMessageBuilder().setUsername("%s Web Log".formatted(GalacticBot.getJda().getSelfUser().getName()))
+		return new WebhookMessageBuilder().setUsername("%s Web Log".formatted("GalacticBot"))
 				.setAvatarUrl(ICON_URL);
 	}
 }

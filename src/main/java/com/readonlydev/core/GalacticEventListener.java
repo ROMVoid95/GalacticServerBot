@@ -55,7 +55,7 @@ public class GalacticEventListener extends ListenerAdapter
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event)
     {
-        if (new Server(event.getGuild()).equals(BotData.galacticraftCentralServer()))
+        if (Server.getServer(event.getGuild()).equals(BotData.galacticraftCentralServer()))
         {
             SuggestionOptions options = BotData.database().botDatabase().getSuggestionOptions();
             MessageChannel channel = event.getChannel();

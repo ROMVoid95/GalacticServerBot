@@ -4,19 +4,9 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.readonlydev.command.client.Client;
 import com.readonlydev.command.client.ClientBuilder;
-import com.readonlydev.command.client.ServerCommands;
-import com.readonlydev.commands.member.CloseDiscussionThread;
+import com.readonlydev.commands.SortInitialize;
 import com.readonlydev.commands.member.EditDescription;
 import com.readonlydev.commands.member.EditTitle;
-import com.readonlydev.commands.member.NewSuggestion;
-import com.readonlydev.commands.owner.DatabaseCommand;
-import com.readonlydev.commands.owner.EvalCommand;
-import com.readonlydev.commands.owner.ExecCommand;
-import com.readonlydev.commands.owner.MaintanenceModeCommand;
-import com.readonlydev.commands.staff.Suggestions;
-import com.readonlydev.commands.staff.server.ServerStaff;
-import com.readonlydev.commands.staff.suggestions.devonly.DevServerPopularChannel;
-import com.readonlydev.commands.staff.suggestions.devonly.SuggestionSetStatus;
 import com.readonlydev.common.waiter.EventWaiter;
 import com.readonlydev.core.BusListener;
 import com.readonlydev.core.ClientListener;
@@ -64,18 +54,9 @@ public class GalacticBot
 
 		ClientBuilder clientBuilder = new ClientBuilder();
 
-		ServerCommands botServerCommands = new ServerCommands("538530739017220107");
-		botServerCommands.addAllCommands(new DatabaseCommand(), new EvalCommand(), new ExecCommand());
-
-		ServerCommands devServerCommands = new ServerCommands("775251052517523467");
-		devServerCommands.addAllCommands(new DevServerPopularChannel(), new SuggestionSetStatus());
-
-		ServerCommands communityServerCommands = new ServerCommands("449966345665249290");
-		communityServerCommands.addAllCommands(new Suggestions(), new ServerStaff(), new NewSuggestion(), new CloseDiscussionThread(), new MaintanenceModeCommand());
-
+		SortInitialize.perform(clientBuilder);
 		clientBuilder.setAllRepliesAsEmbed();
 		clientBuilder.addGlobalSlashCommands(new EditDescription(), new EditTitle());
-		clientBuilder.addAllServerCommands(devServerCommands, communityServerCommands, botServerCommands);
 		clientBuilder.setOwnerId(Conf.Bot().getOwner());
 		clientBuilder.setPrefix(Conf.Bot().getPrefix());
 		clientBuilder.setActivity(Activity.watching("for Suggestion"));
@@ -99,8 +80,8 @@ public class GalacticBot
 
 	public static void main(String[] args) throws Exception
 	{
-		Runtime.getRuntime().addShutdownHook(new Thread(GalacticBot::shutdown));
 		new GalacticBot();
+		Runtime.getRuntime().addShutdownHook(new Thread(GalacticBot::shutdown));
 	}
 
 	private static void shutdown()

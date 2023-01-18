@@ -1,6 +1,7 @@
 package com.readonlydev;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.readonlydev.command.client.ServerCommands;
@@ -18,13 +19,11 @@ public class Server
 	private final long guildId;
 	@Getter
 	private ServerCommands serverCommands = null;
-	@Getter
 	private Guild guild = null;
 	
-	public Server(Guild guild)
+	public static Server getServer(Guild guild)
 	{
-		this(guild.getIdLong(), false);
-		this.guild = guild;
+		return new Server(guild.getIdLong());
 	}
 	
 	public Server(long guildId)
@@ -36,7 +35,8 @@ public class Server
 	{
 		this.guildId = guildId;
 		if(genServerCommands) {
-			this.serverCommands = new ServerCommands(guildId);
+			this.serverCommands = new ServerCommands();
+			this.serverCommands.setGuildIdLong(guildId);
 		}
 	}
 	
@@ -53,10 +53,15 @@ public class Server
 			LogUtils.log("Server SlashCommands (ID: " + String.valueOf(this.guildId) + ")", String.join("\n", commands.stream().map(SlashCommand::getName).collect(Collectors.toSet())));
 			log.info("Server SlashCommands (ID: " + String.valueOf(this.guildId) + ")");
 			log.info(String.join(" | ", commands.stream().map(SlashCommand::getName).collect(Collectors.toSet())));
-			this.serverCommands.addAllCommands(commands);
+			this.serverCommands.getSlashCommands().addAll(commands);
+		} else {
+			throw new IllegalStateException("Attempted to add SlashCommands to Server "+guildId+" with invalid ServerCommands object");
 		}
-		
-		throw new IllegalStateException("Attempted to add SlashCommands to Server instance with invalid ServerCommands object");
+	}
+	
+	public Optional<Guild> getGuild()
+	{
+		return Optional.ofNullable(guild);
 	}
 	
 	@Override
@@ -74,6 +79,11 @@ public class Server
 			return false;
 		}
 		
-		return this.guild.getId().equals(other.getGuild().getId());
+		if(!other.getGuild().isPresent() || !this.getGuild().isPresent())
+		{
+			return false;
+		}
+		
+		return this.guild.getId().equals(other.getGuild().get().getId());
 	}
 }

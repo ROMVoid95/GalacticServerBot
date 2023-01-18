@@ -3,7 +3,7 @@
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- because logback is to stupid to add a proper filter for that -->
         <filter class="com.readonlydev.logback.LogFilter">
-            <level>DEBUG</level>
+            <level>WARN</level>
         </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>[%d{HH:mm:ss}] [%level] [%logger{0}]: %msg%n</Pattern>
@@ -30,8 +30,9 @@
         </encoder>
     </appender>
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STDERR"/>
         <appender-ref ref="FILE"/>
     </root>
 </configuration>

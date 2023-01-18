@@ -26,7 +26,7 @@ public class EvalCommand extends GalacticSlashCommand
 	public EvalCommand()
 	{
 		this.name = "eval";
-		options = Arrays.asList(new OptionData(OptionType.STRING, "ev", "", true).setMaxLength(1024));
+		options = Arrays.asList(new OptionData(OptionType.STRING, "ev", "statement to evaluate", true).setMaxLength(1024));
 	}
 
     @Override
