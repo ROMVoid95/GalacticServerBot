@@ -9,15 +9,15 @@ plugins {
 }
 
 repositories {
+	mavenLocal()
     maven {
         url "https://jitpack.io"
     }
-    mavenLocal()
     mavenCentral()
 }
 
 ext {
-	jdatools		= '4.0.2'
+	jdatools		= 'master-SNAPSHOT'
 	reflections 	= '0.10.2'
 	okhttp 			= '5.0.0-alpha.2'
 	webhooks 		= '0.8.2'
@@ -26,7 +26,7 @@ ext {
 }
 
 dependencies {
-    implementation "com.readonlydev:JDATools:${jdatools}"
+    implementation "com.github.ReadOnlyDevelopment:JDATools:${jdatools}"
 	implementation("org.reflections:reflections:${reflections}") {
 		exclude group: 'org.slf4j', module: 'slf4j-api'
 	}
@@ -114,24 +114,6 @@ shadowJar {
     classifier = ''
 }
 
-//import org.gradle.internal.os.OperatingSystem;
-//
-//tasks.named('installShadowDist').configure {
-//	onlyIf {
-//	    OperatingSystem.current().isLinux()
-//	}
-//
-//    destinationDir = file("${installDir}")
-//}
-//
-//task copyConfigs(type: Copy) {
-//	onlyIf {
-//	    OperatingSystem.current().isLinux()
-//	}
-//    from 'configs'
-//    into file("${installDir}/lib/configs")
-//}
-
 task fullBuild {
     group 'jdatools'
     dependsOn 'clean'
@@ -149,9 +131,3 @@ class Version {
         "${major}.${minor}.${revision}"
     }
 }
-
-//if(OperatingSystem.current().isLinux())
-//{
-//    tasks.fullBuild.finalizedBy 'copyConfigs'
-//	tasks.installShadowDist.finalizedBy 'copyConfigs'
-//}
