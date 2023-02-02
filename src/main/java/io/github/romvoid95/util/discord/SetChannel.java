@@ -8,19 +8,19 @@ public enum SetChannel
 {
     POST
     (
-        BotData.database().botDatabase().getSuggestionOptions().getSuggestionChannel(),
+        BotData.database().galacticBot().getSuggestionOptions().getSuggestionChannel(),
         BotData.galacticraftCentralServer()
     ),
     
     POPULAR
     (
-        BotData.database().botDatabase().getSuggestionOptions().getPopularChannelId(),
+        BotData.database().galacticBot().getSuggestionOptions().getPopularChannelId(),
         BotData.galacticraftCentralServer()
     ),
     
     DEV_POPULAR
     (
-        BotData.database().botDatabase().getSuggestionOptions().getDevServerPopularChannel(),
+        BotData.database().galacticBot().getSuggestionOptions().getDevServerPopularChannel(),
         BotData.teamGalacticraftServer()
     );
     

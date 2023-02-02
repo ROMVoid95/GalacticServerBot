@@ -3,9 +3,10 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id 'application'
+    id 'io.freefair.lombok' version '6.6.1'
 	id 'org.ajoberstar.grgit' version '4.1.1'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id "com.github.ben-manes.versions" version "0.42.0"
+    id 'com.github.ben-manes.versions' version '0.42.0'
 }
 
 repositories {
@@ -23,40 +24,36 @@ ext {
 	webhooks 		= '0.8.2'
     rethink 		= '2.4.4'
 	commons			= '2.11.0'
+	jsr223			= '3.0.12'
+	commonsText		= '1.10.0'
+	curseApi		= '1.7.3'
+	modrinth4j		= 'master-SNAPSHOT'
+	jda				= '5.0.0-beta.3'
+	logback			= '1.2.11'
+	slf4j			= '1.7.36'
 }
 
 dependencies {
-    implementation "com.github.ReadOnlyDevelopment:JDATools:${jdatools}"
-	implementation("org.reflections:reflections:${reflections}") {
-		exclude group: 'org.slf4j', module: 'slf4j-api'
-	}
-	implementation("club.minnced:discord-webhooks:${webhooks}") {
-		exclude group: 'org.slf4j', module: 'slf4j-api'
-	}
-	implementation("com.rethinkdb:rethinkdb-driver:${rethink}") {
-		exclude group: 'org.slf4j', module: 'slf4j-api'
-	}
-	implementation("commons-io:commons-io:${commons}") {
-		exclude group: 'org.slf4j', module: 'slf4j-api'
-	}
-    implementation 'org.codehaus.groovy:groovy-jsr223:3.0.12'
-    
-	implementation 'org.slf4j:slf4j-api:1.7.36'
-	implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'org.apache.commons:commons-text:1.9'
-	implementation 'io.github.matyrobbrt:curseforgeapi:1.7.3'
-	implementation 'com.github.masecla22:Modrinth4J:master-SNAPSHOT'
-	implementation 'org.jsoup:jsoup:1.15.2'
-    
-   	compileOnly 'org.projectlombok:lombok:1.18.24'
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation group: 'com.github.ReadOnlyDevelopment', name: 'JDATools', 	version: jdatools
+
+    implementation group: 'org.slf4j', 				name: 'slf4j-api', 			version: slf4j
+    implementation group: 'ch.qos.logback', 		name: 'logback-classic', 	version: logback
+	implementation group: 'club.minnced', 			name: 'discord-webhooks', 	version: webhooks
+	implementation group: 'com.rethinkdb', 			name: 'rethinkdb-driver', 	version: rethink
+	implementation group: 'commons-io', 			name: 'commons-io', 		version: commons
+	implementation group: 'org.codehaus.groovy', 	name: 'groovy-jsr223', 		version: jsr223
+	implementation group: 'org.apache.commons', 	name: 'commons-text', 		version: commonsText
+	implementation group: 'io.github.matyrobbrt', 	name: 'curseforgeapi', 		version: curseApi
+	implementation group: 'com.github.masecla22', 	name: 'Modrinth4J', 		version: modrinth4j
+	implementation group: 'org.codehaus.groovy', 	name: 'groovy-jsr223', 		version: jsr223
 	
-	testCompileOnly 'org.projectlombok:lombok:1.18.24'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+	implementation("net.dv8tion:JDA:${jda}") {
+        exclude module: 'opus-java'
+    }
 }
 
 mainClassName = "io.github.romvoid95.GalacticBot"
-group = 'com.readonlydev'
+group = 'io.github.romvoid95'
 def ver = new Version(major: 0, minor: 1, revision: 0)
 version ver.toString()
 description = 'Discord Bot for the Galacticraft Central Server'

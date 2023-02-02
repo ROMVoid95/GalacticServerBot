@@ -1,12 +1,12 @@
 package io.github.romvoid95.core;
 
-import com.github.readonlydevelopment.command.Command;
-import com.github.readonlydevelopment.command.CommandListener;
-import com.github.readonlydevelopment.command.SlashCommand;
-import com.github.readonlydevelopment.command.event.CommandEvent;
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
+import io.github.readonly.command.Command;
+import io.github.readonly.command.CommandListener;
+import io.github.readonly.command.SlashCommand;
+import io.github.readonly.command.event.CommandEvent;
+import io.github.readonly.command.event.SlashCommandEvent;
 
-import io.github.romvoid95.logback.LogUtils;
+import io.github.romvoid95.util.LogUtils;
 import io.github.romvoid95.util.discord.DiscordUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.channel.ChannelType;

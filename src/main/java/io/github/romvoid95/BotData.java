@@ -1,11 +1,12 @@
 package io.github.romvoid95;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
+
+import org.apache.commons.collections4.map.HashedMap;
 
 import io.github.romvoid95.database.DatabaseManager;
 import io.github.romvoid95.database.Rethink;
@@ -19,33 +20,36 @@ public class BotData
 {
 
 	private static final ScheduledExecutorService	galacticExec	= Factory.newScheduledThreadPool(1, "Galactic-Thread-%d", false);
-	private static final ScheduledExecutorService	updateExec		= Factory.newScheduledThreadPool(1, "Galactic-Update-Thread-%d", true);
+	private static final ScheduledExecutorService	updateExec		= Factory.newUpdateThread();
 	private static DatabaseManager					db;
 
-	private static final Server	gcc		= new Server(449966345665249290L);
-	private static final Server	tgc		= new Server(775251052517523467L);
-	private static final Server	bds		= new Server(538530739017220107L);
-	static final List<Server>	servers	= new ArrayList<>();
+	private static final Map<String, Server> serverMap = new HashedMap<>();
 
 	static
 	{
-		servers.add(gcc);
-		servers.add(tgc);
+		serverMap.put("449966345665249290", new Server("449966345665249290"));
+		serverMap.put("775251052517523467", new Server("775251052517523467"));
+		serverMap.put("538530739017220107", new Server("538530739017220107"));
+	}
+	
+	static Map<String, Server> serverMap()
+	{
+		return serverMap;
 	}
 
 	public static Server botDevServer()
 	{
-		return bds;
+		return serverMap.get("538530739017220107");
 	}
 
 	public static Server galacticraftCentralServer()
 	{
-		return gcc;
+		return serverMap.get("449966345665249290");
 	}
 
 	public static Server teamGalacticraftServer()
 	{
-		return tgc;
+		return serverMap.get("775251052517523467");
 	}
 
 	public static DatabaseManager database()

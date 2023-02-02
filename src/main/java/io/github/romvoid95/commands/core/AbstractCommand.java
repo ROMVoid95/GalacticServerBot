@@ -1,21 +1,18 @@
 package io.github.romvoid95.commands.core;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.annotation.Nullable;
-
-import com.github.readonlydevelopment.command.Command;
-import com.github.readonlydevelopment.command.arg.CommandArgument;
-import com.github.readonlydevelopment.command.arg.parse.Argument;
-import com.github.readonlydevelopment.command.arg.parse.ArgumentIndex;
-import com.github.readonlydevelopment.command.event.CommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
-
+import io.github.readonly.command.Command;
+import io.github.readonly.command.arg.CommandArgument;
+import io.github.readonly.command.arg.parse.Argument;
+import io.github.readonly.command.arg.parse.ArgumentIndex;
+import io.github.readonly.command.event.CommandEvent;
+import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.util.StringUtils;
+import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -45,7 +42,7 @@ public abstract class AbstractCommand extends Command
         this.event = event;
         if (getArgsAsString().equalsIgnoreCase("help"))
         {
-            temporaryReply(this.getHelpEmbed(), 30, TimeUnit.SECONDS);
+        	Reply.temporaryReply(event, getHelpEmbed(), 30, TimeUnit.SECONDS);
             event.getMessage().delete().queue();
         } else
         {
@@ -96,7 +93,7 @@ public abstract class AbstractCommand extends Command
     protected void replySuccess(String message)
     {
         event.getMessage().delete().queue();
-        event.reply(simpleEmbed(message, ResultLevel.SUCCESS.getColor()));
+        Reply.Success(event, message);
     }
     
     protected void replySuccess(Message message)
@@ -115,44 +112,12 @@ public abstract class AbstractCommand extends Command
     {
         String cmd = event.getMessage().getContentRaw();
         event.getMessage().delete().queue();
-        event.reply(simpleEmbed("`" + cmd + "`\n\n" + message, ResultLevel.ERROR.getColor()));
+        Reply.Error(event, "`" + cmd + "`\n\n" + message);
     }
 
     protected void requiredRoles(String... roles)
     {
         Arrays.asList(roles).forEach(r -> this.addRequiredRoles(r));
-    }
-
-    public void temporaryReply(ResultLevel level, String message, int time, TimeUnit unit)
-    {
-        MessageEmbed embed = new MessageEmbed(null, null, message, null, null, level.getColorInt(), null, null, null, null, null, null, null);
-        event.reply(embed, success ->
-        {
-            success.delete().queueAfter(time, unit);
-        });
-    }
-
-    public void temporaryReply(MessageEmbed embed, int time, TimeUnit unit)
-    {
-        event.reply(embed, success ->
-        {
-            success.delete().queueAfter(time, unit);
-        });
-    }
-
-    public MessageEmbed simpleEmbed(final String message)
-    {
-        return simpleEmbed(message, null);
-    }
-
-    public MessageEmbed simpleEmbed(final String message, @Nullable Color color)
-    {
-        EmbedBuilder builder = new EmbedBuilder().setDescription(message);
-        if (color != null)
-        {
-            builder.setColor(color);
-        }
-        return builder.build();
     }
 
     protected int getArgCount()

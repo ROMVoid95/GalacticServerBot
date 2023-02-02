@@ -1,39 +1,42 @@
 package io.github.romvoid95;
 
-import com.github.readonlydevelopment.command.Client;
-import com.github.readonlydevelopment.command.ClientBuilder;
-import com.github.readonlydevelopment.common.waiter.EventWaiter;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
+import io.github.readonly.api.BotContainer;
+import io.github.readonly.api.scheduler.Task;
+import io.github.readonly.common.event.EventHandler;
+import io.github.readonly.discordbot.DiscordBot;
 import io.github.romvoid95.commands.SortInitialize;
 import io.github.romvoid95.commands.member.EditDescription;
 import io.github.romvoid95.commands.member.EditTitle;
-import io.github.romvoid95.core.BusListener;
 import io.github.romvoid95.core.ClientListener;
 import io.github.romvoid95.core.GalacticEventListener;
 import io.github.romvoid95.core.GuildSettings;
-import io.github.romvoid95.core.event.JDAEvent;
-import io.github.romvoid95.logback.LogFilter;
+import io.github.romvoid95.util.DateFormatting;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 
 @Slf4j
-public class GalacticBot
+public class GalacticBot extends DiscordBot<GalacticBot>
 {
 
-	private static boolean TESTING = true;
+	private static GalacticBot	_instance;
+	@Getter
+	private JDA					jda;
 
-	private static JDA			jda;
-	private static Client		client;
-	private static EventWaiter	eventWaiter	= new EventWaiter();
-	private static EventBus		EVENT_BUS	= new EventBus("GalacticBot EventBus");
+	public static final GalacticBot instance()
+	{
+		return GalacticBot._instance;
+	}
 
 	private void preStart()
 	{
@@ -43,89 +46,69 @@ public class GalacticBot
 		RestAction.setPassContext(true);
 		RestAction.setDefaultFailure(ErrorResponseException.ignore(RestAction.getDefaultFailure(), ErrorResponse.UNKNOWN_MESSAGE));
 
-		log.info("Filtering all logs below {}", LogFilter.LEVEL);
+		BotData.database();
 	}
 
-	private GalacticBot() throws Exception
+	private GalacticBot()
 	{
 		preStart();
 
 		Conf.saveBotConfigJson();
 
-		ClientBuilder clientBuilder = new ClientBuilder();
-
-		SortInitialize.perform(clientBuilder);
-		clientBuilder.setAllRepliesAsEmbed();
-		clientBuilder.addGlobalSlashCommands(new EditDescription(), new EditTitle());
-		clientBuilder.setOwnerId(Conf.Bot().getOwner());
-		clientBuilder.setPrefix(Conf.Bot().getPrefix());
-		clientBuilder.setActivity(Activity.watching("for Suggestion"));
-		clientBuilder.useHelpBuilder(false);
-		clientBuilder.setListener(new ClientListener());
-		clientBuilder.setGuildSettingsManager(new GuildSettings());
-
 		// @noformat
-		GalacticBot.client = clientBuilder.build();
+		SortInitialize.perform(this.getClientBuilder());
+		this.getClientBuilder()
+			.setAllRepliesAsEmbed()
+			.addGlobalSlashCommands(new EditDescription(), new EditTitle())
+			.setOwnerId(Conf.Bot().getOwner())
+			.setActivity(Activity.watching("for Suggestion"))
+			.useHelpBuilder(false)
+			.setListener(new ClientListener())
+			.setGuildSettingsManager(new GuildSettings());
 
-		GalacticBot.jda = JDABuilder.create(Conf.Bot().getToken(), BotData.JDA.INTENTS)
+		this.jda = JDABuilder.create(Conf.Bot().getToken(), BotData.JDA.INTENTS)
 			.disableCache(BotData.JDA.DISABLED_CACHE_FLAGS)
 			.setActivity(Activity.playing("Init Stage"))
-			.addEventListeners(eventWaiter, client, new GalacticEventListener())
+			.addEventListeners(this.getEventWaiter(), this.buildClient(), new GalacticEventListener())
 			.build();
 		// @format
 
-		EVENT_BUS.register(new BusListener());
-		EVENT_BUS.register(this);
+		EventHandler.instance().register(new BusListener());
+
+		GalacticBot._instance = this;
+	}
+	
+	private void send()
+	{
+		Date now = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(now);
+        
+        String time = c.getTime().toString();
+        String parsedTime = DateFormatting.formatDate(time);
+        
+		getJda().getTextChannelById("1069462759252693012").sendMessage(
+				"Task Ran -> \n```\n" + "Time: %s\n".formatted(time) + "Parsed: %s\n".formatted(parsedTime) + "```"
+		).queue();
 	}
 
-	public static void main(String[] args) throws Exception
+	public static void main(String[] args)
 	{
-		new GalacticBot();
+		GalacticBot bot = new GalacticBot();
 		Runtime.getRuntime().addShutdownHook(new Thread(GalacticBot::shutdown));
+		Task.builder().interval(10, TimeUnit.SECONDS).name("Test Task").execute(bot::send).submit((BotContainer) bot.getInstance().get());
 	}
 
 	private static void shutdown()
 	{
 		BotData.galacticExecutor().shutdown();
 		BotData.database().getConnection().close();
-		getJda().shutdownNow();
+		GalacticBot.instance().getJda().shutdownNow();
 	}
 
-	public static boolean isTesting()
+	public boolean isDevBot()
 	{
-		return TESTING;
-	}
-
-	public static EventBus EventBus()
-	{
-		return EVENT_BUS;
-	}
-
-	public static EventWaiter getEventWaiter()
-	{
-		return eventWaiter;
-	}
-
-	public static Client getClient()
-	{
-		return client;
-	}
-
-	public static JDA getJda()
-	{
-		return jda;
-	}
-
-	@Subscribe
-	private void onReadyEvent(JDAEvent<ReadyEvent> event)
-	{
-		log.info("JDAEvent ONREADY fired, init Server Guilds");
-		ReadyEvent ready = event.getEvent();
-		for (Server server : BotData.servers)
-		{
-			server.initGuild(ready.getJDA());
-		}
-
+		return getJda().getSelfUser().getApplicationId().equals("1018818779276390401");
 	}
 
 	public static final class Info
@@ -134,5 +117,17 @@ public class GalacticBot
 		public static final String	USER_AGENT		= "%s/@version@/DiscordBot (%s)".formatted("GalacticBot", GITHUB_URL);
 		public static final String	VERSION			= "@version@";
 		public static final String	GIT_REVISION	= "@revision@";
+	}
+
+	@Override
+	public String getId()
+	{
+		return "galacticbot";
+	}
+
+	@Override
+	public Optional<?> getInstance()
+	{
+		return Optional.of(_instance);
 	}
 }

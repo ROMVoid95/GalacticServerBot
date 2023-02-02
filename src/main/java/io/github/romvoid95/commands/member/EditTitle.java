@@ -1,11 +1,10 @@
 package io.github.romvoid95.commands.member;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
-
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.option.RequiredOption;
+import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.impl.Suggestion;
@@ -14,8 +13,6 @@ import io.github.romvoid95.util.discord.SuggestionStatus;
 import io.github.romvoid95.util.discord.entity.SuggestionEmbed;
 import io.github.romvoid95.util.rec.LinkedMessagesRecord;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class EditTitle extends GalacticSlashCommand
 {
@@ -24,9 +21,9 @@ public class EditTitle extends GalacticSlashCommand
     {
         this.name = "edit-title";
         this.help = "Fully replaces the title of your suggestion";
-        this.options = Arrays.asList(
-            new OptionData(OptionType.STRING, "id", "The Unique ID provided to you by the Bot in DM's", true), 
-            new OptionData(OptionType.STRING, "title", "Your new title", true).setMaxLength(64)
+        setOptions(
+        	RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"),
+        	RequiredOption.text("title", "Your new title", 64)
         );
         this.directMessagesAllowed();
     }
@@ -48,7 +45,7 @@ public class EditTitle extends GalacticSlashCommand
         }
 
         String id = event.getOption("id").getAsString();
-        Optional<Suggestion> suggestionToEdit = BotData.database().botDatabase().getSuggestionFromUniqueId(id);
+        Optional<Suggestion> suggestionToEdit = BotData.database().galacticBot().getSuggestionFromUniqueId(id);
 
         if (suggestionToEdit.isPresent())
         {

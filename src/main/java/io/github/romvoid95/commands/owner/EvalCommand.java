@@ -1,21 +1,18 @@
 package io.github.romvoid95.commands.owner;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Triple;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.MessageContentBuilder;
-
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.option.RequiredOption;
+import io.github.readonly.common.util.MessageContentBuilder;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 import io.github.romvoid95.util.eval.EvalEngine;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.SplitUtil.Strategy;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -26,7 +23,7 @@ public class EvalCommand extends GalacticSlashCommand
 	public EvalCommand()
 	{
 		this.name = "eval";
-		options = Arrays.asList(new OptionData(OptionType.STRING, "ev", "statement to evaluate", true).setMaxLength(1024));
+		setOptions(RequiredOption.text("ev", "statement to evaluate", 1024));
 	}
 
     @Override
@@ -73,6 +70,6 @@ public class EvalCommand extends GalacticSlashCommand
 			Reply.Success(event, event.optString("ev"));
 		else
 			for (final MessageCreateBuilder m : builder.buildAll(Strategy.NEWLINE, Strategy.WHITESPACE, Strategy.ANYWHERE))
-				Reply.EphemeralReplyCallback(event, m.build());
+				Reply.EphemeralReply(event, m.build());
 	}
 }

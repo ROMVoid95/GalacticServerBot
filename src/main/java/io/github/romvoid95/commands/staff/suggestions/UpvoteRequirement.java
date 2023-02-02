@@ -1,10 +1,9 @@
 package io.github.romvoid95.commands.staff.suggestions;
 
 import java.awt.Color;
-import java.util.Arrays;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.option.Option;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
@@ -13,7 +12,6 @@ import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
 public class UpvoteRequirement extends GalacticSlashCommand
@@ -23,7 +21,9 @@ public class UpvoteRequirement extends GalacticSlashCommand
     {
         this.name = "requirement";
         this.help = "Display or change the current upvotes required to be posted in Popular Suggestions";
-        this.options = Arrays.asList(new OptionData(OptionType.INTEGER, "count", "Number of upvotes required").setRequiredRange(1, 100));
+        setOptions(
+        	Option.number("count", "Number of upvotes required", 1, 100)
+        );
         this.subcommandGroup = new SubcommandGroupData("upvotes", "Suggestion Upvotes commands");
     }
 
@@ -40,7 +40,7 @@ public class UpvoteRequirement extends GalacticSlashCommand
                 return;
             }
 
-            final DBGalacticBot db = BotData.database().botDatabase();
+            final DBGalacticBot db = BotData.database().galacticBot();
             int upvotesRequired = db.getSuggestionOptions().getStarRequirement();
 
             //@noformat
@@ -63,7 +63,7 @@ public class UpvoteRequirement extends GalacticSlashCommand
 
             OptionMapping integerOption = event.getOptionsByType(OptionType.INTEGER).get(0);
 
-            final DBGalacticBot db = BotData.database().botDatabase();
+            final DBGalacticBot db = BotData.database().galacticBot();
             int upvotesRequired = db.getSuggestionOptions().getStarRequirement();
             int newUpvotesRequired = integerOption.getAsInt();
 

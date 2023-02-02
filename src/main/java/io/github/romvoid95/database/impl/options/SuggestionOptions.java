@@ -2,7 +2,6 @@ package io.github.romvoid95.database.impl.options;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.github.romvoid95.GalacticBot;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,33 +21,18 @@ public class SuggestionOptions
     @JsonIgnore
     public String getSuggestionChannel()
     {
-        if (GalacticBot.isTesting())
-        {
-            return Development.suggestionsChannelIdOverride;
-        }
-
         return suggestionsChannelId;
     }
 
     @JsonIgnore
     public String getPopularSuggestionChannel()
     {
-        if (GalacticBot.isTesting())
-        {
-            return Development.popularIdOverride;
-        }
-
         return popularChannelId;
     }
 
     @JsonIgnore
     public String getDevServerPopularChannel()
     {
-        if (GalacticBot.isTesting())
-        {
-            return Development.devServerPopularIdOverride;
-        }
-
         return devServerPopularChannelId;
     }
     

@@ -3,8 +3,8 @@ package io.github.romvoid95.core.guildlogger;
 import java.awt.Color;
 import java.time.Instant;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.common.util.ResultLevel;
 
 import io.github.romvoid95.GalacticBot;
 import io.github.romvoid95.database.impl.Suggestion;
@@ -69,7 +69,7 @@ public class RootLogChannel
     
     public final void sendBlacklistedLog(JDA jda, Member member, String action, User user, String reason)
     {
-        if(!GalacticBot.isTesting())
+        if(!GalacticBot.instance().isDevBot())
         {
             EmbedBuilder builder = new EmbedBuilder();
             

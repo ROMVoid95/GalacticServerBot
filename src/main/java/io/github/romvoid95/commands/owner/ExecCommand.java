@@ -4,24 +4,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
 import com.google.common.base.Throwables;
 
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.option.RequiredOption;
+import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class ExecCommand extends GalacticSlashCommand
 {
 	public ExecCommand()
 	{
 		this.name = "exec";
-		options = Arrays.asList(new OptionData(OptionType.STRING, "cmd", "command to execute", true).setMaxLength(1024));
+		setOptions(RequiredOption.text("cmd", "command to execute", 1024));
 	}
 
     @Override

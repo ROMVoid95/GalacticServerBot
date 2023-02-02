@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.github.readonly.common.util.KeyValueSupplier;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-public enum SuggestionStatus
+public enum SuggestionStatus implements KeyValueSupplier
 {
 
     //@noformat
@@ -66,10 +67,16 @@ public enum SuggestionStatus
         this.fieldTitle = fieldTitle;
         this.fieldDescription = fieldDescription;
     }
-
-    public String getName()
+    
+    @Override
+    public String key()
     {
         return fieldTitle;
+    }
+    
+    public String getName()
+    {
+    	return key();
     }
 
     public Color getColor()
@@ -78,11 +85,17 @@ public enum SuggestionStatus
     }
 
     @Override
+    public String value()
+    {
+        return toString();
+    }
+    
+    @Override
     public String toString()
     {
-        return super.name().toLowerCase();
+    	return super.name().toLowerCase();
     }
-
+    
     public MessageEmbed.Field getStatusEmbedField()
     {
         return new MessageEmbed.Field(fieldTitle, fieldDescription, false);

@@ -9,6 +9,7 @@ import com.rethinkdb.net.Connection;
 
 import io.github.romvoid95.database.entity.DBBlacklist;
 import io.github.romvoid95.database.entity.DBGalacticBot;
+import io.github.romvoid95.database.entity.DBUpdates;
 
 public class DatabaseManager
 {
@@ -22,7 +23,7 @@ public class DatabaseManager
 
     @Nonnull
     @CheckReturnValue
-    public DBGalacticBot botDatabase()
+    public DBGalacticBot galacticBot()
     {
         DBGalacticBot obj = Rethink.table(DBGalacticBot.DB_TABLE).get("galacticbot").runAtom(conn, DBGalacticBot.class);
         return obj == null ? DBGalacticBot.create() : obj;
@@ -34,6 +35,14 @@ public class DatabaseManager
     {
         DBBlacklist obj = Rethink.table(DBBlacklist.DB_TABLE).get("blacklist").runAtom(conn, DBBlacklist.class);
         return obj == null ? DBBlacklist.create() : obj;
+    }
+    
+    @Nonnull
+    @CheckReturnValue
+    public DBUpdates updates()
+    {
+        DBUpdates obj = Rethink.table(DBUpdates.DB_TABLE).get("updates").runAtom(conn, DBUpdates.class);
+        return obj == null ? DBUpdates.create() : obj;
     }
 
     public void save(@Nonnull ManagedObject object)

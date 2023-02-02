@@ -1,12 +1,14 @@
 package io.github.romvoid95.commands.member;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
+import java.util.function.Consumer;
 
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 
 public class CloseDiscussionThread extends GalacticSlashCommand
 {
@@ -38,10 +40,9 @@ public class CloseDiscussionThread extends GalacticSlashCommand
             return;
         }
         
-        Reply.EphemeralReplyCallback(event, "Discussion Thread has been closed").queue(hook -> {
-            event.getChannel().asThreadChannel().getManager().setName("Discussion (CLOSED)").setArchived(true).setLocked(true).queue();
-        });;
-        
-        
+        Consumer<InteractionHook> consumerLambda = 
+        	(close) -> event.getChannel().asThreadChannel().getManager().setName("Discussion (CLOSED)").setArchived(true).setLocked(true).queue();
+
+        Reply.EphemeralReply(event, "Discussion Thread has been closed", consumerLambda);
     }
 }

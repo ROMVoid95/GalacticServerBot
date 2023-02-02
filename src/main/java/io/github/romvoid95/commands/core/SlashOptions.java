@@ -1,69 +1,86 @@
 package io.github.romvoid95.commands.core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map.Entry;
 
+import io.github.readonly.command.lists.ChoiceList;
+import io.github.readonly.command.lists.OptionsList;
+import io.github.readonly.command.option.Choice;
+import io.github.readonly.command.option.RequiredOption;
 import io.github.romvoid95.BotData;
+import io.github.romvoid95.GalacticBot;
+import io.github.romvoid95.database.entity.DBUpdates;
+import io.github.romvoid95.database.impl.updates.Mod;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.Command.Choice;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class SlashOptions
 {
-    private static OptionData ViableChannels = new OptionData(OptionType.STRING, "channel", "Available Channels that Members are able to send messages in", true);
-    
-    public static OptionData getViableChannelsOption(Guild guild)
-    {
-        Role role = guild.getRoleById(691198175519965184L);
-        List<Command.Choice> choices = new ArrayList<>();
-        guild.getTextChannels().forEach(channel -> {
-            
-            if(role.hasPermission(channel, Permission.MESSAGE_SEND))
-            {
-                choices.add(new Choice("#" + channel.getName(), channel.getId()));
-            }
-        });
-        return ViableChannels.addChoices(choices);
-    }
+	private static OptionData ViableChannels = RequiredOption.channel("channel", "Available Channels that Members are able to send messages in");
 
-    public static class Suggestion
-    {        
-        //@noformat
-        private static OptionData TypeOption = new OptionData(OptionType.STRING, "type", "Suggestion Type", true)
-            .addChoices(
-                new Command.Choice("Galacticraft 5", "[Galacticraft 5]"),
-                new Command.Choice("Galacticraft-Legacy", "[Galacticraft-Legacy]"),
-                new Command.Choice("Idea For New Addon", "[Addon Idea]"),
-                new Command.Choice("Do Not Make Suggestions For Existing Addons", "existing")
-             );
-        //@format
-        private static OptionData TitleOption       = new OptionData(OptionType.STRING, "title", "Short generalized title for your suggestion", true).setMaxLength(64);
-        private static OptionData DescriptionOption = new OptionData(OptionType.STRING, "description", "Describe in detail your suggestion", true).setMaxLength(1024);
-        
-        public static  List<OptionData> OptionsList()
-        {
-            return Arrays.asList(TypeOption, TitleOption, DescriptionOption);
-        }
-    }
+	public static OptionData getViableChannelsOption(Guild guild)
+	{
+		Role					role	= guild.getRoleById(691198175519965184L);
+		ChoiceList				list = new ChoiceList();
+		guild.getTextChannels().forEach(channel ->
+		{
+			if (role.hasPermission(channel, Permission.MESSAGE_SEND))
+			{
+				list.add(Choice.add(channel.getAsMention(), channel.getId()));
+			}
+		});
+		return ViableChannels.addChoices(list);
+	}
 
-    public static class DeleteSuggestion
-    {
-        private static OptionData SuggestionOption = new OptionData(OptionType.STRING, "number", "Suggestion #", true);
-        
-        public static OptionData getSuggestionOptions()
-        {
-            List<Command.Choice> choices = new ArrayList<>();
-            for(Entry<String, Integer> entry : BotData.database().botDatabase().getManager().getMap().entrySet())
-            {
-                choices.add(new Choice("#" + entry.getValue(), entry.getKey()));
-            }
-            return SuggestionOption.addChoices(choices);
-        }
-    }
+	public static class Suggestion
+	{
+		public static OptionsList OptionsList()
+		{
+			return new OptionsList(
+				RequiredOption.text("type", "Suggestion Type", ChoiceList.of(
+					Choice.add("Galacticraft 5", "[Galacticraft 5]"),
+					Choice.add("Galacticraft-Legacy", "[Galacticraft-Legacy]"),
+					Choice.add("Idea For New Addon", "[Addon Idea]"),
+					Choice.add("Do Not Make Suggestions For Existing Addons", "existing")
+					)
+				),
+				RequiredOption.text("title", "Short generalized title for your suggestion", 64),
+				RequiredOption.text("description", "Describe in detail your suggestion", 1024));
+				
+		}
+	}
+
+	public static class UpdateMods
+	{
+		public static ChoiceList getGuildChoiceList(String guildId)
+		{
+			ChoiceList				list = new ChoiceList();
+			DBUpdates updates = BotData.database().updates();
+			
+			for(Entry<String, Mod> e : updates.getMods().entrySet())
+			{
+				String name = e.getKey();
+				if(e.getValue().getNotifications().containsKey(guildId))
+				{
+					list.add(Choice.add(name, name));
+				}
+			}
+			
+			return list;
+		}
+	}
+
+	public static OptionData getServers()
+	{
+		OptionData servers = new OptionData(OptionType.STRING, "guild", "Choose a Guild", true);
+		
+		for(Guild guild : GalacticBot.instance().getJda().getGuilds())
+		{
+			servers.addChoice(guild.getName(), guild.getId());
+		}
+		
+		return servers;
+	}
 }

@@ -2,10 +2,9 @@ package io.github.romvoid95.commands.member;
 
 import java.util.UUID;
 
-import com.github.readonlydevelopment.command.OptionHelper;
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
-
+import io.github.readonly.command.OptionHelper;
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.Conf;
 import io.github.romvoid95.Server;
@@ -47,12 +46,12 @@ public class NewSuggestion extends GalacticSlashCommand
             return;
         }
         
-        if(!Server.getServer(event.getGuild()).equals(BotData.galacticraftCentralServer()))
+        if(!Server.get(event.getGuild()).equals(BotData.galacticraftCentralServer()))
         {
         	Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in the Galacticraft Central Discord Server");
         }
         
-        String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionChannel();
+        String channelId = BotData.database().galacticBot().getSuggestionOptions().getSuggestionChannel();
         // Just in case some stupid stuff is going on
         if (channelId.isBlank())
         {
@@ -83,7 +82,7 @@ public class NewSuggestion extends GalacticSlashCommand
             return;
         }
 
-        int number = BotData.database().botDatabase().getManager().getCount() + 1;
+        int number = BotData.database().galacticBot().getManager().getCount() + 1;
         String title = getTitle(event);
         String description = event.getOption("description").getAsString();
         
@@ -109,7 +108,7 @@ public class NewSuggestion extends GalacticSlashCommand
             {
                 Suggestion newSuggestion = new Suggestion(reply.getId(), event.getMember().getId(), title);
                 
-                String newSuggestionId = BotData.database().botDatabase().addNewSuggestion(number, newSuggestion);
+                String newSuggestionId = BotData.database().galacticBot().addNewSuggestion(number, newSuggestion);
                 reply.addReaction(Emojis.STAR.getEmoji()).queue();
                 reply.createThreadChannel("Discussion").queue();
                 

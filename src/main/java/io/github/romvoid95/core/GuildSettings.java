@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.readonlydevelopment.settings.GuildSettingsManager;
+import io.github.readonly.settings.GuildSettingsManager;
 
 import io.github.romvoid95.core.guildlogger.RootLogChannel;
 import io.github.romvoid95.core.guildlogger.ServerSettings;

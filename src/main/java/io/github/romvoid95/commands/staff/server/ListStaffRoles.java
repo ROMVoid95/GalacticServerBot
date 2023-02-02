@@ -1,10 +1,10 @@
 package io.github.romvoid95.commands.staff.server;
 
-import java.util.Arrays;
 import java.util.List;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.lists.ChoiceList;
+import io.github.readonly.command.option.RequiredOption;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.commands.core.RoleType;
@@ -13,9 +13,6 @@ import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.interactions.commands.Command;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
 public class ListStaffRoles extends GalacticSlashCommand
@@ -24,12 +21,7 @@ public class ListStaffRoles extends GalacticSlashCommand
     {
         this.name = "list";
         this.help = "shows roles currently in the Admins or Moderators list";
-        this.options = Arrays.asList(
-            new OptionData(OptionType.STRING, "type", "Mod or Admin", true).addChoices(
-                    new Command.Choice("Moderator", "MOD"),
-                    new Command.Choice("Admin", "ADMIN")
-                )
-        );
+        setOptions(RequiredOption.text("type", "Mod or Admin", ChoiceList.toList(RoleType.class)));
         this.subcommandGroup = new SubcommandGroupData("staff", "Manage Roles that are considered staff in the server");
     }
 
@@ -47,7 +39,7 @@ public class ListStaffRoles extends GalacticSlashCommand
         
         RoleType type = RoleType.valueOf(event.getOption("type").getAsString());
 
-        DBGalacticBot db = BotData.database().botDatabase();
+        DBGalacticBot db = BotData.database().galacticBot();
         List<Role> roles = db.getRoles(event.getGuild(), type);
         String title = "**%s**".formatted(type.name);
         String list;

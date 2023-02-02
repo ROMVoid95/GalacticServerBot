@@ -1,7 +1,7 @@
 package io.github.romvoid95.commands.core;
 
-import com.github.readonlydevelopment.command.SlashCommand;
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
+import io.github.readonly.command.SlashCommand;
+import io.github.readonly.command.event.SlashCommandEvent;
 
 public abstract class ParentSlashCommand extends SlashCommand
 {

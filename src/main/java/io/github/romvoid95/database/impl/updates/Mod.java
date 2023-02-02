@@ -1,37 +1,54 @@
 package io.github.romvoid95.database.impl.updates;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Data
-@Accessors(fluent = true)
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class Mod
 {
-    private final Modrinth modrinth;
-    private final Curseforge curseforge;
-    private String updateChannelId;
-    private List<Long> pingRoles = new ArrayList<>();;
+	private boolean active = false;
+    private Modrinth modrinth = new Modrinth();
+    private Curseforge curseforge = new Curseforge();
+    private Map<String, UpdateInfo> notifications = new HashMap<>();
+
     
-    public Mod(String modrinthProjectSlug, long curseforgeProjectId)
-    {
-    	this.modrinth = new Modrinth(modrinthProjectSlug);
-    	this.curseforge = new Curseforge(curseforgeProjectId);
+    @Setter
+    @Getter
+    @NoArgsConstructor
+    public static class UpdateInfo {
+    	private String channelId;
+    	private String pingRoleId;
+    	
+    	@JsonIgnore
+    	public Optional<String> getRoleId()
+    	{
+    		return Optional.ofNullable(pingRoleId);
+    	}
     }
     
-    @Data
-    public class Modrinth {
-    	private final String slug;
-    	private int versionCount;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class Modrinth {
+    	private String projectId;
     	private String latestVersionId;
     }
     
-    @Data
-    public class Curseforge {
-    	private final long projectId;
-    	private long latestFileId;
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class Curseforge {
+    	private String projectId;
+    	private String latestFileId;
     }
 }
 

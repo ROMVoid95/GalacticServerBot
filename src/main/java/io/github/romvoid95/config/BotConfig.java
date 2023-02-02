@@ -18,15 +18,8 @@ public class BotConfig
 
     private String              avatarUrl       = "https://i.imgur.com/S7CqwYg.png";
     private String              token           = "TOKEN";
-    private String              apiKey          = "API_KEY";
-    private String              prefix          = "PREFIX";
-    private String              clientId        = "CLIENTID";
-    private String              secret          = "SECRET";
-    private Boolean             debug           = false;
     private String              owner           = "owner-id";
     private String              webhookUrl      = "URL";
-    private String				curseApiKey		= "";
-    private String[]            commandPackages = new String[] {};
     private RethinkDataseConfig database        = new RethinkDataseConfig();
 
     @JsonIgnore

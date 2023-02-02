@@ -11,7 +11,7 @@ public class SettingsHelper
 {
     public static RootLogChannel getRootLogChannel(Guild guild)
     {
-        ServerSettings settings = GalacticBot.getClient().getSettingsFor(guild);
+        ServerSettings settings = GalacticBot.instance().getClient().getSettingsFor(guild);
         return settings.getRootLogger();
     }
 }

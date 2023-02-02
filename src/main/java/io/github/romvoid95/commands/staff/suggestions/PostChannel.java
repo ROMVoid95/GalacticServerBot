@@ -1,10 +1,9 @@
 package io.github.romvoid95.commands.staff.suggestions;
 
 import java.awt.Color;
-import java.util.Arrays;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.option.Option;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
@@ -15,7 +14,6 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class PostChannel extends GalacticSlashCommand
 {
@@ -24,7 +22,7 @@ public class PostChannel extends GalacticSlashCommand
     {
         this.name = "channel";
         this.help = "Display or change the channel new Suggestions are posted in";
-        this.options = Arrays.asList(new OptionData(OptionType.CHANNEL, "channel", "Guild Channel to use for new Suggestions"));
+        setOptions(Option.channel("channel", "Guild Channel to use for new Suggestions"));
     }
 
     @Override
@@ -40,7 +38,7 @@ public class PostChannel extends GalacticSlashCommand
                 return;
             }
 
-            final DBGalacticBot db = BotData.database().botDatabase();
+            final DBGalacticBot db = BotData.database().galacticBot();
             String suggestionsChannelId = db.getSuggestionOptions().getSuggestionChannel();
             TextChannel suggestionsChannel = event.getGuild().getTextChannelById(suggestionsChannelId);
 
@@ -70,7 +68,7 @@ public class PostChannel extends GalacticSlashCommand
                 Reply.Error(event, "You must choose a Text Channel to use for Suggestions");
                 return;
             }
-            final DBGalacticBot db = BotData.database().botDatabase();
+            final DBGalacticBot db = BotData.database().galacticBot();
             String suggestionsChannelId = db.getSuggestionOptions().getSuggestionChannel();
             TextChannel oldChannel = event.getGuild().getTextChannelById(suggestionsChannelId);
             TextChannel newChannel = channelOption.getAsChannel().asTextChannel();

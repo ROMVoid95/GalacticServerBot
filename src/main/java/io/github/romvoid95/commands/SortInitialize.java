@@ -3,8 +3,8 @@ package io.github.romvoid95.commands;
 import java.util.Arrays;
 import java.util.List;
 
-import com.github.readonlydevelopment.command.ClientBuilder;
-import com.github.readonlydevelopment.command.SlashCommand;
+import io.github.readonly.command.ClientBuilder;
+import io.github.readonly.command.SlashCommand;
 
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.member.CloseDiscussionThread;
@@ -17,6 +17,7 @@ import io.github.romvoid95.commands.staff.Suggestions;
 import io.github.romvoid95.commands.staff.server.ServerStaff;
 import io.github.romvoid95.commands.staff.suggestions.devonly.DevServerPopularChannel;
 import io.github.romvoid95.commands.staff.suggestions.devonly.SuggestionSetStatus;
+import io.github.romvoid95.commands.staff.updates.UpdatesCommand;
 
 public class SortInitialize
 {
@@ -33,16 +34,16 @@ public class SortInitialize
 
 	private static final List<SlashCommand> centralServerCommands()
 	{
-		return Arrays.asList(new Suggestions(), new ServerStaff(), new NewSuggestion(), new CloseDiscussionThread());
+		return Arrays.asList(new Suggestions(), new ServerStaff(), new NewSuggestion(), new CloseDiscussionThread(), new UpdatesCommand());
 	}
 	
 	private static final List<SlashCommand> teamServerCommands()
 	{
-		return Arrays.asList(new DevServerPopularChannel(), new SuggestionSetStatus());
+		return Arrays.asList(new DevServerPopularChannel(), new SuggestionSetStatus(), new UpdatesCommand());
 	}
 	
 	private static final List<SlashCommand> botServerCommands()
 	{
-		return Arrays.asList(new DatabaseCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand());
+		return Arrays.asList(new DatabaseCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand());
 	}
 }

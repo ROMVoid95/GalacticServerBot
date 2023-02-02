@@ -1,7 +1,6 @@
 package io.github.romvoid95.commands.owner;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-
+import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
@@ -31,7 +30,7 @@ public class DatabaseCommand extends GalacticSlashCommand
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        DBGalacticBot database = BotData.database().botDatabase();
+        DBGalacticBot database = BotData.database().galacticBot();
         
         database.clearSuggestionDatabase();
         

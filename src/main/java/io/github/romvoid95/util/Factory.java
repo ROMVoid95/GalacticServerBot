@@ -14,6 +14,11 @@ public class Factory
     {
         return Executors.newScheduledThreadPool(poolSize, newThreadFactory(threadName, isDaemon));
     }
+    
+    public static ScheduledExecutorService newUpdateThread()
+    {
+    	return Executors.newScheduledThreadPool(1, r -> setThreadDaemon(new Thread(r, "UpdateChecker"), true));
+    }
 
     public static ThreadFactory newThreadFactory(String threadName, boolean isdaemon)
     {
@@ -25,5 +30,10 @@ public class Factory
                     log.error("There was a uncaught exception in the {} threadpool", thread.getName(), throwable));
             return t;
         };
+    }
+    
+    private static Thread setThreadDaemon(final Thread thread, final boolean isDaemon) {
+        thread.setDaemon(isDaemon);
+        return thread;
     }
 }

@@ -6,8 +6,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import com.github.readonlydevelopment.command.event.CommandEvent;
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
+import io.github.readonly.command.event.CommandEvent;
+import io.github.readonly.command.event.SlashCommandEvent;
 
 import io.github.romvoid95.GalacticBot;
 import net.dv8tion.jda.api.entities.Message;
@@ -59,7 +59,7 @@ public class DiscordUtils
     {
         try
         {
-            return Optional.of(GalacticBot.getJda().getRoleById(id));
+            return Optional.of(GalacticBot.instance().getJda().getRoleById(id));
         } catch (NumberFormatException e)
         {
             return Optional.empty();
@@ -68,7 +68,7 @@ public class DiscordUtils
 
     public static Optional<TextChannel> getChannel(String id)
     {
-        return Optional.ofNullable(GalacticBot.getJda().getTextChannelById(id));
+        return Optional.ofNullable(GalacticBot.instance().getJda().getTextChannelById(id));
     }
 
     public static String capitalize(String input)

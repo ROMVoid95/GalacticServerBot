@@ -1,4 +1,4 @@
-package io.github.romvoid95.logback;
+package io.github.romvoid95.util;
 
 import java.awt.Color;
 import java.time.OffsetDateTime;

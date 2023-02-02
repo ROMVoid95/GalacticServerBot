@@ -1,30 +1,24 @@
 package io.github.romvoid95.util.discord;
 
-import java.awt.Color;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
-import javax.annotation.Nullable;
-
-import com.github.readonlydevelopment.command.event.CommandEvent;
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
-
+import io.github.readonly.command.event.CommandEvent;
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.core.guildlogger.ServerSettings;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
-public class Reply
+public final class Reply
 {
-    
-    
-    
     public static void InvalidPermissions(SlashCommandEvent event)
     {        
         event.replyEmbeds(
-            simpleEmbed(event.getMember().getAsMention() + ", you do not have the required permissions/roles to run this command.\n\n**This attempt has been logged**", Color.RED)
+            simpleEmbed(event.getMember().getAsMention() + ", you do not have the required permissions/roles to run this command.\n\n**This attempt has been logged**", ResultLevel.WARNING.getColor())
         ).setEphemeral(true).queue(s -> {
             ((ServerSettings) event.getClient().getSettingsFor(event.getGuild())).getRootLogger().sendLogMessage(event);
         });
@@ -34,17 +28,63 @@ public class Reply
     {
         event.replyEmbeds(simpleEmbed(message, level.getColor())).setEphemeral(true).queue();
     }
+    
+    public static void EphemeralReply(SlashCommandEvent event, ResultLevel level, MessageEmbed embed)
+    {
+        event.replyEmbeds(embed).setEphemeral(true).queue();
+    }
+    
+    public static void EphemeralReply(SlashCommandEvent event, ResultLevel level, EmbedBuilder builder)
+    {
+    	builder.setColor(level.getColor());
+        event.replyEmbeds(builder.build()).setEphemeral(true).queue();
+    }
 
-    public static ReplyCallbackAction EphemeralReplyCallback(SlashCommandEvent event, MessageCreateData data)
+    public static void EphemeralReply(SlashCommandEvent event, String message)
     {
-        return event.replyEmbeds(simpleEmbed(data.getContent(), ResultLevel.SUCCESS.getColor())).setEphemeral(true);
+        event.replyEmbeds(simpleEmbed(message)).setEphemeral(true).queue();
     }
     
-    public static ReplyCallbackAction EphemeralReplyCallback(SlashCommandEvent event, String message)
+    public static void EphemeralReply(SlashCommandEvent event, String message, Consumer<? super InteractionHook> onSuccess)
     {
-        return event.replyEmbeds(simpleEmbed(message, ResultLevel.SUCCESS.getColor())).setEphemeral(true);
+        event.replyEmbeds(simpleEmbed(message)).setEphemeral(true).queue(onSuccess);
     }
     
+    public static void EphemeralReply(SlashCommandEvent event, String message, Consumer<? super InteractionHook> onSuccess, Consumer<? super Throwable> failure)
+    {
+        event.replyEmbeds(simpleEmbed(message)).setEphemeral(true).queue(onSuccess, failure);
+    }
+    
+    public static void EphemeralReply(SlashCommandEvent event, EmbedBuilder builder)
+    {
+        event.replyEmbeds(builder.build()).setEphemeral(true).queue();
+    }
+    
+    public static void EphemeralReply(SlashCommandEvent event, EmbedBuilder builder, Consumer<? super InteractionHook> onSuccess)
+    {
+        event.replyEmbeds(builder.build()).setEphemeral(true).queue(onSuccess);
+    }
+    
+    public static void EphemeralReply(SlashCommandEvent event, EmbedBuilder builder, Consumer<? super InteractionHook> onSuccess, Consumer<? super Throwable> failure)
+    {
+        event.replyEmbeds(builder.build()).setEphemeral(true).queue(onSuccess, failure);
+    }
+    
+    public static void EphemeralReply(SlashCommandEvent event, MessageCreateData data)
+    {
+        event.replyEmbeds(simpleEmbed(data.getContent(), ResultLevel.SUCCESS.getColor())).setEphemeral(true).queue();
+    }
+    
+    public static void EphemeralReply(SlashCommandEvent event, MessageCreateData data, Consumer<? super InteractionHook> onSuccess)
+    {
+        event.replyEmbeds(simpleEmbed(data.getContent(), ResultLevel.SUCCESS.getColor())).setEphemeral(true).queue(onSuccess);
+    }
+    
+    public static void EphemeralReply(SlashCommandEvent event, MessageCreateData data, Consumer<? super InteractionHook> onSuccess, Consumer<? super Throwable> failure)
+    {
+        event.replyEmbeds(simpleEmbed(data.getContent(), ResultLevel.SUCCESS.getColor())).setEphemeral(true).queue(onSuccess, failure);
+    }
+
     public static void Success(SlashCommandEvent event, String message)
     {
         event.replyEmbeds(simpleEmbed(message, ResultLevel.SUCCESS.getColor())).queue();
@@ -78,6 +118,14 @@ public class Reply
         });
     }
 
+    public static void temporaryReply(CommandEvent event, MessageEmbed embed, int time, TimeUnit unit)
+    {
+        event.getChannel().sendMessageEmbeds(embed).queue(success ->
+        {
+            success.delete().queueAfter(time, unit);
+        });
+    }
+    
     public static void temporaryReply(MessageChannelUnion channel, MessageEmbed embed, int time, TimeUnit unit)
     {
         channel.sendMessageEmbeds(embed).queue(success ->
@@ -88,13 +136,13 @@ public class Reply
 
     public static MessageEmbed simpleEmbed(final String message)
     {
-        return simpleEmbed(message, null);
+        return simpleEmbed(message, 0);
     }
 
-    public static MessageEmbed simpleEmbed(final String message, @Nullable Color color)
+    public static MessageEmbed simpleEmbed(final String message, int color)
     {
         EmbedBuilder builder = new EmbedBuilder().setDescription(message);
-        if (color != null)
+        if (color != 0)
         {
             builder.setColor(color);
         }

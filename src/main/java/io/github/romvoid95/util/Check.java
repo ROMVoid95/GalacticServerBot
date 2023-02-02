@@ -5,10 +5,11 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
+import io.github.readonly.command.event.SlashCommandEvent;
 
 import io.github.romvoid95.BotData;
-import io.github.romvoid95.Conf;
+import io.github.romvoid95.GalacticBot;
+import io.github.romvoid95.Server;
 import io.github.romvoid95.database.impl.Suggestion;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
@@ -18,18 +19,18 @@ public class Check
     
     public static boolean isOwner(SlashCommandEvent event)
     {
-        return Conf.Bot().isOwner(event.getUser());
+        return GalacticBot.instance().getClient().getOwnerId().equals(event.getAuthor().getId());
     }
 
     private static boolean isFromBotDevServer(SlashCommandEvent event)
     {
-        return event.getGuild().equals(BotData.botDevServer());
+        return Server.get(event.getGuild()).equals(BotData.botDevServer());
     }
     
     public static boolean forSuggestionAuthor(SlashCommandEvent event)
     {
         String messageId = event.getChannel().asThreadChannel().retrieveParentMessage().complete().getId();
-        Suggestion suggestion = BotData.database().botDatabase().getSuggestionFromMessageId(messageId);
+        Suggestion suggestion = BotData.database().galacticBot().getSuggestionFromMessageId(messageId);
         
         return suggestion.getAuthorId().equals(event.getMember().getId());
     }
@@ -59,7 +60,7 @@ public class Check
         {
             return true;
         } else {
-            List<String> adminRoles = BotData.database().botDatabase().getGuilds().get(event.getGuild().getIdLong()).getServerAdminRoles();
+            List<String> adminRoles = BotData.database().galacticBot().getGuilds().get(event.getGuild().getIdLong()).getServerAdminRoles();
             List<String> memberRoles = event.getMember().getRoles().stream().map(Role::getId).collect(Collectors.toList());
             boolean checksPass = false;
             
@@ -78,7 +79,7 @@ public class Check
         {
             return true;
         } else {
-            List<String> staffRoles = BotData.database().botDatabase().getGuilds().get(event.getGuild().getIdLong()).getServerModeratorRoles();
+            List<String> staffRoles = BotData.database().galacticBot().getGuilds().get(event.getGuild().getIdLong()).getServerModeratorRoles();
             List<String> memberRoles = event.getMember().getRoles().stream().map(Role::getId).collect(Collectors.toList());
             boolean checksPass = false;
             
@@ -95,6 +96,11 @@ public class Check
             
             return checksPass;
         }
+    }
+    
+    public static boolean userNotStaff(SlashCommandEvent event)
+    {
+    	return Check.staffRoles(event) == false;
     }
     
     private static boolean containsAny(final Collection<?> coll1, final Collection<?> coll2) {

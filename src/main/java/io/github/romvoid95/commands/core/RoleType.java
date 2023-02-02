@@ -1,6 +1,8 @@
 package io.github.romvoid95.commands.core;
 
-public enum RoleType
+import io.github.readonly.common.util.KeyValueSupplier;
+
+public enum RoleType implements KeyValueSupplier
 {
 
     MOD("Moderator Roles"),
@@ -12,4 +14,16 @@ public enum RoleType
     {
         this.name = name;
     }
+
+	@Override
+	public String key()
+	{
+		return name;
+	}
+
+	@Override
+	public String value()
+	{
+		return super.toString().toLowerCase();
+	}
 }

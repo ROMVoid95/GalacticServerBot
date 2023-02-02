@@ -1,10 +1,10 @@
 package io.github.romvoid95.commands.staff.suggestions;
 
-import java.util.Arrays;
-
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
-
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.lists.ChoiceList;
+import io.github.readonly.command.option.Choice;
+import io.github.readonly.command.option.RequiredOption;
+import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.core.guildlogger.RootLogChannel;
@@ -14,9 +14,7 @@ import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class SuggestionBlacklist extends GalacticSlashCommand
 {
@@ -25,12 +23,10 @@ public class SuggestionBlacklist extends GalacticSlashCommand
     {
         this.name = "blacklist";
         this.help = "Add or remove a member from suggestions blacklist";
-        this.options = Arrays.asList(
-            new OptionData(OptionType.STRING, "action", "What action to take", true).addChoices(
-                new Command.Choice("Add", "add"), 
-                new Command.Choice("Remove", "remove")), 
-            new OptionData(OptionType.USER, "user", "User", true), 
-            new OptionData(OptionType.STRING, "reason", "reason for the action taken", true)
+        setOptions(
+        	RequiredOption.text("action", "What action to take", ChoiceList.of(Choice.add("Add"), Choice.add("Remove"))),
+        	RequiredOption.user("user", "User"),
+        	RequiredOption.text("reason", "reason for the action taken")
         );
     }
 
@@ -46,7 +42,7 @@ public class SuggestionBlacklist extends GalacticSlashCommand
             return;
         }
 
-        String channelId = BotData.database().botDatabase().getSuggestionOptions().getSuggestionChannel();
+        String channelId = BotData.database().galacticBot().getSuggestionOptions().getSuggestionChannel();
         TextChannel txtChannel = event.getGuild().getTextChannelById(channelId);
 
         if (!event.getChannel().asTextChannel().equals(txtChannel))

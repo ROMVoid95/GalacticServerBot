@@ -3,8 +3,7 @@ package io.github.romvoid95.commands.staff.suggestions;
 import java.util.Collection;
 import java.util.EnumSet;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-
+import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
@@ -35,7 +34,7 @@ public class ChannelLock extends GalacticSlashCommand
             return;
         }
 
-        final DBGalacticBot db = BotData.database().botDatabase();
+        final DBGalacticBot db = BotData.database().galacticBot();
         boolean suggestionsLocked = db.getSuggestionOptions().isSuggestionsLocked();
 
         Role memberRole = event.getGuild().getRolesByName("Astronaut", false).get(0);

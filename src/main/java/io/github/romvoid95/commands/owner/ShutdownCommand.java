@@ -1,7 +1,6 @@
 package io.github.romvoid95.commands.owner;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-
+import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;

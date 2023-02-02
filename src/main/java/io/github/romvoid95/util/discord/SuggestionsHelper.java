@@ -3,7 +3,7 @@ package io.github.romvoid95.util.discord;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.readonlydevelopment.common.utils.ResultLevel;
+import io.github.readonly.common.util.ResultLevel;
 
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.GalacticBot;
@@ -25,7 +25,7 @@ public class SuggestionsHelper
 
     public List<String> getAllAuthors()
     {
-        DBGalacticBot db = BotData.database().botDatabase();
+        DBGalacticBot db = BotData.database().galacticBot();
         return db.getManager().getList().stream().map(Suggestion::getAuthorId).collect(Collectors.toList());
     }
 
@@ -71,7 +71,7 @@ public class SuggestionsHelper
 
     public static void handleSuggestionDownvoteEvent(MessageReactionRemoveEvent event)
     {
-        DBGalacticBot suggestions = BotData.database().botDatabase();
+        DBGalacticBot suggestions = BotData.database().galacticBot();
         if (suggestions.getAllSuggestionMessageIds().contains(event.getMessageId()))
         {
             Suggestion suggestion = suggestions.getSuggestionFromMessageId(event.getMessageId());
@@ -88,7 +88,7 @@ public class SuggestionsHelper
 
     public static void handleSuggestionUpvoteEvent(MessageReactionAddEvent event)
     {
-        DBGalacticBot database = BotData.database().botDatabase();
+        DBGalacticBot database = BotData.database().galacticBot();
 
         if (database.getAllSuggestionMessageIds().contains(event.getMessageId()))
         {
@@ -112,7 +112,7 @@ public class SuggestionsHelper
                 {
                     if (suggestion.getMessages().getCommunityPopularMsgId().isEmpty())
                     {
-                        TextChannel popularChannel = GalacticBot.getJda().getTextChannelById(options.getPopularChannelId());
+                        TextChannel popularChannel = GalacticBot.instance().getJda().getTextChannelById(options.getPopularChannelId());
                         popularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(
                             success -> {
                                 database.addNewCommunityPopularMessage(success.getId(), suggestion);
@@ -125,7 +125,7 @@ public class SuggestionsHelper
                     
                     if (suggestion.getMessages().getDevPopularMsgId().isEmpty())
                     {
-                        TextChannel devPopularChannel = GalacticBot.getJda().getTextChannelById(options.getDevServerPopularChannel());
+                        TextChannel devPopularChannel = GalacticBot.instance().getJda().getTextChannelById(options.getDevServerPopularChannel());
                         devPopularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(
                             success -> {
                                 database.addNewDevServerPopularMessage(success.getId(), suggestion);

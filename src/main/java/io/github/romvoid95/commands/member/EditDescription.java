@@ -1,11 +1,11 @@
 package io.github.romvoid95.commands.member;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-import com.github.readonlydevelopment.command.event.SlashCommandEvent;
-import com.github.readonlydevelopment.common.utils.ResultLevel;
-
+import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.lists.ChoiceList;
+import io.github.readonly.command.option.RequiredOption;
+import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.EditType;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
@@ -15,8 +15,6 @@ import io.github.romvoid95.util.discord.SuggestionStatus;
 import io.github.romvoid95.util.discord.entity.SuggestionEmbed;
 import io.github.romvoid95.util.rec.LinkedMessagesRecord;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class EditDescription extends GalacticSlashCommand
 {
@@ -25,10 +23,10 @@ public class EditDescription extends GalacticSlashCommand
     {
         this.name = "edit-description";
         this.help = "[DM ONLY] Edit the description of your Suggestion";
-        this.options = Arrays.asList(
-            new OptionData(OptionType.STRING, "id", "The Unique ID provided to you by the Bot in DM's", true),
-            new OptionData(OptionType.STRING, "type", "Replace or append", true).addChoices(EditType.toChoices()),
-            new OptionData(OptionType.STRING, "description", "Your new description", true).setMaxLength(1024)
+        setOptions(
+        	RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"),
+        	RequiredOption.text("type", "Replace or append", ChoiceList.toList(EditType.class)),
+        	RequiredOption.text("description", "Your new description", 1024)
         );
         this.directMessagesAllowed();
     }
@@ -50,7 +48,7 @@ public class EditDescription extends GalacticSlashCommand
         }
 
         String id = event.getOption("id").getAsString();
-        Optional<Suggestion> suggestionToEdit = BotData.database().botDatabase().getSuggestionFromUniqueId(id);
+        Optional<Suggestion> suggestionToEdit = BotData.database().galacticBot().getSuggestionFromUniqueId(id);
 
         if (suggestionToEdit.isPresent())
         {
