@@ -20,6 +20,7 @@ public class SlashCommandServer extends Server
 	{
 		super(guildId);
 		this.serverCommands = new ServerCommands();
+		this.serverCommands.setGuildId(guildId);
 	}
 
 	public void addSlashCommands(Collection<SlashCommand> commands)
