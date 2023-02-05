@@ -1,7 +1,9 @@
 package io.github.romvoid95.util.discord;
 
 import io.github.romvoid95.BotData;
-import io.github.romvoid95.Server;
+import io.github.romvoid95.Servers;
+import io.github.romvoid95.server.Server;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public enum SetChannel
@@ -9,19 +11,19 @@ public enum SetChannel
     POST
     (
         BotData.database().galacticBot().getSuggestionOptions().getSuggestionChannel(),
-        BotData.galacticraftCentralServer()
+        Servers.galacticraftCentral
     ),
     
     POPULAR
     (
         BotData.database().galacticBot().getSuggestionOptions().getPopularChannelId(),
-        BotData.galacticraftCentralServer()
+        Servers.galacticraftCentral
     ),
     
     DEV_POPULAR
     (
         BotData.database().galacticBot().getSuggestionOptions().getDevServerPopularChannel(),
-        BotData.teamGalacticraftServer()
+        Servers.teamGalacticraft
     );
     
     private String channelId;
@@ -35,6 +37,7 @@ public enum SetChannel
     
     public MessageChannel getChannel()
     {
-    	return server.getGuild().get().getTextChannelById(channelId);
+    	Guild guild = server.getGuild();
+    	return guild.getTextChannelById(channelId);
     }
 }

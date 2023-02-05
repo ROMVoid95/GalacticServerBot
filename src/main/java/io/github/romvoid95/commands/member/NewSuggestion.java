@@ -7,10 +7,11 @@ import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.Conf;
-import io.github.romvoid95.Server;
+import io.github.romvoid95.Servers;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.commands.core.SlashOptions;
 import io.github.romvoid95.database.impl.Suggestion;
+import io.github.romvoid95.server.Server;
 import io.github.romvoid95.util.discord.Emojis;
 import io.github.romvoid95.util.discord.Reply;
 import io.github.romvoid95.util.discord.SuggestionStatus;
@@ -46,27 +47,14 @@ public class NewSuggestion extends GalacticSlashCommand
             return;
         }
         
-        if(!Server.of(event.getGuild()).equals(BotData.galacticraftCentralServer()))
+        if(!Server.of(event.getGuild()).equals(Servers.galacticraftCentral))
         {
         	Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in the Galacticraft Central Discord Server");
+        	return;
         }
-        
+
         String channelId = BotData.database().galacticBot().getSuggestionOptions().getSuggestionChannel();
-        // Just in case some stupid stuff is going on
-        if (channelId.isBlank())
-        {
-            Reply.EphemeralReply(event, ResultLevel.ERROR, "The Suggestions Channel for this server has not be set by the Staff");
-            return;
-        }
-
         TextChannel txtChannel = event.getGuild().getTextChannelById(channelId);
-        // Ensure the channel is visable by the bot
-        if (txtChannel == null)
-        {
-            Reply.EphemeralReply(event, ResultLevel.ERROR, "The Suggestions Channel that has been set for the server is invalid, Please inform Staff");
-            return;
-        }
-
         // Only allow new suggestions in the predefined channel
         // We don't live in the jungle out here
         if(!event.getChannel().asTextChannel().equals(txtChannel))

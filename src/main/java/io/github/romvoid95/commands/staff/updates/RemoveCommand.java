@@ -4,12 +4,10 @@ import io.github.readonly.command.OptionHelper;
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
 import io.github.readonly.command.option.RequiredOption;
-import io.github.readonly.common.event.EventHandler;
 import io.github.readonly.common.util.Embed;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
-import io.github.romvoid95.core.event.ModUpdateEvent;
 import io.github.romvoid95.database.entity.DBUpdates;
 import io.github.romvoid95.database.impl.updates.UpdateMod;
 import io.github.romvoid95.util.Check;
@@ -55,7 +53,6 @@ public class RemoveCommand extends GalacticSlashCommand
 
 		mod.getNotifications().remove(event.getGuild().getId());
 		updates.saveUpdating();
-		EventHandler.instance().post(new ModUpdateEvent.Remove(modName, event.getGuild()));
 
 		Embed reply = Embed.newBuilder().description("Sucessfully removed mod `" + modName + "` from Update Notifications");
 		if(deletPingRole && roleReplyInfo != null)

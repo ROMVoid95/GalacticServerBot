@@ -7,12 +7,10 @@ import io.github.readonly.command.OptionHelper;
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
 import io.github.readonly.command.option.RequiredOption;
-import io.github.readonly.common.event.EventHandler;
 import io.github.readonly.common.util.Embed;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
-import io.github.romvoid95.core.event.ModUpdateEvent;
 import io.github.romvoid95.database.entity.DBUpdates;
 import io.github.romvoid95.database.impl.updates.UpdateMod;
 import io.github.romvoid95.database.impl.updates.UpdateMod.Curseforge;
@@ -125,10 +123,6 @@ public class AddCommand extends GalacticSlashCommand
 		final String	channelMention	= channel.getAsMention();
 		final String	roleMention		= pingRole != null ? pingRole.getAsMention() : pingRoleError;
 
-		EventHandler.instance().post(new ModUpdateEvent.Add(modName, event.getGuild()));
-		
-		
-		
 		Reply.EphemeralReply(event.getHook(), ResultLevel.SUCCESS, Embed.newBuilder().description("Sucessfully added mod `" + modName + "` to Update Notifications with the following configurations").field("Update Channel", channelMention).field("Ping Role", roleMention).toEmbed());
 	}
 	

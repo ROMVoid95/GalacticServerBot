@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.github.readonly.command.ClientBuilder;
 import io.github.readonly.command.SlashCommand;
-import io.github.romvoid95.BotData;
+import io.github.romvoid95.Servers;
 import io.github.romvoid95.commands.member.CloseDiscussionThread;
 import io.github.romvoid95.commands.member.NewSuggestion;
 import io.github.romvoid95.commands.owner.DatabaseCommand;
@@ -23,13 +23,13 @@ public class SortInitialize
 {
 	public static void perform(ClientBuilder clientBuilder)
 	{
-		BotData.botDevServer().addSlashCommands(SortInitialize.botServerCommands());
-		BotData.galacticraftCentralServer().addSlashCommands(SortInitialize.centralServerCommands());
-		BotData.teamGalacticraftServer().addSlashCommands(SortInitialize.teamServerCommands());
+		Servers.readOnlyNetwork.addSlashCommands(SortInitialize.botServerCommands());
+		Servers.galacticraftCentral.addSlashCommands(SortInitialize.centralServerCommands());
+		Servers.teamGalacticraft.addSlashCommands(SortInitialize.teamServerCommands());
 		
-		clientBuilder.addServerCommands(BotData.botDevServer().getServerCommands());
-		clientBuilder.addServerCommands(BotData.galacticraftCentralServer().getServerCommands());
-		clientBuilder.addServerCommands(BotData.teamGalacticraftServer().getServerCommands());
+		clientBuilder.addServerCommands(Servers.readOnlyNetwork.getServerCommands());
+		clientBuilder.addServerCommands(Servers.galacticraftCentral.getServerCommands());
+		clientBuilder.addServerCommands(Servers.teamGalacticraft.getServerCommands());
 	}
 
 	private static final List<SlashCommand> centralServerCommands()

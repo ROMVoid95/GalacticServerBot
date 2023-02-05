@@ -9,8 +9,9 @@ import io.github.readonly.command.event.SlashCommandEvent;
 
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.GalacticBot;
-import io.github.romvoid95.Server;
+import io.github.romvoid95.Servers;
 import io.github.romvoid95.database.impl.Suggestion;
+import io.github.romvoid95.server.Server;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 
@@ -24,7 +25,7 @@ public class Check
 
     private static boolean isFromBotDevServer(SlashCommandEvent event)
     {
-        return Server.of(event.getGuild()).equals(BotData.botDevServer());
+        return Server.of(event.getGuild()).equals(Servers.readOnlyNetwork);
     }
     
     public static boolean forSuggestionAuthor(SlashCommandEvent event)

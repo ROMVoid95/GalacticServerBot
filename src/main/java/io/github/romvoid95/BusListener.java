@@ -5,6 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import io.github.readonly.common.event.jda.PostReadyEvent;
 import io.github.romvoid95.core.event.MaintenanceEvent;
 import io.github.romvoid95.database.impl.options.ServerOptions;
+import io.github.romvoid95.server.Server;
 import io.github.romvoid95.updates.UpdateManager;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -45,7 +46,7 @@ public class BusListener
 			presence.setActivity(Activity.playing("Maintanence Mode"));
 		}
 
-		for (Server server : BotData.serverMap().values())
+		for (Server server : Servers.allServers)
 		{
 			server.initGuild(jda);
 		}

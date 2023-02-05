@@ -1,12 +1,9 @@
 package io.github.romvoid95;
 
 import java.util.EnumSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
-
-import org.apache.commons.collections4.map.HashedMap;
 
 import io.github.romvoid95.database.DatabaseManager;
 import io.github.romvoid95.database.Rethink;
@@ -22,35 +19,6 @@ public class BotData
 	private static final ScheduledExecutorService	galacticExec	= Factory.newScheduledThreadPool(1, "GalacticBot", false);
 	private static final ScheduledExecutorService	updateExec		= Factory.newScheduledThreadPool(1, "ModUpdates", true);
 	private static DatabaseManager					db;
-
-	private static final Map<String, Server> serverMap = new HashedMap<>();
-
-	static
-	{
-		serverMap.put("449966345665249290", new Server("449966345665249290"));
-		serverMap.put("775251052517523467", new Server("775251052517523467"));
-		serverMap.put("538530739017220107", new Server("538530739017220107"));
-	}
-
-	static Map<String, Server> serverMap()
-	{
-		return serverMap;
-	}
-
-	public static Server botDevServer()
-	{
-		return serverMap.get("538530739017220107");
-	}
-
-	public static Server galacticraftCentralServer()
-	{
-		return serverMap.get("449966345665249290");
-	}
-
-	public static Server teamGalacticraftServer()
-	{
-		return serverMap.get("775251052517523467");
-	}
 
 	public static DatabaseManager database()
 	{
