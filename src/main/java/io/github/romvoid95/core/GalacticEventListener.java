@@ -19,24 +19,26 @@ public class GalacticEventListener extends ListenerAdapter
 	@Override
 	public void onMessageReceived(@Nonnull MessageReceivedEvent event)
 	{
-		if (!GalacticBot.instance().isDevBot())
+		if(event.getChannelType().isGuild())
 		{
-			if (Server.of(event.getGuild()).equals(Servers.galacticraftCentral))
+			if (!GalacticBot.instance().isDevBot())
 			{
-				SuggestionOptions	options	= BotData.database().galacticBot().getSuggestionOptions();
-				MessageChannel		channel	= event.getChannel();
-
-				if (options.getSuggestionChannel().equals(channel.getId()))
+				if (Server.of(event.getGuild()).equals(Servers.galacticraftCentral))
 				{
-					MessageType type = event.getMessage().getType();
-					if (type != MessageType.SLASH_COMMAND)
+					SuggestionOptions	options	= BotData.database().galacticBot().getSuggestionOptions();
+					MessageChannel		channel	= event.getChannel();
+
+					if (options.getSuggestionChannel().equals(channel.getId()))
 					{
-						event.getMessage().delete().queue();
+						MessageType type = event.getMessage().getType();
+						if (type != MessageType.SLASH_COMMAND)
+						{
+							event.getMessage().delete().queue();
+						}
 					}
 				}
 			}
 		}
-
 	}
 
 	@Override
