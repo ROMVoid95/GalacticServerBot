@@ -46,7 +46,7 @@ public class NewSuggestion extends GalacticSlashCommand
             return;
         }
         
-        if(!Server.get(event.getGuild()).equals(BotData.galacticraftCentralServer()))
+        if(!Server.of(event.getGuild()).equals(BotData.galacticraftCentralServer()))
         {
         	Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in the Galacticraft Central Discord Server");
         }

@@ -10,31 +10,31 @@ import net.dv8tion.jda.api.entities.Guild;
 @Getter
 public abstract class ModUpdateEvent extends BotEvent
 {
-	private String commandId;
+	private String mod;
 	private Optional<Server> server;
 	
-	public ModUpdateEvent(String commandId, Guild guild)
+	public ModUpdateEvent(String mod, Guild guild)
 	{
 		super(GalacticBot.instance().getJda());
-		this.commandId = commandId;
 		this.server = Server.get(guild);
+		this.mod = mod;
 	}
 	
 	public static class Add extends ModUpdateEvent
 	{
 
-		public Add(String commandId, Guild guild)
+		public Add(String mod, Guild guild)
 		{
-			super(commandId, guild);
+			super(mod, guild);
 		}
 	}
 	
 	public static class Remove extends ModUpdateEvent
 	{
 
-		public Remove(String commandId, Guild guild)
+		public Remove(String mod, Guild guild)
 		{
-			super(commandId, guild);
+			super(mod, guild);
 		}
 	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import io.github.readonly.command.ClientBuilder;
 import io.github.readonly.command.SlashCommand;
-
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.member.CloseDiscussionThread;
 import io.github.romvoid95.commands.member.NewSuggestion;
@@ -13,6 +12,7 @@ import io.github.romvoid95.commands.owner.DatabaseCommand;
 import io.github.romvoid95.commands.owner.EvalCommand;
 import io.github.romvoid95.commands.owner.ExecCommand;
 import io.github.romvoid95.commands.owner.MaintanenceModeCommand;
+import io.github.romvoid95.commands.owner.TestCommand2;
 import io.github.romvoid95.commands.staff.Suggestions;
 import io.github.romvoid95.commands.staff.server.ServerStaff;
 import io.github.romvoid95.commands.staff.suggestions.devonly.DevServerPopularChannel;
@@ -44,6 +44,6 @@ public class SortInitialize
 	
 	private static final List<SlashCommand> botServerCommands()
 	{
-		return Arrays.asList(new DatabaseCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand());
+		return Arrays.asList(new DatabaseCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand(), new TestCommand2());
 	}
 }

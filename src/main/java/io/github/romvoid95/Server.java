@@ -31,6 +31,11 @@ public class Server
 		return Optional.ofNullable(BotData.serverMap().get(guild.getId()));
 	}
 	
+	public static Server of(Guild guild)
+	{
+		return new Server(guild.getId(), false);
+	}
+	
 	public Server(String guildId)
 	{
 		this(guildId, true);

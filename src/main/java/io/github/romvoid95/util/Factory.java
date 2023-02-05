@@ -15,9 +15,9 @@ public class Factory
         return Executors.newScheduledThreadPool(poolSize, newThreadFactory(threadName, isDaemon));
     }
     
-    public static ScheduledExecutorService newUpdateThread()
+    public static ScheduledExecutorService newUpdateCheckerThread(String threadName)
     {
-    	return Executors.newScheduledThreadPool(1, r -> setThreadDaemon(new Thread(r, "UpdateChecker"), true));
+    	return Executors.newScheduledThreadPool(1, r -> setThreadDaemon(new Thread(r, threadName), true));
     }
 
     public static ThreadFactory newThreadFactory(String threadName, boolean isdaemon)

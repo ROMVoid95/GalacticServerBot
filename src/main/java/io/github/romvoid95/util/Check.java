@@ -24,7 +24,7 @@ public class Check
 
     private static boolean isFromBotDevServer(SlashCommandEvent event)
     {
-        return Server.get(event.getGuild()).equals(BotData.botDevServer());
+        return Server.of(event.getGuild()).equals(BotData.botDevServer());
     }
     
     public static boolean forSuggestionAuthor(SlashCommandEvent event)

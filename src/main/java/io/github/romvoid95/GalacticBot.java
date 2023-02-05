@@ -1,12 +1,7 @@
 package io.github.romvoid95;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
-import io.github.readonly.api.BotContainer;
-import io.github.readonly.api.scheduler.Task;
 import io.github.readonly.common.event.EventHandler;
 import io.github.readonly.discordbot.DiscordBot;
 import io.github.romvoid95.commands.SortInitialize;
@@ -15,7 +10,6 @@ import io.github.romvoid95.commands.member.EditTitle;
 import io.github.romvoid95.core.ClientListener;
 import io.github.romvoid95.core.GalacticEventListener;
 import io.github.romvoid95.core.GuildSettings;
-import io.github.romvoid95.util.DateFormatting;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -28,10 +22,9 @@ import net.dv8tion.jda.api.requests.RestAction;
 @Slf4j
 public class GalacticBot extends DiscordBot<GalacticBot>
 {
-
-	private static GalacticBot	_instance;
 	@Getter
 	private JDA					jda;
+	private static GalacticBot	_instance;
 
 	public static final GalacticBot instance()
 	{
@@ -77,26 +70,11 @@ public class GalacticBot extends DiscordBot<GalacticBot>
 
 		GalacticBot._instance = this;
 	}
-	
-	private void send()
-	{
-		Date now = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(now);
-        
-        String time = c.getTime().toString();
-        String parsedTime = DateFormatting.formatDate(time);
-        
-		getJda().getTextChannelById("1069462759252693012").sendMessage(
-				"Task Ran -> \n```\n" + "Time: %s\n".formatted(time) + "Parsed: %s\n".formatted(parsedTime) + "```"
-		).queue();
-	}
 
 	public static void main(String[] args)
 	{
-		GalacticBot bot = new GalacticBot();
+		new GalacticBot();
 		Runtime.getRuntime().addShutdownHook(new Thread(GalacticBot::shutdown));
-		Task.builder().interval(10, TimeUnit.SECONDS).name("Test Task").execute(bot::send).submit((BotContainer) bot.getInstance().get());
 	}
 
 	private static void shutdown()

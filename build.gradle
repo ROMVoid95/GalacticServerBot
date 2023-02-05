@@ -21,16 +21,19 @@ ext {
 	jdatools		= 'master-SNAPSHOT'
 	reflections 	= '0.10.2'
 	okhttp 			= '5.0.0-alpha.2'
-	webhooks 		= '0.8.2'
+	webhooks 		= '0.8.2-buttons'
     rethink 		= '2.4.4'
 	commons			= '2.11.0'
 	jsr223			= '3.0.12'
 	commonsText		= '1.10.0'
-	curseApi		= '1.7.3'
+	curseApi		= '1.0.2-SNAPSHOT'
 	modrinth4j		= 'master-SNAPSHOT'
 	jda				= '5.0.0-beta.3'
 	logback			= '1.2.11'
 	slf4j			= '1.7.36'
+	jsoup 			= '1.15.2'
+	fastutil 		= '8.5.8'
+	javax			= '1.3.2'
 }
 
 dependencies {
@@ -43,9 +46,13 @@ dependencies {
 	implementation group: 'commons-io', 			name: 'commons-io', 		version: commons
 	implementation group: 'org.codehaus.groovy', 	name: 'groovy-jsr223', 		version: jsr223
 	implementation group: 'org.apache.commons', 	name: 'commons-text', 		version: commonsText
-	implementation group: 'io.github.matyrobbrt', 	name: 'curseforgeapi', 		version: curseApi
+	implementation group: 'de.erdbeerbaerlp', 		name: 'cfcore', 			version: curseApi
 	implementation group: 'com.github.masecla22', 	name: 'Modrinth4J', 		version: modrinth4j
 	implementation group: 'org.codehaus.groovy', 	name: 'groovy-jsr223', 		version: jsr223
+	implementation group: 'org.jsoup', 				name: 'jsoup', 				version: jsoup
+	implementation group: 'it.unimi.dsi', 			name: 'fastutil', 			version: fastutil
+	implementation group: 'javax.annotation', 		name: 'javax.annotation-api', version: javax
+	implementation 'com.vladsch.flexmark:flexmark-html2md-converter:0.64.0'
 	
 	implementation("net.dv8tion:JDA:${jda}") {
         exclude module: 'opus-java'
@@ -119,6 +126,25 @@ task fullBuild {
     doLast {
     	
     }
+}
+
+Map makeManifestAttributes(String mainClass) {
+  final def actualDateTime = OffsetDateTime.now(ZoneOffset.UTC).withNano(0)
+  final def currentDateTime = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(actualDateTime)
+  return [
+          'Maven-Artifact'          : "${project.group}:${archivesBaseName}:${project.bot_version}",
+          'Timestamp'               : currentDateTime,
+          'Specification-Title'     : archivesBaseName,
+          'Specification-Vendor'    : 'Minecraft Mod Development',
+          'Specification-Version'   : '1',
+          'Implementation-Title'    : archivesBaseName,
+          'Implementation-Version'  : "${project.bot_version}",
+          'Implementation-Vendor'   : 'Minecraft Mod Development',
+          'Implementation-Timestamp': currentDateTime,
+          'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+          'Built-On'                : "${project.libs.versions.jda.get()}-${project.libs.versions.chewtils.get()}",
+          'Main-Class'              : mainClass
+  ]
 }
 
 class Version {

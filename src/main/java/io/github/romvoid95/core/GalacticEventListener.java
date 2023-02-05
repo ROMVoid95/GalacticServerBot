@@ -20,7 +20,7 @@ public class GalacticEventListener extends ListenerAdapter
 	{
 		if (!GalacticBot.instance().isDevBot())
 		{
-			if (Server.get(event.getGuild()).equals(BotData.galacticraftCentralServer()))
+			if (Server.of(event.getGuild()).equals(BotData.galacticraftCentralServer()))
 			{
 				SuggestionOptions	options	= BotData.database().galacticBot().getSuggestionOptions();
 				MessageChannel		channel	= event.getChannel();

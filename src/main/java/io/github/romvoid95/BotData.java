@@ -19,8 +19,8 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 public class BotData
 {
 
-	private static final ScheduledExecutorService	galacticExec	= Factory.newScheduledThreadPool(1, "Galactic-Thread-%d", false);
-	private static final ScheduledExecutorService	updateExec		= Factory.newUpdateThread();
+	private static final ScheduledExecutorService	galacticExec	= Factory.newScheduledThreadPool(1, "GalacticBot", false);
+	private static final ScheduledExecutorService	updateExec		= Factory.newScheduledThreadPool(1, "ModUpdates", true);
 	private static DatabaseManager					db;
 
 	private static final Map<String, Server> serverMap = new HashedMap<>();
@@ -31,7 +31,7 @@ public class BotData
 		serverMap.put("775251052517523467", new Server("775251052517523467"));
 		serverMap.put("538530739017220107", new Server("538530739017220107"));
 	}
-	
+
 	static Map<String, Server> serverMap()
 	{
 		return serverMap;
@@ -61,7 +61,7 @@ public class BotData
 
 		return db;
 	}
-
+	
 	public static ScheduledExecutorService updateExecutor()
 	{
 		return updateExec;
@@ -86,32 +86,12 @@ public class BotData
 	{
 
 		//@format:off
-    	public static final Set<GatewayIntent> INTENTS = Set.of(
-            GatewayIntent.DIRECT_MESSAGES,
-            GatewayIntent.GUILD_BANS,
-            GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
-            GatewayIntent.GUILD_MESSAGE_REACTIONS,
-            GatewayIntent.GUILD_MESSAGES,
-            GatewayIntent.GUILD_MEMBERS,
-            GatewayIntent.MESSAGE_CONTENT
-        );
-    	
-    	public static final Set<CacheFlag> DISABLED_CACHE_FLAGS = EnumSet.of(
-    		CacheFlag.ACTIVITY, 
-    		CacheFlag.CLIENT_STATUS, 
-    		CacheFlag.VOICE_STATE
-    	);
+		public static final Set<GatewayIntent> INTENTS = Set.of(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT);
 
-    	public static final Set<Message.MentionType> DEFAULT_MENTIONS = EnumSet.of(
-            Message.MentionType.EMOJI,
-            Message.MentionType.CHANNEL
-        );
+		public static final Set<CacheFlag> DISABLED_CACHE_FLAGS = EnumSet.of(CacheFlag.SCHEDULED_EVENTS, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE);
 
-    	public static final Set<Permission> PERMISSIONS = EnumSet.of(
-            Permission.MESSAGE_MANAGE,
-            Permission.MANAGE_WEBHOOKS,
-            Permission.MANAGE_THREADS,
-            Permission.MANAGE_ROLES
-        );
-    }
+		public static final Set<Message.MentionType> DEFAULT_MENTIONS = EnumSet.of(Message.MentionType.EMOJI, Message.MentionType.CHANNEL);
+
+		public static final Set<Permission> PERMISSIONS = EnumSet.of(Permission.MESSAGE_MANAGE, Permission.MANAGE_WEBHOOKS, Permission.MANAGE_THREADS, Permission.MANAGE_ROLES);
+	}
 }

@@ -8,16 +8,8 @@ public class UpdatesCommand extends ParentSlashCommand
 	{
 		super("updates");
 		subCommands(
-			new AddCommand()
-		);
-	}
-	
-	public UpdatesCommand(ModPlatformCommand child)
-	{
-		super("updates");
-		subCommands(
 			new AddCommand(),
-			child
+			new RemoveCommand()
 		);
 	}
 }

@@ -39,6 +39,11 @@ public final class Reply
     	builder.setColor(level.getColor());
         event.replyEmbeds(builder.build()).setEphemeral(true).queue();
     }
+    
+    public static void EphemeralReply(InteractionHook hook, ResultLevel level, MessageEmbed embed)
+    {
+        hook.sendMessageEmbeds(embed).queue();
+    }
 
     public static void EphemeralReply(SlashCommandEvent event, String message)
     {
