@@ -19,6 +19,7 @@ public class BotConfig
 	private String				avatarUrl	= "https://i.imgur.com/S7CqwYg.png";
 	private String				token		= "TOKEN";
 	private String				owner		= "owner-id";
+	private String				rootLog		= "";
 	private String				webhookUrl	= "URL";
 	private PlatformKeys		platforms   = new PlatformKeys();
 	private RethinkDataseConfig	database	= new RethinkDataseConfig();

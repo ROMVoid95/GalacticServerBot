@@ -25,7 +25,7 @@ public class LogUtils {
 	public static WebhookClient LOGBACK_WEBHOOK;
 
 	static {
-		String webhook = Conf.Bot().getWebhookUrl().replace(WEBHOOK_START, "");
+		String webhook = Conf.Bot().getRootLog().replace(WEBHOOK_START, "");
 		if (webhook != null) {
 			var parts = webhook.split("/");
 			long id = Long.valueOf(parts[0]);
@@ -59,7 +59,7 @@ public class LogUtils {
 		}
 
 		try {
-			LOGBACK_WEBHOOK.send(new WebhookEmbed(null, Color.PINK.getRGB(), message, null, null,
+			LOGBACK_WEBHOOK.sendEmbeds(new WebhookEmbed(null, Color.PINK.getRGB(), message, null, null,
 					new WebhookEmbed.EmbedFooter(DateFormatting.formatDate(OffsetDateTime.now()), ICON_URL),
 					new WebhookEmbed.EmbedTitle("Log", null), null, new ArrayList<>()));
 		} catch (Exception e) {

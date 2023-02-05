@@ -2,6 +2,12 @@ package io.github.romvoid95;
 
 import java.util.Optional;
 
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.filter.ThresholdFilter;
 import io.github.readonly.common.event.EventHandler;
 import io.github.readonly.discordbot.DiscordBot;
 import io.github.romvoid95.commands.SortInitialize;
@@ -10,6 +16,7 @@ import io.github.romvoid95.commands.member.EditTitle;
 import io.github.romvoid95.core.ClientListener;
 import io.github.romvoid95.core.GalacticEventListener;
 import io.github.romvoid95.core.GuildSettings;
+import io.github.romvoid95.logging.WebhookAppender;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -69,6 +76,33 @@ public class GalacticBot extends DiscordBot<GalacticBot>
 		EventHandler.instance().register(new BusListener());
 
 		GalacticBot._instance = this;
+		
+		this.handleLogger();
+	}
+	
+	private void handleLogger()
+	{
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        ThresholdFilter filter = new ThresholdFilter();
+        filter.setLevel("info");
+        filter.setContext(lc);
+        filter.start();
+
+        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+        encoder.setPattern("[%level] [%logger{0}]: `%msg%n`");
+        encoder.setContext(lc);
+        encoder.start();
+
+        WebhookAppender appender = new WebhookAppender();
+        appender.setEncoder(encoder);
+        appender.addFilter(filter);
+        appender.setName("ERROR_WH");
+        appender.setContext(lc);
+        appender.start();
+
+        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        root.addAppender(appender);
 	}
 
 	public static void main(String[] args)
