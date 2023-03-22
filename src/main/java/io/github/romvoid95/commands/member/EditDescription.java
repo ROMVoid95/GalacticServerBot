@@ -12,7 +12,7 @@ import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.util.discord.Reply;
 import io.github.romvoid95.util.discord.SuggestionStatus;
-import io.github.romvoid95.util.discord.entity.SuggestionEmbed;
+import io.github.romvoid95.util.discord.entity.SuggestionMessage_V1;
 import io.github.romvoid95.util.rec.LinkedMessagesRecord;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 
@@ -21,8 +21,8 @@ public class EditDescription extends GalacticSlashCommand
 
     public EditDescription()
     {
-        this.name = "edit-description";
-        this.help = "[DM ONLY] Edit the description of your Suggestion";
+        name("edit-description");
+        description("[DM ONLY] Edit the description of your Suggestion");
         setOptions(
         	RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"),
         	RequiredOption.text("type", "Replace or append", ChoiceList.toList(EditType.class)),
@@ -40,7 +40,7 @@ public class EditDescription extends GalacticSlashCommand
             return;
         }
         
-        boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getMember().getId());
+        boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getAuthor().getId());
         if(isBlacklisted)
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, "You have been blacklisted and cannot edit your suggestions, Contact staff if you believe this is an error");
@@ -61,7 +61,7 @@ public class EditDescription extends GalacticSlashCommand
             }
 
             LinkedMessagesRecord lmr = suggestion.getMessages().getLinkedMessagesRecord();
-            SuggestionEmbed embed = SuggestionEmbed.fromEmbed(lmr.postMsg().get().getEmbeds().get(0));
+            SuggestionMessage_V1 embed = SuggestionMessage_V1.fromEmbed(lmr.postMsg().get().getEmbeds().get(0));
             
             EditType editType = EditType.getEditType(event.getOption("type").getAsString());
             

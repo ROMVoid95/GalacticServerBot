@@ -2,7 +2,7 @@ package io.github.romvoid95.util.rec;
 
 import java.util.Optional;
 
-import io.github.romvoid95.util.discord.entity.SuggestionEmbed;
+import io.github.romvoid95.util.discord.entity.SuggestionMessage_V1;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.requests.restaction.MessageEditAction;
@@ -16,7 +16,7 @@ public record LinkedMessagesRecord(
 )
 {
 
-    public MessageEditAction editMessages(SuggestionEmbed embed)
+    public MessageEditAction editMessages(SuggestionMessage_V1 embed)
     {
         MessageEditBuilder builder = new MessageEditBuilder()
             .setEmbeds(embed.toEmbedBuilder().build());

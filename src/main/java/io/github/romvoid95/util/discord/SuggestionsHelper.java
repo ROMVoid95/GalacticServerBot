@@ -61,7 +61,7 @@ public class SuggestionsHelper
             .setTitle(suggestionEmbed.getTitle())
             .setAuthor(suggestionEmbed.getAuthor().getName())
             .setDescription(suggestionEmbed.getDescription())
-            .setColor(status.getColor())
+            .setColor(status.getRGB().getColor())
             .addField(suggestionEmbed.getFields().get(0))
             .addField(status.getStatusEmbedField());
         //@format

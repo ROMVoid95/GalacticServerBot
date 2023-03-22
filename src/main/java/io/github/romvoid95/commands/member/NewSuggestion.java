@@ -4,18 +4,20 @@ import java.util.UUID;
 
 import io.github.readonly.command.OptionHelper;
 import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.lists.ChoiceList;
+import io.github.readonly.command.option.Choice;
+import io.github.readonly.command.option.RequiredOption;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.Conf;
 import io.github.romvoid95.Servers;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
-import io.github.romvoid95.commands.core.SlashOptions;
 import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.server.Server;
 import io.github.romvoid95.util.discord.Emojis;
 import io.github.romvoid95.util.discord.Reply;
-import io.github.romvoid95.util.discord.SuggestionStatus;
 import io.github.romvoid95.util.discord.SuggestionsHelper;
+import io.github.romvoid95.util.discord.entity.SuggestionMessage_V2;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
@@ -30,9 +32,19 @@ public class NewSuggestion extends GalacticSlashCommand
 
     public NewSuggestion()
     {
-        this.name = "new-suggestion";
-        this.options = SlashOptions.Suggestion.OptionsList();
-        this.help = "Create a new Suggestion";
+    	name(name);
+    	description("Create a new Suggestion");
+    	setOptions(
+			RequiredOption.text("type", "Suggestion Type", ChoiceList.of(
+				Choice.add("Galacticraft 5", "[Galacticraft 5]"),
+				Choice.add("Galacticraft-Legacy", "[Galacticraft-Legacy]"),
+				Choice.add("Idea For New Addon", "[Addon Idea]"),
+				Choice.add("Do Not Make Suggestions For Existing Addons", "existing")
+				)
+			),
+			RequiredOption.text("title", "Short generalized title for your suggestion", 64),
+			RequiredOption.text("description", "Describe in detail your suggestion", 1024)
+    	);
     }
 
     @Override
@@ -71,38 +83,38 @@ public class NewSuggestion extends GalacticSlashCommand
         }
 
         int number = BotData.database().galacticBot().getManager().getCount() + 1;
+        String type = event.getOption("type").getAsString();
         String title = getTitle(event);
-        String description = event.getOption("description").getAsString();
-        
-        //@noformat
-        EmbedBuilder embed = new EmbedBuilder()
-            .setColor(SuggestionStatus.NONE.getColor())
-            .setTitle(getTitle(event))
-            .setAuthor(event.getOption("type").getAsString())
-            .setDescription("`Suggestion # %d`\n`By:` **%s**".formatted(number, mention))
-            .addField("Description", description, false);
-        //@format
-        
-        if(Conf.Bot().isOwner(event.getUser()) && (title.equalsIgnoreCase("test") || description.equalsIgnoreCase("test"))) {
+        String suggestionDescription = event.getOption("description").getAsString();
+        String numberAndAuthor = "`Suggestion # %d`\n`By:` **%s**".formatted(number, mention);
+
+        if(Conf.Bot().isOwner(event.getUser()) && (title.equalsIgnoreCase("test") || suggestionDescription.equalsIgnoreCase("test"))) {
             String[] uuid = UUID.randomUUID().toString().split("-");
             sendPrivateMessage(event.getUser().openPrivateChannel(), event.getUser(), number, title, uuid[uuid.length - 1]);
             Reply.Success(event, "Test Message Sent");
             return;
         }
 
-        event.replyEmbeds(embed.build()).queue(s ->
-        {
-            s.retrieveOriginal().queue(reply ->
-            {
-                Suggestion newSuggestion = new Suggestion(reply.getId(), event.getMember().getId(), title);
-                
-                String newSuggestionId = BotData.database().galacticBot().addNewSuggestion(number, newSuggestion);
-                reply.addReaction(Emojis.STAR.getEmoji()).queue();
-                reply.createThreadChannel("Discussion").queue();
-                
-                sendPrivateMessage(event.getUser().openPrivateChannel(), event.getUser(), number, title, newSuggestionId);
-            });
-        });
+        event.replyEmbeds(SuggestionMessage_V2.builder()
+        	.title(title)
+        	.type(type)
+        	.numberAndAuthor(numberAndAuthor)
+        	.description(suggestionDescription)
+        	.build()
+        ).queue(s ->
+	        {
+	            s.retrieveOriginal().queue(reply ->
+	            {
+	                Suggestion newSuggestion = new Suggestion(reply.getId(), event.getMember().getId(), title);
+	                
+	                String newSuggestionId = BotData.database().galacticBot().addNewSuggestion(number, newSuggestion);
+	                reply.addReaction(Emojis.STAR.getEmoji()).queue();
+	                reply.createThreadChannel(title).queue();
+	                
+	                sendPrivateMessage(event.getUser().openPrivateChannel(), event.getUser(), number, title, newSuggestionId);
+	            });
+	        }
+        );
     }
     
     private void sendPrivateMessage(CacheRestAction<PrivateChannel> action, User user, int number, String title, String newSuggestionId)

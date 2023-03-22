@@ -41,7 +41,7 @@ public class CloseDiscussionThread extends GalacticSlashCommand
         }
         
         Consumer<InteractionHook> consumerLambda = 
-        	(close) -> event.getChannel().asThreadChannel().getManager().setName("Discussion (CLOSED)").setArchived(true).setLocked(true).queue();
+        	(close) -> event.getChannel().asThreadChannel().getManager().setName("(CLOSED)").setArchived(true).setLocked(true).queue();
 
         Reply.EphemeralReply(event, "Discussion Thread has been closed", consumerLambda);
     }

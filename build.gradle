@@ -38,6 +38,7 @@ ext {
 
 dependencies {
     implementation group: 'com.github.ReadOnlyDevelopment', name: 'JDATools', 	version: jdatools
+    implementation group: 'net.dv8tion', 			name: 'JDA', 				version: '5.0.0-beta.3'
 
     implementation group: 'org.slf4j', 				name: 'slf4j-api', 			version: slf4j
     implementation group: 'ch.qos.logback', 		name: 'logback-classic', 	version: logback

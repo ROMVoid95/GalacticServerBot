@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SuggestionEmbed
+public class SuggestionMessage_V1
 {
 
     private String             title;
@@ -26,17 +26,17 @@ public class SuggestionEmbed
     private MessageEmbed.Field status;
     
 
-    private SuggestionEmbed(String title, String type, String numberAndAuthor, Color color, Field description)
+    private SuggestionMessage_V1(String title, String type, String numberAndAuthor, Color color, Field description)
     {
         this(title, type, numberAndAuthor, color, description, null);
     }
 
-    public static SuggestionEmbed fromEmbed(MessageEmbed e)
+    public static SuggestionMessage_V1 fromEmbed(MessageEmbed e)
     {
         if (e.getFields().size() == 2)
         {
             //@noformat
-            return new SuggestionEmbed(
+            return new SuggestionMessage_V1(
                 e.getTitle(), 
                 e.getAuthor().getName(), 
                 e.getDescription(),
@@ -44,7 +44,7 @@ public class SuggestionEmbed
                 e.getFields().get(0), 
                 e.getFields().get(1));
         } else {
-            return new SuggestionEmbed(
+            return new SuggestionMessage_V1(
                 e.getTitle(), 
                 e.getAuthor().getName(), 
                 e.getDescription(),
@@ -54,7 +54,7 @@ public class SuggestionEmbed
         }
 
     }
-
+    
     public void setStatus(SuggestionStatus status)
     {
         this.status = status.getStatusEmbedField();

@@ -10,7 +10,7 @@ import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.util.discord.Reply;
 import io.github.romvoid95.util.discord.SuggestionStatus;
-import io.github.romvoid95.util.discord.entity.SuggestionEmbed;
+import io.github.romvoid95.util.discord.entity.SuggestionMessage_V1;
 import io.github.romvoid95.util.rec.LinkedMessagesRecord;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 
@@ -37,7 +37,7 @@ public class EditTitle extends GalacticSlashCommand
             return;
         }
         
-        boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getMember().getId());
+        boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getAuthor().getId());
         if(isBlacklisted)
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, "You have been blacklisted and cannot edit your suggestions, Contact staff if you believe this is an error");
@@ -58,7 +58,7 @@ public class EditTitle extends GalacticSlashCommand
             }
 
             LinkedMessagesRecord lmr = suggestion.getMessages().getLinkedMessagesRecord();
-            SuggestionEmbed embed = SuggestionEmbed.fromEmbed(lmr.postMsg().get().getEmbeds().get(0));
+            SuggestionMessage_V1 embed = SuggestionMessage_V1.fromEmbed(lmr.postMsg().get().getEmbeds().get(0));
             embed.setTitle(event.getOption("title").getAsString());
 
             lmr.editMessages(embed).queue(s -> 

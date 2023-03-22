@@ -6,6 +6,7 @@ import io.github.romvoid95.util.StringUtils;
 public enum EditType implements KeyValueSupplier
 {
     REPLACE,
+    PREPEND,
     APPEND;
 
     public static EditType getEditType(String value)
