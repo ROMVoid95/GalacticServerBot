@@ -1,10 +1,11 @@
 package io.github.romvoid95.util.discord.entity;
 
+import static io.github.readonly.common.util.Embed.Condition.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import io.github.readonly.common.util.Embed;
-import io.github.readonly.common.util.Embed.Condition;
 import io.github.readonly.common.util.RGB;
 import io.github.romvoid95.commands.core.EditType;
 import io.github.romvoid95.util.discord.SuggestionStatus;
@@ -125,7 +126,7 @@ public class SuggestionMessage_V2
 
 	private MessageEmbed createHeaderEmbed()
 	{
-		return Embed.newBuilder().title(title).setAuthor(type).color(embedColor).addFieldConditionally(Condition.NotNull(status)).toEmbed();
+		return Embed.newBuilder().title(title).setAuthor(type).color(embedColor).addFieldConditionally(NotNull(status)).toEmbed();
 	}
 
 	public static Builder builder()
@@ -135,10 +136,10 @@ public class SuggestionMessage_V2
 
 	public static final class Builder
 	{
-		private String				title;
-		private String				type;
-		private String				numberAndAuthor;
-		private String				description;
+		private String	title;
+		private String	type;
+		private String	numberAndAuthor;
+		private String	description;
 
 		private Builder()
 		{
