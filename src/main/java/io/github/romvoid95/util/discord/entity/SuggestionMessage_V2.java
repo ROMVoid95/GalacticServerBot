@@ -1,13 +1,13 @@
 package io.github.romvoid95.util.discord.entity;
 
-import static io.github.readonly.common.util.Embed.Condition.NotNull;
+import static io.github.romvoid95.util.Embed.Condition.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.readonly.common.util.Embed;
 import io.github.readonly.common.util.RGB;
 import io.github.romvoid95.commands.core.EditType;
+import io.github.romvoid95.util.Embed;
 import io.github.romvoid95.util.discord.SuggestionStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

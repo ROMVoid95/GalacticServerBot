@@ -54,7 +54,7 @@ public class BotData
 	{
 
 		//@format:off
-		public static final Set<GatewayIntent> INTENTS = Set.of(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_BANS, GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT);
+		public static final Set<GatewayIntent> INTENTS = Set.of(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MODERATION, GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT);
 
 		public static final Set<CacheFlag> DISABLED_CACHE_FLAGS = EnumSet.of(CacheFlag.SCHEDULED_EVENTS, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE);
 

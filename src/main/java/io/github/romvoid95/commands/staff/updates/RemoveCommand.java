@@ -4,13 +4,13 @@ import io.github.readonly.command.OptionHelper;
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
 import io.github.readonly.command.option.RequiredOption;
-import io.github.readonly.common.util.Embed;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBUpdates;
 import io.github.romvoid95.database.impl.updates.UpdateMod;
 import io.github.romvoid95.util.Check;
+import io.github.romvoid95.util.Embed;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.entities.Role;
 
