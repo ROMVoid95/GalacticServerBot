@@ -14,7 +14,7 @@ import io.github.romvoid95.database.entity.DBUpdates;
 public class DatabaseManager
 {
 
-    private final Connection conn;
+    private Connection conn;
 
     public DatabaseManager(@Nonnull Connection conn)
     {
@@ -25,24 +25,36 @@ public class DatabaseManager
     @CheckReturnValue
     public DBGalacticBot galacticBot()
     {
-        DBGalacticBot obj = Rethink.table(DBGalacticBot.DB_TABLE).get("galacticbot").runAtom(conn, DBGalacticBot.class);
-        return obj == null ? DBGalacticBot.create() : obj;
+    	this.checkConnection();
+    	if(this.conn.isOpen()) {
+            DBGalacticBot obj = Rethink.table(DBGalacticBot.DB_TABLE).get("galacticbot").runAtom(conn, DBGalacticBot.class);
+            return obj == null ? DBGalacticBot.create() : obj;
+    	}
+    	return null;
     }
 
     @Nonnull
     @CheckReturnValue
     public DBBlacklist blacklist()
     {
-        DBBlacklist obj = Rethink.table(DBBlacklist.DB_TABLE).get("blacklist").runAtom(conn, DBBlacklist.class);
-        return obj == null ? DBBlacklist.create() : obj;
+    	this.checkConnection();
+    	if(this.conn.isOpen()) {
+            DBBlacklist obj = Rethink.table(DBBlacklist.DB_TABLE).get("blacklist").runAtom(conn, DBBlacklist.class);
+            return obj == null ? DBBlacklist.create() : obj;
+    	}
+    	return null;
     }
     
     @Nonnull
     @CheckReturnValue
     public DBUpdates updates()
     {
-        DBUpdates obj = Rethink.table(DBUpdates.DB_TABLE).get("updates").runAtom(conn, DBUpdates.class);
-        return obj == null ? DBUpdates.create() : obj;
+    	this.checkConnection();
+    	if(this.conn.isOpen()) {
+            DBUpdates obj = Rethink.table(DBUpdates.DB_TABLE).get("updates").runAtom(conn, DBUpdates.class);
+            return obj == null ? DBUpdates.create() : obj;
+    	}
+    	return null;
     }
 
     public void save(@Nonnull ManagedObject object)
@@ -58,6 +70,13 @@ public class DatabaseManager
     public void delete(@Nonnull ManagedObject object)
     {
         Rethink.table(object.getTableName()).get(object.getId()).delete().runNoReply(conn);
+    }
+    
+    private void checkConnection()
+    {
+    	if(!this.conn.isOpen()) {
+    		this.conn = this.conn.reconnect();
+    	}
     }
 
     public Connection getConnection()
