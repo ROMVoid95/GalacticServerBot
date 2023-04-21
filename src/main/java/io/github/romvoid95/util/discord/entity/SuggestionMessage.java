@@ -109,7 +109,13 @@ public class SuggestionMessage
 
     private MessageEmbed createHeaderEmbed()
     {
-        return Embed.newBuilder().title(title).setAuthor(type).color(embedColor).addFieldConditionally(NotNull(status)).toEmbed();
+        return Embed.newBuilder()
+            .title(title)
+            .setAuthor(type)
+            .description(numberAndAuthor)
+            .color(embedColor)
+            .addFieldConditionally(NotNull(status))
+            .toEmbed();
     }
 
     public static Builder builder()
