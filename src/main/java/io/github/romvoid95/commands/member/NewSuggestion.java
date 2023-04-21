@@ -32,7 +32,7 @@ public class NewSuggestion extends GalacticSlashCommand
 
     public NewSuggestion()
     {
-    	name(name);
+    	name("new-suggestion");
     	description("Create a new Suggestion");
     	setOptions(
 			RequiredOption.text("type", "Suggestion Type", ChoiceList.of(
