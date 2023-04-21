@@ -31,6 +31,8 @@ public class StringUtils
     {
     }
 
+    
+    
     /**
      * Capitalizes the first letter of a string.
      *

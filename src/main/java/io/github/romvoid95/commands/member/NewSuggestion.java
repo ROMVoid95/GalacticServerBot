@@ -17,7 +17,7 @@ import io.github.romvoid95.server.Server;
 import io.github.romvoid95.util.discord.Emojis;
 import io.github.romvoid95.util.discord.Reply;
 import io.github.romvoid95.util.discord.SuggestionsHelper;
-import io.github.romvoid95.util.discord.entity.SuggestionMessage_V2;
+import io.github.romvoid95.util.discord.entity.SuggestionMessage;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
@@ -38,12 +38,13 @@ public class NewSuggestion extends GalacticSlashCommand
 			RequiredOption.text("type", "Suggestion Type", ChoiceList.of(
 				Choice.add("Galacticraft 5", "[Galacticraft 5]"),
 				Choice.add("Galacticraft-Legacy", "[Galacticraft-Legacy]"),
+				Choice.add("Galacticraft [Both Versions]", "[Galacticraft - Both Versions]"),
 				Choice.add("Idea For New Addon", "[Addon Idea]"),
 				Choice.add("Do Not Make Suggestions For Existing Addons", "existing")
 				)
 			),
 			RequiredOption.text("title", "Short generalized title for your suggestion", 64),
-			RequiredOption.text("description", "Describe in detail your suggestion", 1024)
+			RequiredOption.text("description", "Describe in detail your suggestion")
     	);
     }
 
@@ -95,11 +96,11 @@ public class NewSuggestion extends GalacticSlashCommand
             return;
         }
 
-        event.replyEmbeds(SuggestionMessage_V2.builder()
+        event.replyEmbeds(SuggestionMessage.builder()
         	.title(title)
         	.type(type)
         	.numberAndAuthor(numberAndAuthor)
-        	.description(suggestionDescription)
+        	.description(SuggestionMessage.split.apply(suggestionDescription))
         	.build()
         ).queue(s ->
 	        {
