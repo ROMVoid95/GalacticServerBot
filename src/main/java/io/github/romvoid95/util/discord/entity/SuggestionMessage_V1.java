@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageEmbed.Field;
+import net.dv8tion.jda.api.utils.SplitUtil;
+import net.dv8tion.jda.api.utils.SplitUtil.Strategy;
 
 @Data
 @NoArgsConstructor
@@ -24,7 +26,6 @@ public class SuggestionMessage_V1
     private Color              embedColor;
     private MessageEmbed.Field description;
     private MessageEmbed.Field status;
-    
 
     private SuggestionMessage_V1(String title, String type, String numberAndAuthor, Color color, Field description)
     {
@@ -53,6 +54,16 @@ public class SuggestionMessage_V1
             //@format
         }
 
+    }
+    
+    public SuggestionMessage convertToNewFormat()
+    {
+        return SuggestionMessage.builder()
+            .title(title)
+            .numberAndAuthor(numberAndAuthor)
+            .type(type)
+            .description(SplitUtil.split(description.getValue(), 4092, Strategy.WHITESPACE, Strategy.ANYWHERE))
+            .create();
     }
     
     public void setStatus(SuggestionStatus status)
