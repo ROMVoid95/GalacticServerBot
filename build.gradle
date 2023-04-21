@@ -26,7 +26,7 @@ ext {
 	commons			= '2.11.0'
 	jsr223			= '3.0.12'
 	commonsText		= '1.10.0'
-	curseApi		= '1.0.3-SNAPSHOT'
+	curseApi		= '65a3ec932d'
 	modrinth4j		= 'master-SNAPSHOT'
 	jda				= '5.0.0-beta.3'
 	logback			= '1.2.11'
@@ -47,7 +47,7 @@ dependencies {
 	implementation group: 'commons-io', 			name: 'commons-io', 		version: commons
 	implementation group: 'org.codehaus.groovy', 	name: 'groovy-jsr223', 		version: jsr223
 	implementation group: 'org.apache.commons', 	name: 'commons-text', 		version: commonsText
-	implementation group: 'de.erdbeerbaerlp', 		name: 'cfcore', 			version: curseApi
+	implementation group: 'com.github.ROMVoid95', 	name: 'CurseCore', 			version: curseApi
 	implementation group: 'com.github.masecla22', 	name: 'Modrinth4J', 		version: modrinth4j
 	implementation group: 'org.codehaus.groovy', 	name: 'groovy-jsr223', 		version: jsr223
 	implementation group: 'org.jsoup', 				name: 'jsoup', 				version: jsoup
