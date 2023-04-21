@@ -109,7 +109,7 @@ public class EditSuggestion extends GalacticSlashCommand
     
     private void runEditDescription(SlashCommandEvent event, SuggestionMessage msg, LinkedMessagesRecord lmr)
     {
-        msg.setDescription(EditType.getEditType(event.getOption("type").getAsString()), event.getOption("content").getAsString());
+        msg.setDescription(EditType.getEditType(event.getOption("edit-type").getAsString()), event.getOption("content").getAsString());
 
         lmr.editMessages(msg).queue(s -> 
         {
