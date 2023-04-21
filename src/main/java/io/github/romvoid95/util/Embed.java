@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import io.github.readonly.command.event.Event;
 import io.github.readonly.common.util.RGB;
-import lombok.NonNull;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageEmbed.Field;
@@ -157,13 +156,13 @@ public class Embed
 		private final T				obj;
 		private final Predicate<T>	predicate;
 
-		private Condition(@NonNull T obj, @NonNull Predicate<T> predicate)
+		private Condition(T obj, Predicate<T> predicate)
 		{
 			this.obj = obj;
 			this.predicate = predicate;
 		}
 
-		public static <T> Condition<T> NotNull(@NonNull T obj)
+		public static <T> Condition<T> NotNull(T obj)
 		{
 			return new Condition<T>(obj, p -> p != null);
 		}
