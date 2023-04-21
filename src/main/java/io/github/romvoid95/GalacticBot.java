@@ -11,7 +11,6 @@ import ch.qos.logback.classic.filter.ThresholdFilter;
 import io.github.readonly.common.event.EventHandler;
 import io.github.readonly.discordbot.DiscordBot;
 import io.github.romvoid95.commands.SortInitialize;
-import io.github.romvoid95.commands.member.EditDescription;
 import io.github.romvoid95.commands.member.EditSuggestion;
 import io.github.romvoid95.core.ClientListener;
 import io.github.romvoid95.core.GalacticEventListener;
@@ -59,7 +58,7 @@ public class GalacticBot extends DiscordBot<GalacticBot>
 		SortInitialize.perform(this.getClientBuilder());
 		this.getClientBuilder()
 			.setAllRepliesAsEmbed()
-			.addGlobalSlashCommands(new EditDescription(), new EditSuggestion())
+			.addGlobalSlashCommands(new EditSuggestion())
 			.setOwnerId(Conf.Bot().getOwner())
 			.setActivity(Activity.watching("for Suggestion"))
 			.useHelpBuilder(false)
