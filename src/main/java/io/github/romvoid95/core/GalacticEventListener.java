@@ -1,7 +1,5 @@
 package io.github.romvoid95.core;
 
-import javax.annotation.Nonnull;
-
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.GalacticBot;
 import io.github.romvoid95.Servers;
@@ -17,7 +15,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class GalacticEventListener extends ListenerAdapter
 {
 	@Override
-	public void onMessageReceived(@Nonnull MessageReceivedEvent event)
+	public void onMessageReceived(MessageReceivedEvent event)
 	{
 		if(event.getChannelType().isGuild())
 		{
@@ -42,7 +40,7 @@ public class GalacticEventListener extends ListenerAdapter
 	}
 
 	@Override
-	public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event)
+	public void onMessageReactionAdd(MessageReactionAddEvent event)
 	{
 		if (!GalacticBot.instance().isDevBot())
 		{
