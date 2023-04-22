@@ -16,13 +16,13 @@ public class DatabaseManager
 
     private Connection conn;
 
-    public DatabaseManager(@Nonnull Connection conn)
+    public DatabaseManager( Connection conn)
     {
         this.conn = conn;
     }
 
-    @Nonnull
-    @CheckReturnValue
+    
+    
     public DBGalacticBot galacticBot()
     {
     	this.checkConnection();
@@ -33,8 +33,8 @@ public class DatabaseManager
     	return null;
     }
 
-    @Nonnull
-    @CheckReturnValue
+    
+    
     public DBBlacklist blacklist()
     {
     	this.checkConnection();
@@ -45,8 +45,8 @@ public class DatabaseManager
     	return null;
     }
     
-    @Nonnull
-    @CheckReturnValue
+    
+    
     public DBUpdates updates()
     {
     	this.checkConnection();
@@ -57,17 +57,17 @@ public class DatabaseManager
     	return null;
     }
 
-    public void save(@Nonnull ManagedObject object)
+    public void save( ManagedObject object)
     {
         Rethink.table(object.getTableName()).insert(object).optArg("conflict", "replace").runNoReply(conn);
     }
 
-    public void saveUpdating(@Nonnull ManagedObject object)
+    public void saveUpdating( ManagedObject object)
     {
         Rethink.table(object.getTableName()).insert(object).optArg("conflict", "update").runNoReply(conn);
     }
 
-    public void delete(@Nonnull ManagedObject object)
+    public void delete( ManagedObject object)
     {
         Rethink.table(object.getTableName()).get(object.getId()).delete().runNoReply(conn);
     }

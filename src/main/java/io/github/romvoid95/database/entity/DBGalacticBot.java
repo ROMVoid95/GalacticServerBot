@@ -254,7 +254,7 @@ public class DBGalacticBot implements ManagedObject
     }
 
     @Override
-    @Nonnull
+    
     public String getId()
     {
         return "galacticbot";
@@ -262,7 +262,7 @@ public class DBGalacticBot implements ManagedObject
 
     @JsonIgnore
     @Override
-    @Nonnull
+    
     public String getTableName()
     {
         return DB_TABLE;

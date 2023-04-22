@@ -7,15 +7,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.github.romvoid95.BotData;
 
 public interface ManagedObject {
-    @Nonnull
+    
     String getId();
 
     @JsonIgnore
-    @Nonnull
+    
     String getTableName();
 
     @JsonIgnore
-    @Nonnull
+    
     default String getDatabaseId() {
         return getId();
     }

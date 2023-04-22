@@ -209,9 +209,9 @@ public class StringUtils
      *
      * @return     String with appropriate unicode direction modifier characters around code blocks.
      */
-    @Nonnull
-    @CheckReturnValue
-    public static String fixInlineCodeblockDirection(@Nonnull String src)
+    
+    
+    public static String fixInlineCodeblockDirection( String src)
     {
         if (!isRtl(src))
         {

@@ -55,12 +55,12 @@
 //		this.guild = jda.getGuildById(guildId);
 //	}
 //	
-//	public boolean hasCommand(@Nonnull String commandName)
+//	public boolean hasCommand( String commandName)
 //	{
 //		return this.slashCmdNameToIdMap.containsKey(commandName);
 //	}
 //	
-//	public String commandId(@Nonnull String commandName)
+//	public String commandId( String commandName)
 //	{
 //		if(this.slashCmdNameToIdMap.containsKey(commandName))
 //		{
