@@ -15,10 +15,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 
-public class DeleteSuggestion extends GalacticSlashCommand
+public class StaffDeleteSuggestion extends GalacticSlashCommand
 {
 
-    public DeleteSuggestion()
+    public StaffDeleteSuggestion()
     {
         this.name = "delete";
         this.help = "Deletes the given Suggestion";

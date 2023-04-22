@@ -109,6 +109,12 @@ public class EditSuggestion extends GalacticSlashCommand
     
     private void runEditDescription(SlashCommandEvent event, SuggestionMessage msg, LinkedMessagesRecord lmr)
     {
+        if(event.getOption("content").getAsString().length() >= 64)
+        {
+            Reply.Error(event, "Suggestion titles cannot be longer than 64 characters");
+            return;
+        }
+        
         msg.setDescription(EditType.getEditType(event.getOption("edit-type").getAsString()), event.getOption("content").getAsString());
 
         lmr.editMessages(msg).queue(s -> 
@@ -122,7 +128,7 @@ public class EditSuggestion extends GalacticSlashCommand
     
     private void runEditTitle(SlashCommandEvent event, SuggestionMessage msg, LinkedMessagesRecord lmr)
     {
-        msg.setTitle(event.getOption("content").getAsString());
+        msg.setTitle(EditType.getEditType(event.getOption("edit-type").getAsString()), event.getOption("content").getAsString());
 
         lmr.editMessages(msg).queue(s -> 
         {

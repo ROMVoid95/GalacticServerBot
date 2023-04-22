@@ -4,6 +4,7 @@ import static io.github.romvoid95.util.Embed.Condition.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import io.github.readonly.common.util.RGB;
 import io.github.romvoid95.commands.core.EditType;
@@ -11,26 +12,32 @@ import io.github.romvoid95.util.Embed;
 import io.github.romvoid95.util.discord.SuggestionStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.utils.SplitUtil;
+import net.dv8tion.jda.api.utils.SplitUtil.Strategy;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
-@Data
 @AllArgsConstructor
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class SuggestionMessage implements SuggestionMsg
+public class SuggestionMessage
 {
 
-    @NonNull private String             title;
-    @NonNull private String             type;
-    @NonNull private String             numberAndAuthor;
-    @NonNull private RGB                embedColor;
+    @NonNull
+    private String             title;
+    @NonNull
+    private String             type;
+    @NonNull
+    private String             numberAndAuthor;
+    @NonNull
+    private RGB                embedColor;
     private MessageEmbed.Field status;
-    @NonNull private List<MessageEmbed> descriptionEmbedList;
+    @NonNull
+    private List<MessageEmbed> descriptionEmbedList;
 
+    public static Function<String, List<String>> split = s -> SplitUtil.split(s, 4092, Strategy.WHITESPACE, Strategy.ANYWHERE);
 
     private SuggestionMessage(Builder builder)
     {
@@ -40,7 +47,7 @@ public class SuggestionMessage implements SuggestionMsg
         this.descriptionEmbedList = this.buildDescriptions(builder.descriptions, SuggestionStatus.NONE.getRGB());
         this.embedColor = SuggestionStatus.NONE.getRGB();
     }
-    
+
     public List<MessageEmbed> toEmbeds()
     {
         return toData().getEmbeds();
@@ -50,42 +57,57 @@ public class SuggestionMessage implements SuggestionMsg
     {
         return new SuggestionMessage(builder).toData().getEmbeds();
     }
-    
-  public static SuggestionMessage fromMessage(List<MessageEmbed> e)
-  {
-      MessageEmbed mainMsg = e.get(0);
-      if (mainMsg.getFields().size() == 1)
-      {
-          //@format:off
-            return new SuggestionMessage(
-              mainMsg.getTitle(), 
-              mainMsg.getAuthor().getName(), 
-              mainMsg.getDescription(),
-              new RGB(mainMsg.getColor().getRGB()),
-              mainMsg.getFields().get(0),
-              e.stream().skip(1).toList()
-            );
-        } else {
-            return new SuggestionMessage(
-              mainMsg.getTitle(), 
-              mainMsg.getAuthor().getName(), 
-              mainMsg.getDescription(),
-              new RGB(mainMsg.getColor().getRGB()),
-              e.stream().skip(1).toList()
-            );
-            //@format
-      }
 
-  }
+    public static SuggestionMessage fromMessage(List<MessageEmbed> e)
+    {
+        MessageEmbed mainMsg = e.get(0);
+        if (mainMsg.getFields().size() == 1)
+        {
+            //@noformat
+            return new SuggestionMessage(
+                mainMsg.getTitle(), 
+                mainMsg.getAuthor().getName(), 
+                mainMsg.getDescription(), 
+                new RGB(mainMsg.getColor().getRGB()), 
+                mainMsg.getFields().get(0), 
+                e.stream().skip(1).toList()
+            );
+        } else
+        {
+            return new SuggestionMessage(
+                mainMsg.getTitle(), 
+                mainMsg.getAuthor().getName(), 
+                mainMsg.getDescription(), 
+                new RGB(mainMsg.getColor().getRGB()), 
+                e.stream().skip(1).toList()
+                );
+            //@format
+        }
+
+    }
 
     public void setStatus(SuggestionStatus status)
     {
         this.status = status.getStatusEmbedField();
     }
 
-    public void setTitle(String title)
+    public void setTitle(EditType editType, String title)
     {
-        this.title = title;
+        switch (editType)
+        {
+            case APPEND ->
+            {
+                this.title = "%s %s".formatted(this.title, title);
+            }
+            case PREPEND ->
+            {
+                this.title = "%s %s".formatted(title, this.title);
+            }
+            case REPLACE ->
+            {
+                this.title = title;
+            }
+        }
     }
 
     public void setDescription(EditType editType, String description)
@@ -110,12 +132,21 @@ public class SuggestionMessage implements SuggestionMsg
         //@format
     }
 
+    private List<MessageEmbed> buildDescriptions(List<String> descriptions, RGB color)
+    {
+        List<MessageEmbed> list = new ArrayList<>();
+        for (String d : descriptions)
+        {
+            list.add(Embed.descriptionEmbed(d, color).title("Description").toEmbed());
+        }
+        return list;
+    }
+
     private String collectionDescriptions()
     {
         return String.join(" ", this.descriptionEmbedList.stream().map(MessageEmbed::getDescription).toList());
     }
 
-    @Override
     public MessageCreateData toData()
     {
         List<MessageEmbed> embeds = new ArrayList<>();
@@ -126,13 +157,7 @@ public class SuggestionMessage implements SuggestionMsg
 
     private MessageEmbed createHeaderEmbed()
     {
-        return Embed.newBuilder()
-            .title(title)
-            .setAuthor(type)
-            .description(numberAndAuthor)
-            .color(embedColor)
-            .addFieldConditionally(NotNull(status))
-            .toEmbed();
+        return Embed.newBuilder().title(title).setAuthor(type).description(numberAndAuthor).color(embedColor).addFieldConditionally(NotNull(status)).toEmbed();
     }
 
     public static Builder builder()
@@ -180,7 +205,7 @@ public class SuggestionMessage implements SuggestionMsg
         {
             return new SuggestionMessage(this);
         }
-        
+
         public List<MessageEmbed> build()
         {
             return SuggestionMessage.toEmbedsFromBuilder(this);

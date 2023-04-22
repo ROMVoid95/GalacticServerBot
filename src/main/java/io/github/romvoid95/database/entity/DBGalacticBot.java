@@ -21,11 +21,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.github.romvoid95.GalacticBot;
 import io.github.romvoid95.commands.core.RoleType;
 import io.github.romvoid95.database.ManagedObject;
 import io.github.romvoid95.database.impl.Suggestion;
-import io.github.romvoid95.database.impl.SuggestionManager;
 import io.github.romvoid95.database.impl.Suggestion.LinkedMessages;
+import io.github.romvoid95.database.impl.SuggestionManager;
 import io.github.romvoid95.database.impl.options.HasteOptions;
 import io.github.romvoid95.database.impl.options.ServerOptions;
 import io.github.romvoid95.database.impl.options.SuggestionOptions;
@@ -33,6 +34,7 @@ import io.github.romvoid95.util.rec.ListPair;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 
 @Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -131,7 +133,16 @@ public class DBGalacticBot implements ManagedObject
     {
         return this.getManager().getList().stream().map(Suggestion::postMsgId).toList();
     }
-
+    
+    @JsonIgnore
+    public List<User> getAllSuggestionAuthors()
+    {
+        return this.getManager().getList().stream()
+            .map(Suggestion::getAuthorId)
+            .map(id -> GalacticBot.instance().getJda().getUserById(id))
+            .toList();
+    }
+    
     public void addNewDevServerPopularMessage(String messageId, Suggestion suggestion)
     {
         LinkedMessages messages = suggestion.getMessages();
@@ -187,6 +198,17 @@ public class DBGalacticBot implements ManagedObject
         {
             return null;
         }
+    }
+    
+    public boolean deleteSuggestion(String id)
+    {
+        Suggestion toDelete = this.getManager().getList().stream().filter(s -> s.get_id().equals(id)).findFirst().get();
+        List<Suggestion> newList = this.getManager().getList();
+        boolean removed = newList.remove(toDelete);
+        
+        this.getManager().setList(newList);
+        this.saveUpdating();
+        return removed;
     }
     
     public int getSuggestionNumber(Suggestion suggestion)
