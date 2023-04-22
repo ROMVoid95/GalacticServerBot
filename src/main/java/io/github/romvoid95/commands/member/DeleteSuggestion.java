@@ -5,8 +5,10 @@ import io.github.readonly.command.option.RequiredOption;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
+import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class DeleteSuggestion extends GalacticSlashCommand
 {
@@ -32,10 +34,15 @@ public class DeleteSuggestion extends GalacticSlashCommand
         String id = event.getOption("id").getAsString();
         
         try {
-            if(BotData.database().galacticBot().deleteSuggestion(id)) {
-                Reply.Success(event, "Suggestion sucessfully deleted");
-                return;
-            }
+            DBGalacticBot db = BotData.database().galacticBot();
+            String messageId = db.getSuggestionFromUniqueId(id).get().postMsgId();
+            TextChannel txtChannel = event.getGuild().getTextChannelById(db.getSuggestionOptions().getSuggestionChannel());
+            txtChannel.deleteMessageById(messageId).queue(s -> {
+                if(BotData.database().galacticBot().deleteSuggestion(id)) {
+                    Reply.Success(event, "Suggestion sucessfully deleted");
+                    return;
+                }
+            });
         } catch (Exception e) {
             Reply.Error(event, "An error occoured when attempting to delete suggestion by ID: " + id);
             return;
