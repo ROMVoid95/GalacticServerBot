@@ -10,8 +10,6 @@ import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandGroupData;
 
 public class UpvoteRequirement extends GalacticSlashCommand
@@ -61,11 +59,9 @@ public class UpvoteRequirement extends GalacticSlashCommand
                 return;
             }
 
-            OptionMapping integerOption = event.getOptionsByType(OptionType.INTEGER).get(0);
-
             final DBGalacticBot db = BotData.database().galacticBot();
             int upvotesRequired = db.getSuggestionOptions().getStarRequirement();
-            int newUpvotesRequired = integerOption.getAsInt();
+            int newUpvotesRequired = event.getOption("count").getAsInt();
 
             //Check if it is already the set channel
             if (upvotesRequired == newUpvotesRequired)
