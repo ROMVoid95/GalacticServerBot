@@ -20,7 +20,7 @@ public class UpvoteRequirement extends GalacticSlashCommand
         this.name = "requirement";
         this.help = "Display or change the current upvotes required to be posted in Popular Suggestions";
         setOptions(
-        	Option.number("count", "Number of upvotes required", 1, 100)
+        	Option.integer("count", "Number of upvotes required", 1, 100)
         );
         this.subcommandGroup = new SubcommandGroupData("upvotes", "Suggestion Upvotes commands");
     }
