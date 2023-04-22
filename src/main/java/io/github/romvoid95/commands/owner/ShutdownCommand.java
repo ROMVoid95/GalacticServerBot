@@ -34,7 +34,7 @@ public class ShutdownCommand extends GalacticSlashCommand
     @Override
     public void onExecute(SlashCommandEvent event)
     {
-        ProcessBuilder builder = new ProcessBuilder("systemctl restart galacticbot".stripTrailing().split("\\s+")).redirectErrorStream(true);
+        ProcessBuilder builder = new ProcessBuilder("./restartBot".stripTrailing().split("\\s+")).redirectErrorStream(true);
         try
         {
             Process systemProcess = builder.start();
