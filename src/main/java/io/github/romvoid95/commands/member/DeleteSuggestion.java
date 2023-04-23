@@ -44,7 +44,7 @@ public class DeleteSuggestion extends GalacticSlashCommand
                 }
             });
         } catch (Exception e) {
-            Reply.Error(event, "An error occoured when attempting to delete suggestion by ID: " + id);
+            Reply.Error(event, "An error occoured when attempting to delete suggestion by ID: " + id + "\n\n" + e.getMessage());
             return;
         }
 	}
