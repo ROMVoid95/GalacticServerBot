@@ -66,7 +66,7 @@ public class NewSuggestion extends GalacticSlashCommand
         	return;
         }
 
-        String channelId = BotData.database().galacticBot().getSuggestionOptions().getSuggestionChannel();
+        String channelId = BotData.database().galacticBot().getSuggestionOptions().getSuggestionsChannelId();
         TextChannel txtChannel = event.getGuild().getTextChannelById(channelId);
         // Only allow new suggestions in the predefined channel
         // We don't live in the jungle out here

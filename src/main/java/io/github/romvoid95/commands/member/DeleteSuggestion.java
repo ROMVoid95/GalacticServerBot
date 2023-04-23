@@ -6,6 +6,7 @@ import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
+import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -35,9 +36,25 @@ public class DeleteSuggestion extends GalacticSlashCommand
         
         try {
             DBGalacticBot db = BotData.database().galacticBot();
-            String messageId = db.getSuggestionFromUniqueId(id).get().postMsgId();
-            TextChannel txtChannel = event.getGuild().getTextChannelById(db.getSuggestionOptions().getSuggestionChannel());
-            txtChannel.deleteMessageById(messageId).queue(s -> {
+            Suggestion suggestion = db.getSuggestionFromUniqueId(id).get();
+            
+            boolean isPopular = suggestion.getMessages().communityPopularMsg().isPresent();
+            
+            if(isPopular)
+            {
+                String popularMsgId = suggestion.getMessages().getCommunityPopularMsgId();
+                TextChannel communityPopularChannel = db.getSuggestionOptions().getPopularChannel();
+                
+                String devPopularMsgId = suggestion.getMessages().getDevPopularMsgId();
+                TextChannel devPopularChannel = db.getSuggestionOptions().getDevPopularChannel();
+                
+                communityPopularChannel.deleteMessageById(popularMsgId).queue();
+                devPopularChannel.deleteMessageById(devPopularMsgId).queue();
+            }
+            
+            
+            TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
+            txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s -> {
                 if(BotData.database().galacticBot().deleteSuggestion(id)) {
                     Reply.Success(event, "Suggestion sucessfully deleted");
                     return;

@@ -2,9 +2,11 @@ package io.github.romvoid95.database.impl.options;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.github.romvoid95.GalacticBot;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 @NoArgsConstructor
 @Setter
@@ -18,24 +20,21 @@ public class SuggestionOptions
     private boolean              suggestionsLocked         = false;
     private int                  starRequirement           = 10;
 
-    @JsonIgnore
-    public String getSuggestionChannel()
+    public TextChannel getSuggestionChannel()
     {
-        return suggestionsChannelId;
-    }
-
-    @JsonIgnore
-    public String getPopularSuggestionChannel()
-    {
-        return popularChannelId;
-    }
-
-    @JsonIgnore
-    public String getDevServerPopularChannel()
-    {
-        return devServerPopularChannelId;
+        return GalacticBot.instance().getJda().getTextChannelById(getSuggestionsChannelId());
     }
     
+    public TextChannel getPopularChannel()
+    {
+        return GalacticBot.instance().getJda().getTextChannelById(getPopularChannelId());
+    }
+    
+    public TextChannel getDevPopularChannel()
+    {
+        return GalacticBot.instance().getJda().getTextChannelById(getDevServerPopularChannelId());
+    }
+
     public final class Development {
         public static final String suggestionsChannelIdOverride = "1008727436919320596";
         public static final String popularIdOverride = "1008728007411761263";

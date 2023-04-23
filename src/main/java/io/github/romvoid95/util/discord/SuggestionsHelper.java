@@ -125,7 +125,7 @@ public class SuggestionsHelper
                     
                     if (suggestion.getMessages().getDevPopularMsgId().isEmpty())
                     {
-                        TextChannel devPopularChannel = GalacticBot.instance().getJda().getTextChannelById(options.getDevServerPopularChannel());
+                        TextChannel devPopularChannel = GalacticBot.instance().getJda().getTextChannelById(options.getDevServerPopularChannelId());
                         devPopularChannel.sendMessageEmbeds(message.getEmbeds().get(0)).queue(
                             success -> {
                                 database.addNewDevServerPopularMessage(success.getId(), suggestion);

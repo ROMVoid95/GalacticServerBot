@@ -42,7 +42,7 @@ public class ChannelLock extends GalacticSlashCommand
         Collection<Permission> toDeny = EnumSet.of(Permission.MESSAGE_SEND, Permission.USE_APPLICATION_COMMANDS);
         Collection<Permission> alwaysAllow = EnumSet.of(Permission.MESSAGE_HISTORY, Permission.MESSAGE_SEND_IN_THREADS);
 
-        TextChannel suggestionChannel = event.getJDA().getTextChannelById(db.getSuggestionOptions().getSuggestionChannel());
+        TextChannel suggestionChannel = db.getSuggestionOptions().getSuggestionChannel();
         suggestionChannel.getManager().putPermissionOverride(memberRole, alwaysAllow, toDeny).queue(s ->
         {
             if (suggestionsLocked)

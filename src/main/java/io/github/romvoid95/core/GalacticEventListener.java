@@ -26,7 +26,7 @@ public class GalacticEventListener extends ListenerAdapter
 					SuggestionOptions	options	= BotData.database().galacticBot().getSuggestionOptions();
 					MessageChannel		channel	= event.getChannel();
 
-					if (options.getSuggestionChannel().equals(channel.getId()))
+					if (options.getSuggestionsChannelId().equals(channel.getId()))
 					{
 						MessageType type = event.getMessage().getType();
 						if (type != MessageType.SLASH_COMMAND)
