@@ -30,16 +30,18 @@ public class ClientListener implements CommandListener
     {
         String asTag = DiscordUtils.getUser(event).getAsTag();
         String id;
+        String guild = "Private Channel";
         if(event.getChannelType().equals(ChannelType.PRIVATE))
         {
             id = event.getUser().getId();
         } else {
             id = event.getMember().getId();
+            guild = event.getGuild().getName();
         }
         String content = event.getFullCommandName();
 
-        LogUtils.log("SlashCommandEvent", webhookContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
-        log.info(logContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
+        LogUtils.log("SlashCommandEvent", webhookContent(event.getChannelType(), "Slash Command", guild, asTag, id, content, event.getChannel().getName()));
+        log.info(logContent(event.getChannelType(), "Slash Command", guild, asTag, id, content, event.getChannel().getName()));
     }
 
     private String webhookContent(ChannelType channelType, String command, String guildName, String tag, String id, String content, String channelName)
