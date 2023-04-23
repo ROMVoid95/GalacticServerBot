@@ -7,6 +7,7 @@ import io.github.readonly.command.option.Option;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
+import io.github.romvoid95.database.impl.options.SuggestionOptions;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -69,16 +70,15 @@ public class UpvoteRequirement extends GalacticSlashCommand
                 return;
             }
 
-            //Check if it is already the set channel
             if (upvotesRequired == newUpvotesRequired)
             {
                 Reply.Success(event, "No operations performed: Selected Upvotes Required is already number required");
                 return;
             }
 
-            // Set new channel ID and send reply
-            db.getSuggestionOptions().setStarRequirement(newUpvotesRequired);
-            db.saveUpdating();
+            SuggestionOptions options = db.getSuggestionOptions();
+            options.setStarRequirement(newUpvotesRequired);
+            db.setSuggestionOptions(options);
             Reply.Success(event, "Sucessfully changed Upvotes Required: `" + upvotesRequired + "` -> `" + newUpvotesRequired + "`");
         }
     }
