@@ -73,7 +73,7 @@ public class DBGalacticBot implements ManagedObject
     public void setSuggestionOptions(SuggestionOptions options)
     {
         this.suggestionOptions = options;
-        this.saveUpdating();
+        this.save();
     }
 
     public void setMaintenanceMode(boolean maintenanceMode)
