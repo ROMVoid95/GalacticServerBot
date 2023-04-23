@@ -20,16 +20,19 @@ public class SuggestionOptions
     private boolean              suggestionsLocked         = false;
     private int                  starRequirement           = 10;
 
+    @JsonIgnore
     public TextChannel getSuggestionChannel()
     {
         return GalacticBot.instance().getJda().getTextChannelById(getSuggestionsChannelId());
     }
     
+    @JsonIgnore
     public TextChannel getPopularChannel()
     {
         return GalacticBot.instance().getJda().getTextChannelById(getPopularChannelId());
     }
     
+    @JsonIgnore
     public TextChannel getDevPopularChannel()
     {
         return GalacticBot.instance().getJda().getTextChannelById(getDevServerPopularChannelId());

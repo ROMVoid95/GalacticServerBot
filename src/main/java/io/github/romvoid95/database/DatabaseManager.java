@@ -18,22 +18,40 @@ public class DatabaseManager
         this.conn = conn;
     }
 
+    
+    
     public DBGalacticBot galacticBot()
     {
-        DBGalacticBot obj = Rethink.table(DBGalacticBot.DB_TABLE).get("galacticbot").runAtom(conn, DBGalacticBot.class);
-        return obj == null ? DBGalacticBot.create() : obj;
+    	this.checkConnection();
+    	if(this.conn.isOpen()) {
+            DBGalacticBot obj = Rethink.table(DBGalacticBot.DB_TABLE).get("galacticbot").runAtom(conn, DBGalacticBot.class);
+            return obj == null ? DBGalacticBot.create() : obj;
+    	}
+    	return null;
     }
+
+    
     
     public DBBlacklist blacklist()
     {
-        DBBlacklist obj = Rethink.table(DBBlacklist.DB_TABLE).get("blacklist").runAtom(conn, DBBlacklist.class);
-        return obj == null ? DBBlacklist.create() : obj;
+    	this.checkConnection();
+    	if(this.conn.isOpen()) {
+            DBBlacklist obj = Rethink.table(DBBlacklist.DB_TABLE).get("blacklist").runAtom(conn, DBBlacklist.class);
+            return obj == null ? DBBlacklist.create() : obj;
+    	}
+    	return null;
     }
+    
+    
     
     public DBUpdates updates()
     {
-        DBUpdates obj = Rethink.table(DBUpdates.DB_TABLE).get("updates").runAtom(conn, DBUpdates.class);
-        return obj == null ? DBUpdates.create() : obj;
+    	this.checkConnection();
+    	if(this.conn.isOpen()) {
+            DBUpdates obj = Rethink.table(DBUpdates.DB_TABLE).get("updates").runAtom(conn, DBUpdates.class);
+            return obj == null ? DBUpdates.create() : obj;
+    	}
+    	return null;
     }
 
     public void save( ManagedObject object)
@@ -49,6 +67,13 @@ public class DatabaseManager
     public void delete( ManagedObject object)
     {
         Rethink.table(object.getTableName()).get(object.getId()).delete().runNoReply(conn);
+    }
+    
+    private void checkConnection()
+    {
+    	if(!this.conn.isOpen()) {
+    		this.conn = this.conn.reconnect();
+    	}
     }
 
     public Connection getConnection()
