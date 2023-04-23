@@ -20,7 +20,7 @@ public class UpvoteRequirement extends GalacticSlashCommand
         this.name = "requirement";
         this.help = "Display or change the current upvotes required to be posted in Popular Suggestions";
         setOptions(
-        	Option.integer("count", "Number of upvotes required", 1, 100)
+        	Option.integer("count", "Number of upvotes required")
         );
         this.subcommandGroup = new SubcommandGroupData("upvotes", "Suggestion Upvotes commands");
     }
@@ -62,6 +62,12 @@ public class UpvoteRequirement extends GalacticSlashCommand
             final DBGalacticBot db = BotData.database().galacticBot();
             int upvotesRequired = db.getSuggestionOptions().getStarRequirement();
             int newUpvotesRequired = event.getOption("count").getAsInt();
+            
+            if(newUpvotesRequired < 1 || newUpvotesRequired > 100)
+            {
+                Reply.Error(event, "No operations performed: Number must be more than 0 and less than 101");
+                return;
+            }
 
             //Check if it is already the set channel
             if (upvotesRequired == newUpvotesRequired)
