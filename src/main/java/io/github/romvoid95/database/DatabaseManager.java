@@ -2,9 +2,6 @@ package io.github.romvoid95.database;
 
 import static io.github.romvoid95.database.Rethink.Rethink;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-
 import com.rethinkdb.net.Connection;
 
 import io.github.romvoid95.database.entity.DBBlacklist;

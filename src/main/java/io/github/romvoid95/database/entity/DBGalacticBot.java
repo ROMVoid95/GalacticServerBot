@@ -13,9 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -188,7 +185,6 @@ public class DBGalacticBot implements ManagedObject
         return returnId;
     }
 
-    @Nullable
     public Suggestion getSuggestionFromNumber(int number)
     {
         try

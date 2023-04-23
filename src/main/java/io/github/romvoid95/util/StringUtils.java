@@ -12,9 +12,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-
 public class StringUtils
 {
 

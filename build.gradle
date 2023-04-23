@@ -18,7 +18,7 @@ repositories {
 }
 
 ext {
-	jdatools		= '4.0.3'
+	jdatools		= '4.0.4'
 	reflections 	= '0.10.2'
 	okhttp 			= '5.0.0-alpha.2'
 	webhooks 		= '0.8.2-buttons'
@@ -52,7 +52,7 @@ dependencies {
 	implementation group: 'org.codehaus.groovy', 	name: 'groovy-jsr223', 		version: jsr223
 	implementation group: 'org.jsoup', 				name: 'jsoup', 				version: jsoup
 	implementation group: 'it.unimi.dsi', 			name: 'fastutil', 			version: fastutil
-	implementation group: 'javax.annotation', 		name: 'javax.annotation-api', version: javax
+	implementation group: 'com.google.guava', 		name: 'guava',              version: '31.1-jre'
 	implementation 'com.vladsch.flexmark:flexmark-html2md-converter:0.64.0'
 	
 	implementation("net.dv8tion:JDA:${jda}") {

@@ -1,7 +1,5 @@
 package io.github.romvoid95.database;
 
-import javax.annotation.Nonnull;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.github.romvoid95.BotData;
