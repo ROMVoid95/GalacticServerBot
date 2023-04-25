@@ -11,7 +11,6 @@ import io.github.readonly.command.option.RequiredOption;
 import io.github.readonly.common.util.MessageContentBuilder;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
-import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 import io.github.romvoid95.util.eval.EvalEngine;
@@ -56,7 +55,7 @@ public class EvalCommand extends GalacticSlashCommand
 
         shortcuts.put("me", event.getMember());
         shortcuts.put("bot", event.getJDA().getSelfUser());
-        
+
         shortcuts.put("manager", BotData.database().galacticBot().getManager());
 
         final Triple<Object, String, String> result = EvalEngine.GROOVY.eval(shortcuts, Collections.emptyList(), EvalEngine.DEFAULT_IMPORTS, 10, event.optString("ev"));

@@ -12,6 +12,7 @@ import io.github.romvoid95.commands.owner.DeleteFromListCommand;
 import io.github.romvoid95.commands.owner.EvalCommand;
 import io.github.romvoid95.commands.owner.ExecCommand;
 import io.github.romvoid95.commands.owner.MaintanenceModeCommand;
+import io.github.romvoid95.commands.owner.SetCountCommand;
 import io.github.romvoid95.commands.staff.Suggestions;
 import io.github.romvoid95.commands.staff.server.ServerStaff;
 import io.github.romvoid95.commands.staff.suggestions.devonly.DevServerPopularChannel;
@@ -43,6 +44,6 @@ public class SortInitialize
 	
 	private static final List<SlashCommand> botServerCommands()
 	{
-		return Arrays.asList(new DeleteFromListCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand());
+		return Arrays.asList(new DeleteFromListCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand(), new SetCountCommand());
 	}
 }

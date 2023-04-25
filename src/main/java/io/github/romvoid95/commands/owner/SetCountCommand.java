@@ -2,7 +2,6 @@ package io.github.romvoid95.commands.owner;
 
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
-import io.github.readonly.command.option.RequiredOption;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
@@ -37,7 +36,7 @@ public class SetCountCommand extends GalacticSlashCommand
         DBGalacticBot db = BotData.database().galacticBot();
         db.getManager().setCount(count);
         db.saveUpdating();
-        
+
         Reply.EphemeralReply(event, "Sucessfully set count");
     }
 }

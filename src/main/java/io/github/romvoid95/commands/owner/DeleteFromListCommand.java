@@ -2,10 +2,8 @@ package io.github.romvoid95.commands.owner;
 
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
-import io.github.readonly.command.option.RequiredOption;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
-import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 
