@@ -36,7 +36,7 @@ public class DeleteFromListCommand extends GalacticSlashCommand
 
         if (BotData.database().galacticBot().deleteSuggestion(id))
         {
-            Reply.Success(event, "Sucessfully cleared Suggestions Database");
+            Reply.EphemeralReply(event, "Sucessfully cleared Suggestions Database");
         }
     }
 }

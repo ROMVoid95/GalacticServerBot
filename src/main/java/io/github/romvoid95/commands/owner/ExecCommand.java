@@ -62,11 +62,11 @@ public class ExecCommand extends GalacticSlashCommand
                 output = "Command returned no output";
             }
 
-            Reply.Success(event, output);
+            Reply.EphemeralReply(event, output);
 
         } catch (IOException e)
         {
-            Reply.Error(event, "```\n" + "%s\n" + "```".formatted(Throwables.getStackTraceAsString(e)));
+            Reply.EphemeralReply(event, "```\n" + "%s\n" + "```".formatted(Throwables.getStackTraceAsString(e)));
 
             e.printStackTrace();
         }

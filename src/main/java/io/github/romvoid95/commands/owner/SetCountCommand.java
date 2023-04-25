@@ -38,6 +38,6 @@ public class SetCountCommand extends GalacticSlashCommand
         db.getManager().setCount(count);
         db.saveUpdating();
         
-        Reply.Success(event, "Sucessfully set count");
+        Reply.EphemeralReply(event, "Sucessfully set count");
     }
 }

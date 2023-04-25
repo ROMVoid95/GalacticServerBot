@@ -31,14 +31,14 @@ public class MaintanenceModeCommand extends GalacticSlashCommand
         {
             EventHandler.instance().post(new MaintenanceEvent(MaintenanceEvent.Action.Enabled));
             database.setMaintenanceMode(true);
-            Reply.Success(event, "Now running in Maintanence Mode");
+            Reply.EphemeralReply(event, "Now running in Maintanence Mode");
         }
 
         if (action.equals("off"))
         {
             EventHandler.instance().post(new MaintenanceEvent(MaintenanceEvent.Action.Disabled));
             database.setMaintenanceMode(false);
-            Reply.Success(event, "Now running in Normal Mode");
+            Reply.EphemeralReply(event, "Now running in Normal Mode");
         }
     }
 }
