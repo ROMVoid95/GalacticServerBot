@@ -21,7 +21,7 @@ public class MaintenanceEvent extends BotEvent
 			@Override
 			public void setActivity(Presence presence)
 			{
-				presence.setPresence(OnlineStatus.DO_NOT_DISTURB, Activity.watching("for Suggestions"));
+				presence.setPresence(OnlineStatus.ONLINE, Activity.watching("for Suggestions"));
 			}
 		};
 		
