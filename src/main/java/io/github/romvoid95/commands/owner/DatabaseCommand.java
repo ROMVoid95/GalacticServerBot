@@ -16,7 +16,7 @@ public class DatabaseCommand extends GalacticSlashCommand
     {
         name("database");
         setOptions(
-            RequiredOption.text("msgId", "msgId"),
+            RequiredOption.text("msgid", "msgid"),
             Option.integer("number", "number")
         );
     }
@@ -36,7 +36,7 @@ public class DatabaseCommand extends GalacticSlashCommand
     protected void onExecute(SlashCommandEvent event)
     {
         DBGalacticBot db = BotData.database().galacticBot();
-        String msgId = event.getOption("msgId").getAsString();
+        String msgId = event.getOption("msgid").getAsString();
         if(event.hasOption("number"))
         {
             int num = event.getOption("number").getAsInt();
