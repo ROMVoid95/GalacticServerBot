@@ -124,16 +124,22 @@ public class NewSuggestion extends GalacticSlashCommand
         builder.addField("Suggestion", "`#" + number + "`", true);
         builder.addField("**Unique ID**", "`" + suggestionId + "`", true);
         builder.addField("Edit Command",
-            "`/edit <section> <type> <content>`\n" + "**section**: Choice between editing the Title or Description\n" + "**type**: Choice between Replacing or to Append to the end of what your editing\n" + "**content**: The content which will be replacing or appended to the section your editing",
+            //@noformat
+            "`/edit <id> <section> <edit-type> <content>`\n" + 
+                "**id**: The Unique ID provided to you by the Bot\n" + 
+                "**section**: Choose either the Title or Description to edit\n" + 
+                "**edit-type**: *Replace*, *Append*, or *Prepend* current value\n" +
+                "**content**: The content to perform the edit-type with on your suggestion",
             false);
+        builder.addField("Delete Command", 
+            "`/delete <id>`\n" + 
+                "**id**: The Unique ID provided to you by the Bot\n", false);
         return builder.build();
     }
 
     private String getFirstTimeSuggestionMessage()
     {
-        return "This message contains the unique ID that can be used to edit the suggestion if you choose or find the need to do so later on. " + "Keep in mind that while you can edit the Title and Description of your suggestion, the Type of suggestion can not be changed. You can message an online "
-            + "staff member and ask for the suggestion to be deleted if you have to change the suggestion type, or simply want it taken down.\n\n"
-            + "**NOTE:** Edits are only available on Suggestions that have a status of Considered or No status. If you're requesting for the deletion to change the type, " + "and your suggestion is posted in the `popular-suggestions` channel."
-            + " Your new updated suggestion will not take it's place. Staff cannot manually add suggestions to the `popular-suggestions` either.\n\n" + "Below you will find the unique ID that you need to use for any edits.";
+        return "This message contains the unique ID that can be used to edit the suggestion if you choose or find the need to do so later on. " + "Keep in mind that while you can edit the Title and Description of your suggestion, the Type of suggestion can not be changed.\n\n"
+            + "**NOTE:** Edits are only available on Suggestions that have a status of Considered or No status. Staff cannot manually add suggestions to the `popular-suggestions` either.\n\n" + "Below you will find the unique ID that you need to use for any edits.";
     }
 }

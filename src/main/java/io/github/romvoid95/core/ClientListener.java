@@ -38,7 +38,7 @@ public class ClientListener implements CommandListener
             id = event.getMember().getId();
             guild = event.getGuild().getName();
         }
-        String content = event.getFullCommandName();
+        String content = event.getCommandString();
 
         LogUtils.log("SlashCommandEvent", webhookContent(event.getChannelType(), "Slash Command", guild, asTag, id, content, event.getChannel().getName()));
         log.info(logContent(event.getChannelType(), "Slash Command", guild, asTag, id, content, event.getChannel().getName()));
