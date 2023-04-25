@@ -1,5 +1,7 @@
 package io.github.romvoid95.commands.owner;
 
+import java.util.LinkedHashMap;
+
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
 import io.github.readonly.command.option.RequiredOption;
@@ -40,7 +42,9 @@ public class DatabaseCommand extends GalacticSlashCommand
         if(event.hasOption("number"))
         {
             int num = event.getOption("number").getAsInt();
-            db.getManager().getMap().remove(msgId, num);
+            LinkedHashMap<String, Integer> m = db.getManager().getMap();
+            m.remove(msgId, num);
+            db.getManager().setMap(m);
             db.saveUpdating();
         }
         Reply.Success(event, "Done");
