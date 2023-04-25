@@ -32,7 +32,7 @@ public class SuggestionsHelper
     public static Message setStatus(SuggestionStatus status, Suggestion suggestion)
     {
         LinkedMessages messages = suggestion.getMessages();
-        Message populatPostMsg = null;
+        Message postMsg = null;
 
         if (messages.postMsg().isPresent())
         {
@@ -45,12 +45,12 @@ public class SuggestionsHelper
                 if (messages.devPopularMsg().isPresent())
                 {
                     setStatusOnMessage(messages.devPopularMsg().get(), status);
-                    populatPostMsg = messages.communityPopularMsg().get();
+                    postMsg = messages.postMsg().get();
                 }
             }
         }
 
-        return populatPostMsg;
+        return postMsg;
     }
 
     private static void setStatusOnMessage(Message message, SuggestionStatus status)

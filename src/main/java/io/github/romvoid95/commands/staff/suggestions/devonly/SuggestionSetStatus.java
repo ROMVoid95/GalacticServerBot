@@ -54,7 +54,7 @@ public class SuggestionSetStatus extends GalacticSlashCommand
             builder.setTitle("Suggestion " + status.getName());
             builder.setDescription("Suggestion [#" + suggestionNumber + "](" + urlLink + ") status set -> `" + status.getName() + "`");
 
-            Reply.EphemeralReply(event, builder);
+            Reply.Success(event, builder);
         }
     }
 
