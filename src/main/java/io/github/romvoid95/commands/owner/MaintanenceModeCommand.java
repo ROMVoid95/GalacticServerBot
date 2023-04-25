@@ -16,7 +16,7 @@ public class MaintanenceModeCommand extends GalacticSlashCommand
 
     public MaintanenceModeCommand()
     {
-        this.name = "maintanence-mode";
+        name("maintanence-mode");
         setOptions(RequiredOption.text("mode", "On or Off", ChoiceList.of(Choice.add("ON"), Choice.add("OFF"))));
         this.ownerCommand = true;
     }
@@ -25,16 +25,16 @@ public class MaintanenceModeCommand extends GalacticSlashCommand
     protected void onExecute(SlashCommandEvent event)
     {
         DBGalacticBot database = BotData.database().galacticBot();
-        
+
         String action = event.getOption("mode").getAsString();
-        if(action.equals("on"))
+        if (action.equals("on"))
         {
             EventHandler.instance().post(new MaintenanceEvent(MaintenanceEvent.Action.Enabled));
             database.setMaintenanceMode(true);
             Reply.Success(event, "Now running in Maintanence Mode");
         }
-        
-        if(action.equals("off"))
+
+        if (action.equals("off"))
         {
             EventHandler.instance().post(new MaintenanceEvent(MaintenanceEvent.Action.Disabled));
             database.setMaintenanceMode(false);

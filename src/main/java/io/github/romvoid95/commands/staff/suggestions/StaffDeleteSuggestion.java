@@ -20,12 +20,9 @@ public class StaffDeleteSuggestion extends GalacticSlashCommand
 
     public StaffDeleteSuggestion()
     {
-        this.name = "delete";
-        this.help = "Deletes the given Suggestion";
-        setOptions(
-        	RequiredOption.number("number", "The Suggestion #"),
-        	RequiredOption.text("reason", "The reason for deleting this suggestion")
-        );
+        name("delete");
+        description("Deletes the given Suggestion");
+        setOptions(RequiredOption.integer("number", "The Suggestion #"), RequiredOption.text("reason", "The reason for deleting this suggestion"));
     }
 
     @Override
@@ -40,11 +37,11 @@ public class StaffDeleteSuggestion extends GalacticSlashCommand
         }
 
         Member invoker = event.getMember();
-        int number = event.getOption("number").getAsInt();
-        String reason = event.getOption("reason").getAsString();
+        int    number  = event.getOption("number").getAsInt();
+        String reason  = event.getOption("reason").getAsString();
 
-        Suggestion toDelete = BotData.database().galacticBot().getSuggestionFromNumber(number);
-        User suggestionAuthor = event.getJDA().getUserById(toDelete.getAuthorId());
+        Suggestion toDelete         = BotData.database().galacticBot().getSuggestionFromNumber(number);
+        User       suggestionAuthor = event.getJDA().getUserById(toDelete.getAuthorId());
 
         LinkedMessagesRecord lmr = toDelete.getMessages().getLinkedMessagesRecord();
 
@@ -64,8 +61,8 @@ public class StaffDeleteSuggestion extends GalacticSlashCommand
 
     private void sendMessageToAuthor(User author, Member member, Suggestion suggestion, String reason)
     {
-        EmbedBuilder builder = new EmbedBuilder();
-        StringBuilder sb = new StringBuilder();
+        EmbedBuilder  builder = new EmbedBuilder();
+        StringBuilder sb      = new StringBuilder();
         sb.append("Title: %s".formatted(suggestion.getTitle()));
 
         builder.setTitle("Suggestion Deleted");

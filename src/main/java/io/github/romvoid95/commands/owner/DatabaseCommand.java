@@ -13,13 +13,13 @@ public class DatabaseCommand extends GalacticSlashCommand
 
     public DatabaseCommand()
     {
-        this.name = "clear-database";
+        name("clear-database");
     }
 
     @Override
     protected void execute(SlashCommandEvent event)
     {
-        if(!Check.isOwner(event))
+        if (!Check.isOwner(event))
         {
             Reply.InvalidPermissions(event);
             return;
@@ -31,12 +31,12 @@ public class DatabaseCommand extends GalacticSlashCommand
     protected void onExecute(SlashCommandEvent event)
     {
         DBGalacticBot database = BotData.database().galacticBot();
-        
+
         database.clearSuggestionDatabase();
-        
+
         SuggestionManager manager = database.getManager();
-        
-        if(manager.getList().isEmpty() && manager.getMap().isEmpty())
+
+        if (manager.getList().isEmpty() && manager.getMap().isEmpty())
         {
             Reply.Success(event, "Sucessfully cleared Suggestions Database");
         }

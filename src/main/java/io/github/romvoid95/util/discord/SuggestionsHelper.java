@@ -1,10 +1,10 @@
 package io.github.romvoid95.util.discord;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import io.github.readonly.common.util.ResultLevel;
-
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.GalacticBot;
 import io.github.romvoid95.database.entity.DBGalacticBot;
@@ -55,18 +55,22 @@ public class SuggestionsHelper
 
     private static void setStatusOnMessage(Message message, SuggestionStatus status)
     {
-        MessageEmbed suggestionEmbed = message.getEmbeds().get(0);
-        //@noformat
-        EmbedBuilder builder = new EmbedBuilder()
-            .setTitle(suggestionEmbed.getTitle())
-            .setAuthor(suggestionEmbed.getAuthor().getName())
-            .setDescription(suggestionEmbed.getDescription())
-            .setColor(status.getRGB().getColor())
-            .addField(suggestionEmbed.getFields().get(0))
-            .addField(status.getStatusEmbedField());
-        //@format
+        List<MessageEmbed> embeds = new ArrayList<>();
+        int statusColor = status.getRGB().getColor();
+        
+        EmbedBuilder infoBuilder = new EmbedBuilder(message.getEmbeds().get(0));
+        infoBuilder.addField(status.getStatusEmbedField());
+        infoBuilder.setColor(status.getRGB().getColor());
+        embeds.add(infoBuilder.build());
+        
+        for(MessageEmbed description : message.getEmbeds().stream().skip(1).toList())
+        {
+            EmbedBuilder descriptionBuilder = new EmbedBuilder(description);
+            descriptionBuilder.setColor(statusColor);
+            embeds.add(descriptionBuilder.build());
+        }
 
-        message.editMessageEmbeds(builder.build()).queue();
+        message.editMessageEmbeds(embeds).queue();
     }
 
     public static void handleSuggestionDownvoteEvent(MessageReactionRemoveEvent event)

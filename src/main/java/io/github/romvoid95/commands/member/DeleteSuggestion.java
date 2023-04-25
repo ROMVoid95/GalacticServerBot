@@ -16,54 +16,56 @@ public class DeleteSuggestion extends GalacticSlashCommand
 
     public DeleteSuggestion()
     {
-        this.name = "delete";
-        setOptions(
-            RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's")
-        );
+        name("delete");
+        description("[DM ONLY] Delete one of your suggestions");
+        setOptions(RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"));
         this.directMessagesAllowed();
     }
-    
-	@Override
-	protected void onExecute(SlashCommandEvent event)
-	{
+
+    @Override
+    protected void onExecute(SlashCommandEvent event)
+    {
         if (!event.getChannel().getType().equals(ChannelType.PRIVATE))
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in Private Channels");
             return;
         }
-        
+
         String id = event.getOption("id").getAsString();
-        
-        try {
-            DBGalacticBot db = BotData.database().galacticBot();
-            Suggestion suggestion = db.getSuggestionFromUniqueId(id).get();
-            
+
+        try
+        {
+            DBGalacticBot db         = BotData.database().galacticBot();
+            Suggestion    suggestion = db.getSuggestionFromUniqueId(id).get();
+
             boolean isPopular = suggestion.getMessages().communityPopularMsg().isPresent();
-            
-            if(isPopular)
+
+            if (isPopular)
             {
-                String popularMsgId = suggestion.getMessages().getCommunityPopularMsgId();
+                String      popularMsgId            = suggestion.getMessages().getCommunityPopularMsgId();
                 TextChannel communityPopularChannel = db.getSuggestionOptions().getPopularChannel();
-                
-                String devPopularMsgId = suggestion.getMessages().getDevPopularMsgId();
+
+                String      devPopularMsgId   = suggestion.getMessages().getDevPopularMsgId();
                 TextChannel devPopularChannel = db.getSuggestionOptions().getDevPopularChannel();
-                
+
                 communityPopularChannel.deleteMessageById(popularMsgId).queue();
                 devPopularChannel.deleteMessageById(devPopularMsgId).queue();
             }
-            
-            
+
             TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
-            txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s -> {
-                if(BotData.database().galacticBot().deleteSuggestion(id)) {
+            txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s ->
+            {
+                if (BotData.database().galacticBot().deleteSuggestion(id))
+                {
                     Reply.Success(event, "Suggestion sucessfully deleted");
                     return;
                 }
             });
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             Reply.Error(event, "An error occoured when attempting to delete suggestion by ID: " + id + "\n\n" + e.getMessage());
             return;
         }
-	}
+    }
 
 }

@@ -12,24 +12,24 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 
 public class CloseDiscussionThread extends GalacticSlashCommand
 {
-    
+
     public CloseDiscussionThread()
     {
-        this.name = "close";
-        this.help = "Closes the Discussion of the suggestion Thread called in";
+        name("close");
+        description("Closes the Discussion of the suggestion Thread called in");
     }
 
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        if(!event.getChannel().getType().equals(ChannelType.GUILD_PUBLIC_THREAD))
+        if (!event.getChannel().getType().equals(ChannelType.GUILD_PUBLIC_THREAD))
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, "This can only be run in Suggestion Discussion Threads!");
             return;
         }
-        
+
         boolean canRun = Check.staffRoles(event);
-        if(canRun == false)
+        if (canRun == false)
         {
             canRun = Check.forSuggestionAuthor(event);
         }
@@ -39,9 +39,8 @@ public class CloseDiscussionThread extends GalacticSlashCommand
             Reply.InvalidPermissions(event);
             return;
         }
-        
-        Consumer<InteractionHook> consumerLambda = 
-        	(close) -> event.getChannel().asThreadChannel().getManager().setName("(CLOSED)").setArchived(true).setLocked(true).queue();
+
+        Consumer<InteractionHook> consumerLambda = (close) -> event.getChannel().asThreadChannel().getManager().setName("(CLOSED)").setArchived(true).setLocked(true).queue();
 
         Reply.EphemeralReply(event, "Discussion Thread has been closed", consumerLambda);
     }

@@ -8,10 +8,6 @@ public class ServerStaff extends ParentSlashCommand
     public ServerStaff()
     {
         super("server");
-        subCommands(
-            new AddStaffRoles(),
-            new RemoveStaffRole(),
-            new ListStaffRoles()
-        );
+        subCommands(new AddStaffRoles(), new RemoveStaffRole(), new ListStaffRoles());
     }
 }

@@ -18,24 +18,24 @@ public class ChannelUnlock extends GalacticSlashCommand
 
     public ChannelUnlock()
     {
-        this.name = "unlock-channel";
-        this.help = "Unlocks and sllows new Suggestions in the current Suggestions channel";
+        name("unlock-channel");
+        description("Unlocks and sllows new Suggestions in the current Suggestions channel");
     }
-    
+
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        
+
         boolean canRun = Check.adminRoles(event);
-        
+
         if (!canRun)
         {
             Reply.InvalidPermissions(event);
             return;
         }
-        
-        final DBGalacticBot db = BotData.database().galacticBot();
-        boolean suggestionsLocked = db.getSuggestionOptions().isSuggestionsLocked();
+
+        final DBGalacticBot db                = BotData.database().galacticBot();
+        boolean             suggestionsLocked = db.getSuggestionOptions().isSuggestionsLocked();
 
         Role memberRole = event.getGuild().getRolesByName("Astronaut", false).get(0);
 

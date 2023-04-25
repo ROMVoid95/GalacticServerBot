@@ -20,8 +20,8 @@ public class PostChannel extends GalacticSlashCommand
 
     public PostChannel()
     {
-        this.name = "channel";
-        this.help = "Display or change the channel new Suggestions are posted in";
+        name("channel");
+        description("Display or change the channel new Suggestions are posted in");
         setOptions(Option.channel("channel", "Guild Channel to use for new Suggestions"));
     }
 
@@ -38,9 +38,9 @@ public class PostChannel extends GalacticSlashCommand
                 return;
             }
 
-            final DBGalacticBot db = BotData.database().galacticBot();
-            String suggestionsChannelId = db.getSuggestionOptions().getSuggestionsChannelId();
-            TextChannel suggestionsChannel = event.getGuild().getTextChannelById(suggestionsChannelId);
+            final DBGalacticBot db                   = BotData.database().galacticBot();
+            String              suggestionsChannelId = db.getSuggestionOptions().getSuggestionsChannelId();
+            TextChannel         suggestionsChannel   = event.getGuild().getTextChannelById(suggestionsChannelId);
 
             //@noformat
             Reply.Success(event, new EmbedBuilder().setColor(Color.ORANGE).setTitle("Current Suggestions Channel")
@@ -68,10 +68,10 @@ public class PostChannel extends GalacticSlashCommand
                 Reply.Error(event, "You must choose a Text Channel to use for Suggestions");
                 return;
             }
-            final DBGalacticBot db = BotData.database().galacticBot();
-            String suggestionsChannelId = db.getSuggestionOptions().getSuggestionsChannelId();
-            TextChannel oldChannel = event.getGuild().getTextChannelById(suggestionsChannelId);
-            TextChannel newChannel = channelOption.getAsChannel().asTextChannel();
+            final DBGalacticBot db                   = BotData.database().galacticBot();
+            String              suggestionsChannelId = db.getSuggestionOptions().getSuggestionsChannelId();
+            TextChannel         oldChannel           = event.getGuild().getTextChannelById(suggestionsChannelId);
+            TextChannel         newChannel           = channelOption.getAsChannel().asTextChannel();
 
             //Check if it is already the set channel
             if (suggestionsChannelId.equals(newChannel.getId()))
@@ -83,14 +83,14 @@ public class PostChannel extends GalacticSlashCommand
             // Set new channel ID and send reply
             db.getSuggestionOptions().setSuggestionsChannelId(newChannel.getId());
             db.saveUpdating();
-            if(oldChannel != null)
+            if (oldChannel != null)
             {
                 Reply.Success(event, "Sucessfully changed Suggestions Channel: " + oldChannel.getAsMention() + " -> " + newChannel.getAsMention());
-            } else {
+            } else
+            {
                 Reply.Success(event, "Sucessfully set Suggestions Channel: " + newChannel.getAsMention());
             }
-            
-           
+
         }
     }
 }

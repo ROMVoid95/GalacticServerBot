@@ -32,20 +32,10 @@ public class NewSuggestion extends GalacticSlashCommand
 
     public NewSuggestion()
     {
-    	name("new-suggestion");
-    	description("Create a new Suggestion");
-    	setOptions(
-			RequiredOption.text("type", "Suggestion Type", ChoiceList.of(
-				Choice.add("Galacticraft 5", "[Galacticraft 5]"),
-				Choice.add("Galacticraft-Legacy", "[Galacticraft-Legacy]"),
-				Choice.add("Galacticraft [Both Versions]", "[Galacticraft - Both Versions]"),
-				Choice.add("Idea For New Addon", "[Addon Idea]"),
-				Choice.add("Do Not Make Suggestions For Existing Addons", "existing")
-				)
-			),
-			RequiredOption.text("title", "Short generalized title for your suggestion", 64),
-			RequiredOption.text("description", "Describe in detail your suggestion")
-    	);
+        name("new-suggestion");
+        description("Create a new Suggestion");
+        setOptions(RequiredOption.text("type", "Suggestion Type", ChoiceList.of(Choice.add("Galacticraft 5", "[Galacticraft 5]"), Choice.add("Galacticraft-Legacy", "[Galacticraft-Legacy]"), Choice.add("Galacticraft [Both Versions]", "[Galacticraft - Both Versions]"),
+            Choice.add("Idea For New Addon", "[Addon Idea]"), Choice.add("Do Not Make Suggestions For Existing Addons", "existing"))), RequiredOption.text("title", "Short generalized title for your suggestion", 64), RequiredOption.text("description", "Describe in detail your suggestion"));
     }
 
     @Override
@@ -54,23 +44,23 @@ public class NewSuggestion extends GalacticSlashCommand
         String mention = event.getMember().getAsMention();
 
         boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getMember().getId());
-        if(isBlacklisted)
+        if (isBlacklisted)
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, "You have been blacklisted and cannot make new suggestions, Contact staff if you believe this is an error");
             return;
         }
-        
-        if(!Server.of(event.getGuild()).equals(Servers.galacticraftCentral))
+
+        if (!Server.of(event.getGuild()).equals(Servers.galacticraftCentral))
         {
-        	Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in the Galacticraft Central Discord Server");
-        	return;
+            Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in the Galacticraft Central Discord Server");
+            return;
         }
 
-        String channelId = BotData.database().galacticBot().getSuggestionOptions().getSuggestionsChannelId();
+        String      channelId  = BotData.database().galacticBot().getSuggestionOptions().getSuggestionsChannelId();
         TextChannel txtChannel = event.getGuild().getTextChannelById(channelId);
         // Only allow new suggestions in the predefined channel
         // We don't live in the jungle out here
-        if(!event.getChannel().asTextChannel().equals(txtChannel))
+        if (!event.getChannel().asTextChannel().equals(txtChannel))
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, mention + "\n" + "Suggestion commands must be performed in " + txtChannel.getAsMention());
             return;
@@ -83,79 +73,67 @@ public class NewSuggestion extends GalacticSlashCommand
             return;
         }
 
-        int number = BotData.database().galacticBot().getManager().getCount() + 1;
-        String type = event.getOption("type").getAsString();
-        String title = getTitle(event);
+        int    number                = BotData.database().galacticBot().getManager().getCount() + 1;
+        String type                  = event.getOption("type").getAsString();
+        String title                 = getTitle(event);
         String suggestionDescription = event.getOption("description").getAsString();
-        String numberAndAuthor = "`Suggestion # %d`\n`By:` **%s**".formatted(number, mention);
+        String numberAndAuthor       = "`Suggestion # %d`\n`By:` **%s**".formatted(number, mention);
 
-        if(Conf.Bot().isOwner(event.getUser()) && (title.equalsIgnoreCase("test") || suggestionDescription.equalsIgnoreCase("test"))) {
+        if (Conf.Bot().isOwner(event.getUser()) && (title.equalsIgnoreCase("test") || suggestionDescription.equalsIgnoreCase("test")))
+        {
             String[] uuid = UUID.randomUUID().toString().split("-");
             sendPrivateMessage(event.getUser().openPrivateChannel(), event.getUser(), number, title, uuid[uuid.length - 1]);
             Reply.Success(event, "Test Message Sent");
             return;
         }
 
-        event.replyEmbeds(SuggestionMessage.builder()
-        	.title(title)
-        	.type(type)
-        	.numberAndAuthor(numberAndAuthor)
-        	.description(SuggestionMessage.split.apply(suggestionDescription))
-        	.build()
-        ).queue(s ->
-	        {
-	            s.retrieveOriginal().queue(reply ->
-	            {
-	                Suggestion newSuggestion = new Suggestion(reply.getId(), event.getMember().getId(), title);
-	                
-	                String newSuggestionId = BotData.database().galacticBot().addNewSuggestion(number, newSuggestion);
-	                reply.addReaction(Emojis.STAR.getEmoji()).queue();
-	                reply.createThreadChannel(title).queue();
-	                
-	                sendPrivateMessage(event.getUser().openPrivateChannel(), event.getUser(), number, title, newSuggestionId);
-	            });
-	        }
-        );
+        event.replyEmbeds(SuggestionMessage.builder().title(title).type(type).numberAndAuthor(numberAndAuthor).description(SuggestionMessage.split.apply(suggestionDescription)).build()).queue(s ->
+        {
+            s.retrieveOriginal().queue(reply ->
+            {
+                Suggestion newSuggestion = new Suggestion(reply.getId(), event.getMember().getId(), title);
+
+                String newSuggestionId = BotData.database().galacticBot().addNewSuggestion(number, newSuggestion);
+                reply.addReaction(Emojis.STAR.getEmoji()).queue();
+                reply.createThreadChannel(title).queue();
+
+                sendPrivateMessage(event.getUser().openPrivateChannel(), event.getUser(), number, title, newSuggestionId);
+            });
+        });
     }
-    
+
     private void sendPrivateMessage(CacheRestAction<PrivateChannel> action, User user, int number, String title, String newSuggestionId)
     {
-        action.flatMap(c -> c.sendMessage(new MessageCreateBuilder().setEmbeds(userChannelEmbed(number, title, newSuggestionId, user)).build()))
-        .queue();
+        action.flatMap(c -> c.sendMessage(new MessageCreateBuilder().setEmbeds(userChannelEmbed(number, title, newSuggestionId, user)).build())).queue();
     }
 
     private String getTitle(SlashCommandInteractionEvent event)
     {
         return OptionHelper.optString(event, "title");
     }
-    
+
     private MessageEmbed userChannelEmbed(int number, String title, String suggestionId, User user)
     {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("Thanks for your suggestion " + user.getName());
-        if(!SuggestionsHelper.getAllAuthors().contains(user.getId()))
+        if (!SuggestionsHelper.getAllAuthors().contains(user.getId()))
         {
             builder.setDescription(getFirstTimeSuggestionMessage());
         }
         builder.addField("Title", "`" + title + "`", false);
         builder.addField("Suggestion", "`#" + number + "`", true);
         builder.addField("**Unique ID**", "`" + suggestionId + "`", true);
-        builder.addField("Edit Command", 
-            "`/edit <section> <type> <content>`\n" + 
-            "**section**: Choice between editing the Title or Description\n" +
-            "**type**: Choice between Replacing or to Append to the end of what your editing\n" + 
-            "**content**: The content which will be replacing or appended to the section your editing", false);
+        builder.addField("Edit Command",
+            "`/edit <section> <type> <content>`\n" + "**section**: Choice between editing the Title or Description\n" + "**type**: Choice between Replacing or to Append to the end of what your editing\n" + "**content**: The content which will be replacing or appended to the section your editing",
+            false);
         return builder.build();
     }
-    
+
     private String getFirstTimeSuggestionMessage()
     {
-        return "This message contains the unique ID that can be used to edit the suggestion if you choose or find the need to do so later on. "
-            + "Keep in mind that while you can edit the Title and Description of your suggestion, the Type of suggestion can not be changed. You can message an online "
+        return "This message contains the unique ID that can be used to edit the suggestion if you choose or find the need to do so later on. " + "Keep in mind that while you can edit the Title and Description of your suggestion, the Type of suggestion can not be changed. You can message an online "
             + "staff member and ask for the suggestion to be deleted if you have to change the suggestion type, or simply want it taken down.\n\n"
-            + "**NOTE:** Edits are only available on Suggestions that have a status of Considered or No status. If you're requesting for the deletion to change the type, "
-            + "and your suggestion is posted in the `popular-suggestions` channel."
-            + " Your new updated suggestion will not take it's place. Staff cannot manually add suggestions to the `popular-suggestions` either.\n\n"
-            + "Below you will find the unique ID that you need to use for any edits.";
+            + "**NOTE:** Edits are only available on Suggestions that have a status of Considered or No status. If you're requesting for the deletion to change the type, " + "and your suggestion is posted in the `popular-suggestions` channel."
+            + " Your new updated suggestion will not take it's place. Staff cannot manually add suggestions to the `popular-suggestions` either.\n\n" + "Below you will find the unique ID that you need to use for any edits.";
     }
 }

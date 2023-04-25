@@ -18,11 +18,9 @@ public class UpvoteRequirement extends GalacticSlashCommand
 
     public UpvoteRequirement()
     {
-        this.name = "requirement";
-        this.help = "Display or change the current upvotes required to be posted in Popular Suggestions";
-        setOptions(
-        	Option.integer("count", "Number of upvotes required")
-        );
+        name("requirement");
+        description("Display or change the current upvotes required to be posted in Popular Suggestions");
+        setOptions(Option.integer("count", "Number of upvotes required"));
         this.subcommandGroup = new SubcommandGroupData("upvotes", "Suggestion Upvotes commands");
     }
 
@@ -39,8 +37,8 @@ public class UpvoteRequirement extends GalacticSlashCommand
                 return;
             }
 
-            final DBGalacticBot db = BotData.database().galacticBot();
-            int upvotesRequired = db.getSuggestionOptions().getStarRequirement();
+            final DBGalacticBot db              = BotData.database().galacticBot();
+            int                 upvotesRequired = db.getSuggestionOptions().getStarRequirement();
 
             //@noformat
             Reply.Success(event, new EmbedBuilder()
@@ -60,11 +58,11 @@ public class UpvoteRequirement extends GalacticSlashCommand
                 return;
             }
 
-            final DBGalacticBot db = BotData.database().galacticBot();
-            int upvotesRequired = db.getSuggestionOptions().getStarRequirement();
-            int newUpvotesRequired = event.getOption("count").getAsInt();
-            
-            if(newUpvotesRequired < 1 || newUpvotesRequired > 100)
+            final DBGalacticBot db                 = BotData.database().galacticBot();
+            int                 upvotesRequired    = db.getSuggestionOptions().getStarRequirement();
+            int                 newUpvotesRequired = event.getOption("count").getAsInt();
+
+            if (newUpvotesRequired < 1 || newUpvotesRequired > 100)
             {
                 Reply.Error(event, "No operations performed: Number must be more than 0 and less than 101");
                 return;

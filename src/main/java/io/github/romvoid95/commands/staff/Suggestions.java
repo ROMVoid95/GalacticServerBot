@@ -15,14 +15,6 @@ public class Suggestions extends ParentSlashCommand
     public Suggestions()
     {
         super("suggestions");
-        subCommands(
-            new PostChannel(),
-            new PopularChannel(),
-            new ChannelLock(),
-            new ChannelUnlock(),
-            new UpvoteRequirement(),
-            new StaffDeleteSuggestion(),
-            new SuggestionBlacklist()
-        );
+        subCommands(new PostChannel(), new PopularChannel(), new ChannelLock(), new ChannelUnlock(), new UpvoteRequirement(), new StaffDeleteSuggestion(), new SuggestionBlacklist());
     }
 }

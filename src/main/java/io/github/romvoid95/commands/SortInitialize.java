@@ -12,7 +12,6 @@ import io.github.romvoid95.commands.owner.DatabaseCommand;
 import io.github.romvoid95.commands.owner.EvalCommand;
 import io.github.romvoid95.commands.owner.ExecCommand;
 import io.github.romvoid95.commands.owner.MaintanenceModeCommand;
-import io.github.romvoid95.commands.owner.TestCommand2;
 import io.github.romvoid95.commands.staff.Suggestions;
 import io.github.romvoid95.commands.staff.server.ServerStaff;
 import io.github.romvoid95.commands.staff.suggestions.devonly.DevServerPopularChannel;
@@ -44,6 +43,6 @@ public class SortInitialize
 	
 	private static final List<SlashCommand> botServerCommands()
 	{
-		return Arrays.asList(new DatabaseCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand(), new TestCommand2());
+		return Arrays.asList(new DatabaseCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand());
 	}
 }

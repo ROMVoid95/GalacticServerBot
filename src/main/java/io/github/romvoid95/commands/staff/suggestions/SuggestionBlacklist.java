@@ -21,13 +21,9 @@ public class SuggestionBlacklist extends GalacticSlashCommand
 
     public SuggestionBlacklist()
     {
-        this.name = "blacklist";
-        this.help = "Add or remove a member from suggestions blacklist";
-        setOptions(
-        	RequiredOption.text("action", "What action to take", ChoiceList.of(Choice.add("Add"), Choice.add("Remove"))),
-        	RequiredOption.user("user", "User"),
-        	RequiredOption.text("reason", "reason for the action taken")
-        );
+        name("blacklist");
+        description("Add or remove a member from suggestions blacklist");
+        setOptions(RequiredOption.text("action", "What action to take", ChoiceList.of(Choice.add("Add"), Choice.add("Remove"))), RequiredOption.user("user", "User"), RequiredOption.text("reason", "reason for the action taken"));
     }
 
     @Override
@@ -42,7 +38,7 @@ public class SuggestionBlacklist extends GalacticSlashCommand
             return;
         }
 
-        String channelId = BotData.database().galacticBot().getSuggestionOptions().getSuggestionsChannelId();
+        String      channelId  = BotData.database().galacticBot().getSuggestionOptions().getSuggestionsChannelId();
         TextChannel txtChannel = event.getGuild().getTextChannelById(channelId);
 
         if (!event.getChannel().asTextChannel().equals(txtChannel))
@@ -52,9 +48,9 @@ public class SuggestionBlacklist extends GalacticSlashCommand
         }
 
         RootLogChannel logChannel = ((ServerSettings) event.getClient().getSettingsFor(event.getGuild())).getRootLogger();
-        final User user = event.getOptionsByType(OptionType.USER).get(0).getAsUser();
-        final String action = event.getOption("action").getAsString();
-        final String reason = event.getOption("reason").getAsString();
+        final User     user       = event.getOptionsByType(OptionType.USER).get(0).getAsUser();
+        final String   action     = event.getOption("action").getAsString();
+        final String   reason     = event.getOption("reason").getAsString();
 
         if (action.equals("add"))
         {

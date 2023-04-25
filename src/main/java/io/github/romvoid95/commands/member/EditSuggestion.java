@@ -24,8 +24,8 @@ public class EditSuggestion extends GalacticSlashCommand
 
     public enum Section implements KeyValueSupplier
     {
-        TITLE,
-        DESCRIPTION;
+
+        TITLE, DESCRIPTION;
 
         public static Section getSection(String value)
         {
@@ -44,16 +44,13 @@ public class EditSuggestion extends GalacticSlashCommand
             return toString();
         }
     }
-    
+
     public EditSuggestion()
     {
-        this.name = "edit";
-        setOptions(
-            RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"),
-            RequiredOption.text("section", "Title or Description", ChoiceList.toList(Section.class)),
-            RequiredOption.text("edit-type", "Replace, Append, or Prepend current value", ChoiceList.toList(EditType.class)),
-            RequiredOption.text("content", "The content used in the action you chose")
-        );
+        name("edit");
+        description("[DM ONLY] Edit the description of title of your suggestions");
+        setOptions(RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"), RequiredOption.text("section", "Title or Description", ChoiceList.toList(Section.class)),
+            RequiredOption.text("edit-type", "Replace, Append, or Prepend current value", ChoiceList.toList(EditType.class)), RequiredOption.text("content", "The content used in the action you chose"));
         this.directMessagesAllowed();
     }
 
@@ -65,21 +62,21 @@ public class EditSuggestion extends GalacticSlashCommand
             Reply.EphemeralReply(event, ResultLevel.ERROR, "This command can only be used in Private Channels");
             return;
         }
-        
+
         boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getAuthor().getId());
-        if(isBlacklisted)
+        if (isBlacklisted)
         {
             Reply.EphemeralReply(event, ResultLevel.ERROR, "You have been blacklisted and cannot edit your suggestions, Contact staff if you believe this is an error");
             return;
         }
 
-        String id = event.getOption("id").getAsString();
+        String               id               = event.getOption("id").getAsString();
         Optional<Suggestion> suggestionToEdit = BotData.database().galacticBot().getSuggestionFromUniqueId(id);
 
         if (suggestionToEdit.isPresent())
         {
-            Suggestion suggestion = suggestionToEdit.get();
-            SuggestionStatus status = suggestion.getStatus();
+            Suggestion       suggestion = suggestionToEdit.get();
+            SuggestionStatus status     = suggestion.getStatus();
             if (SuggestionStatus.nonEditable(status))
             {
                 Reply.Error(event, "The current Suggestion Status does not allow editing");
@@ -87,53 +84,56 @@ public class EditSuggestion extends GalacticSlashCommand
             }
 
             LinkedMessagesRecord lmr = suggestion.getMessages().getLinkedMessagesRecord();
-            SuggestionMessage msg;
-            if(lmr.postMsg().get().getEmbeds().size() == 1)
+            SuggestionMessage    msg;
+            if (lmr.postMsg().get().getEmbeds().size() == 1)
             {
                 msg = SuggestionMessage_V1.fromEmbed(lmr.postMsg().get().getEmbeds().get(0)).convertToNewFormat();
-            } else {
+            } else
+            {
                 msg = SuggestionMessage.fromMessage(lmr.postMsg().get().getEmbeds());
             }
-            
-            if(Section.getSection(event.getOption("section").getAsString()) == Section.TITLE)
+
+            if (Section.getSection(event.getOption("section").getAsString()) == Section.TITLE)
             {
                 runEditTitle(event, msg, lmr);
-            } else {
+            } else
+            {
                 runEditDescription(event, msg, lmr);
             }
-        }
-        else {
+        } else
+        {
             Reply.Error(event, "Your Suggestion with ID `%s` cannot be found, was it deleted by chance?".formatted(id));
         }
     }
-    
+
     private void runEditDescription(SlashCommandEvent event, SuggestionMessage msg, LinkedMessagesRecord lmr)
     {
-        if(event.getOption("content").getAsString().length() >= 64)
+        if (event.getOption("content").getAsString().length() >= 64)
         {
             Reply.Error(event, "Suggestion titles cannot be longer than 64 characters");
             return;
         }
-        
+
         msg.setDescription(EditType.getEditType(event.getOption("edit-type").getAsString()), event.getOption("content").getAsString());
 
-        lmr.editMessages(msg).queue(s -> 
+        lmr.editMessages(msg).queue(s ->
         {
             Reply.Success(event, "Sucessfully edited Suggestion Description");
-        }, e -> 
+        }, e ->
         {
             Reply.Error(event, "An error occured when editing your suggestion description, Please let staff know about this error");
-        });;
+        });
+        ;
     }
-    
+
     private void runEditTitle(SlashCommandEvent event, SuggestionMessage msg, LinkedMessagesRecord lmr)
     {
         msg.setTitle(EditType.getEditType(event.getOption("edit-type").getAsString()), event.getOption("content").getAsString());
 
-        lmr.editMessages(msg).queue(s -> 
+        lmr.editMessages(msg).queue(s ->
         {
             Reply.Success(event, "Sucessfully edited Suggestion Title");
-        }, e -> 
+        }, e ->
         {
             Reply.Error(event, "An error occured when editing your suggestion Title, Please let staff know about this error");
         });

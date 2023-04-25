@@ -18,14 +18,14 @@ public class ChannelLock extends GalacticSlashCommand
 
     public ChannelLock()
     {
-        this.name = "lock-channel";
-        this.help = "Locks and prevents new Suggestions in the current Suggestions channel";
+        name("lock-channel");
+        description("Locks and prevents new Suggestions in the current Suggestions channel");
     }
 
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        
+
         boolean canRun = Check.adminRoles(event);
 
         if (!canRun)
@@ -34,12 +34,12 @@ public class ChannelLock extends GalacticSlashCommand
             return;
         }
 
-        final DBGalacticBot db = BotData.database().galacticBot();
-        boolean suggestionsLocked = db.getSuggestionOptions().isSuggestionsLocked();
+        final DBGalacticBot db                = BotData.database().galacticBot();
+        boolean             suggestionsLocked = db.getSuggestionOptions().isSuggestionsLocked();
 
         Role memberRole = event.getGuild().getRolesByName("Astronaut", false).get(0);
 
-        Collection<Permission> toDeny = EnumSet.of(Permission.MESSAGE_SEND, Permission.USE_APPLICATION_COMMANDS);
+        Collection<Permission> toDeny      = EnumSet.of(Permission.MESSAGE_SEND, Permission.USE_APPLICATION_COMMANDS);
         Collection<Permission> alwaysAllow = EnumSet.of(Permission.MESSAGE_HISTORY, Permission.MESSAGE_SEND_IN_THREADS);
 
         TextChannel suggestionChannel = db.getSuggestionOptions().getSuggestionChannel();
@@ -47,7 +47,7 @@ public class ChannelLock extends GalacticSlashCommand
         {
             if (suggestionsLocked)
             {
-                Reply.Success(event,"No operations performed: Suggestions channel is already LOCKED");
+                Reply.Success(event, "No operations performed: Suggestions channel is already LOCKED");
                 return;
             }
 

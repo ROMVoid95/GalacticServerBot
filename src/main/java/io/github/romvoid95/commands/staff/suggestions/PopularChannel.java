@@ -20,8 +20,8 @@ public class PopularChannel extends GalacticSlashCommand
 
     public PopularChannel()
     {
-        this.name = "popular-channel";
-        this.help = "Display or change the current channel Popular Suggestions are posted in";
+        name("popular-channel");
+        description("Display or change the current channel Popular Suggestions are posted in");
         setOptions(Option.channel("channel", "Guild Channel to use for Popular Suggestions"));
     }
 
@@ -38,9 +38,9 @@ public class PopularChannel extends GalacticSlashCommand
                 return;
             }
 
-            final DBGalacticBot db = BotData.database().galacticBot();
-            String popularChannelId = db.getSuggestionOptions().getPopularChannelId();
-            TextChannel popularChannel = event.getGuild().getTextChannelById(popularChannelId);
+            final DBGalacticBot db               = BotData.database().galacticBot();
+            String              popularChannelId = db.getSuggestionOptions().getPopularChannelId();
+            TextChannel         popularChannel   = event.getGuild().getTextChannelById(popularChannelId);
 
             //@noformat
             Reply.Success(event, new EmbedBuilder().setColor(Color.ORANGE).setTitle("Current Popular Channel")
@@ -49,7 +49,7 @@ public class PopularChannel extends GalacticSlashCommand
                     String.format("**ID:** .......................... %s", popularChannel.getId()) + "\n" +
                     String.format("**In Category:** ........ %s", popularChannel.getParentCategory().getName()), false));
             //@format
-            
+
         } else
         {
             boolean canRun = Check.adminRoles(event);
@@ -68,10 +68,10 @@ public class PopularChannel extends GalacticSlashCommand
                 Reply.Error(event, "You must choose a Text Channel to use for Popular Suggestions");
                 return;
             }
-            final DBGalacticBot db = BotData.database().galacticBot();
-            String popularChannelId = db.getSuggestionOptions().getPopularChannelId();
-            TextChannel oldChannel = event.getGuild().getTextChannelById(popularChannelId);
-            TextChannel newChannel = channelOption.getAsChannel().asTextChannel();
+            final DBGalacticBot db               = BotData.database().galacticBot();
+            String              popularChannelId = db.getSuggestionOptions().getPopularChannelId();
+            TextChannel         oldChannel       = event.getGuild().getTextChannelById(popularChannelId);
+            TextChannel         newChannel       = channelOption.getAsChannel().asTextChannel();
 
             //Check if it is already the set channel
             if (popularChannelId.equals(newChannel.getId()))
@@ -83,10 +83,11 @@ public class PopularChannel extends GalacticSlashCommand
             // Set new channel ID and send reply
             db.getSuggestionOptions().setPopularChannelId(newChannel.getId());
             db.saveUpdating();
-            if(oldChannel != null)
+            if (oldChannel != null)
             {
                 Reply.Success(event, "Sucessfully changed Popular-Suggestions channel: " + oldChannel.getAsMention() + " -> " + newChannel.getAsMention());
-            } else {
+            } else
+            {
                 Reply.Success(event, "Sucessfully set Popular-Suggestions channel: " + newChannel.getAsMention());
             }
         }
