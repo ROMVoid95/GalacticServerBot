@@ -8,7 +8,7 @@ import io.github.readonly.command.SlashCommand;
 import io.github.romvoid95.Servers;
 import io.github.romvoid95.commands.member.CloseDiscussionThread;
 import io.github.romvoid95.commands.member.NewSuggestion;
-import io.github.romvoid95.commands.owner.DatabaseCommand;
+import io.github.romvoid95.commands.owner.DeleteFromListCommand;
 import io.github.romvoid95.commands.owner.EvalCommand;
 import io.github.romvoid95.commands.owner.ExecCommand;
 import io.github.romvoid95.commands.owner.MaintanenceModeCommand;
@@ -43,6 +43,6 @@ public class SortInitialize
 	
 	private static final List<SlashCommand> botServerCommands()
 	{
-		return Arrays.asList(new DatabaseCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand());
+		return Arrays.asList(new DeleteFromListCommand(), new EvalCommand(), new ExecCommand(), new MaintanenceModeCommand(), new UpdatesCommand());
 	}
 }
