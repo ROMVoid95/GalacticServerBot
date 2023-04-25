@@ -68,6 +68,12 @@ public class DBGalacticBot implements ManagedObject
         botObj.save();
         return botObj;
     }
+
+    public void setSuggestionManager(SuggestionManager manager)
+    {
+        this.manager = manager;
+        this.save();
+    }
     
     public void setSuggestionOptions(SuggestionOptions options)
     {
