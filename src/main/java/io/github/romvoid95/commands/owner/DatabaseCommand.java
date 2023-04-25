@@ -40,12 +40,9 @@ public class DatabaseCommand extends GalacticSlashCommand
         if(event.hasOption("number"))
         {
             int num = event.getOption("number").getAsInt();
-            db.getManager().getMap().replace(msgId, num);
-        } else {
-            db.getManager().getMap().remove(msgId);
+            db.getManager().getMap().remove(msgId, num);
+            db.saveUpdating();
         }
-        db.saveUpdating();
-        
         Reply.Success(event, "Done");
     }
 }
