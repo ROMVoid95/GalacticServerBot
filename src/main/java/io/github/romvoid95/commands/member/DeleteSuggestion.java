@@ -14,20 +14,15 @@ import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.util.Embed;
 import io.github.romvoid95.util.discord.Reply;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
-import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 
 public class DeleteSuggestion extends GalacticSlashCommand
 {
-
-    private String msgId;
-
     public DeleteSuggestion()
     {
         name("delete");
@@ -92,12 +87,12 @@ public class DeleteSuggestion extends GalacticSlashCommand
             TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
             txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s ->
             {
-                m.editMessage(MessageEditBuilder.fromMessage(m).setComponents().setEmbeds(new MessageEmbed[0]).setEmbeds(Embed.descriptionEmbed("Sucessfully deleted Suggestion: `" + suggestion.getTitle() + "`").toEmbed()).build()).queue();
+                m.editMessageEmbeds(Embed.descriptionEmbed("Sucessfully deleted Suggestion: `" + suggestion.getTitle() + "`").toEmbed()).setComponents().queue();
                 return;
             });
         } catch (Exception e)
         {
-            m.editMessage(MessageEditBuilder.fromMessage(m).setComponents().setEmbeds(new MessageEmbed[0]).setEmbeds(Embed.descriptionEmbed("An error occoured when attempting to delete suggestion").toEmbed()).build()).queue();
+            m.editMessageEmbeds(Embed.descriptionEmbed("An error occoured when attempting to delete suggestion").toEmbed()).setComponents().queue();
             return;
         }
     }
