@@ -30,11 +30,6 @@ public class Embed
 	{
 		return new Embed().description(description).color(color);
 	}
-	
-	public static Embed descriptionEmbed(String description)
-	{
-		return descriptionEmbed(description);
-	}
 
 	private Embed(MessageEmbed messageEmbed)
 	{

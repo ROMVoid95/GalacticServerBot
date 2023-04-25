@@ -87,12 +87,12 @@ public class DeleteSuggestion extends GalacticSlashCommand
             TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
             txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s ->
             {
-                m.editMessageEmbeds(Embed.descriptionEmbed("Sucessfully deleted Suggestion: `" + suggestion.getTitle() + "`").toEmbed()).setComponents().queue();
+                m.editMessageEmbeds(Embed.descriptionEmbed("Sucessfully deleted Suggestion: `" + suggestion.getTitle() + "`", RGB.GREEN).toEmbed()).setComponents().queue();
                 return;
             });
         } catch (Exception e)
         {
-            m.editMessageEmbeds(Embed.descriptionEmbed("An error occoured when attempting to delete suggestion").toEmbed()).setComponents().queue();
+            m.editMessageEmbeds(Embed.descriptionEmbed("An error occoured when attempting to delete suggestion", RGB.RED).toEmbed()).setComponents().queue();
             return;
         }
     }
