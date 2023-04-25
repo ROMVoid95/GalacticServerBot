@@ -4,6 +4,7 @@ import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
+import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 
@@ -13,7 +14,7 @@ public class DatabaseCommand extends GalacticSlashCommand
     public DatabaseCommand()
     {
         name("database");
-        setOptions(Option.text("id", "The id"));
+        setOptions(Option.integer("count", "count"));
     }
 
     @Override
@@ -30,11 +31,15 @@ public class DatabaseCommand extends GalacticSlashCommand
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        String id = event.getOption("id").getAsString();
+        int count = event.getOption("count").getAsInt();
 
-        if (BotData.database().galacticBot().deleteSuggestion(id))
+        DBGalacticBot db = BotData.database().galacticBot();
+        db.getManager().setCount(count);
+        db.saveUpdating();
+        
+        if (BotData.database().galacticBot().getManager().getCount() == count)
         {
-            Reply.Success(event, "Sucessfully cleared Suggestions Database");
+            Reply.Success(event, "Sucessfully set count");
         }
     }
 }
