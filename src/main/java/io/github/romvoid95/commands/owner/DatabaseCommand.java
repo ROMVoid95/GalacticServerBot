@@ -2,6 +2,7 @@ package io.github.romvoid95.commands.owner;
 
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
+import io.github.readonly.command.option.RequiredOption;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
@@ -14,7 +15,10 @@ public class DatabaseCommand extends GalacticSlashCommand
     public DatabaseCommand()
     {
         name("database");
-        setOptions(Option.integer("count", "count"));
+        setOptions(
+            RequiredOption.text("msgId", "msgId"),
+            Option.integer("number", "number")
+        );
     }
 
     @Override
@@ -31,15 +35,17 @@ public class DatabaseCommand extends GalacticSlashCommand
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        int count = event.getOption("count").getAsInt();
-
         DBGalacticBot db = BotData.database().galacticBot();
-        db.getManager().setCount(count);
+        String msgId = event.getOption("msgId").getAsString();
+        if(event.hasOption("number"))
+        {
+            int num = event.getOption("number").getAsInt();
+            db.getManager().getMap().replace(msgId, num);
+        } else {
+            db.getManager().getMap().remove(msgId);
+        }
         db.saveUpdating();
         
-        if (BotData.database().galacticBot().getManager().getCount() == count)
-        {
-            Reply.Success(event, "Sucessfully set count");
-        }
+        Reply.Success(event, "Done");
     }
 }
