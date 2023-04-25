@@ -13,15 +13,19 @@ import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.util.Embed;
 import io.github.romvoid95.util.discord.Reply;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
-import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 public class DeleteSuggestion extends GalacticSlashCommand
 {
+
+    private String msgId;
 
     public DeleteSuggestion()
     {
@@ -43,13 +47,30 @@ public class DeleteSuggestion extends GalacticSlashCommand
         DBGalacticBot db         = BotData.database().galacticBot();
         Suggestion    suggestion = db.getSuggestionFromUniqueId(id).get();
 
-        event.replyEmbeds(Embed.descriptionEmbed("Are you sure you want to delete your suggestion with the title of:\n\n`" + suggestion.getTitle() + "`\n\n**THIS ACTION IS FINAL AND CANNOT BE REVERSED.\n\nClick the Confirm button below to confim suggestion deletion", RGB.ORANGE).toEmbed())
-            .addActionRow(Button.danger("confirm", "Confirm Delete")).queue();
-
-        GalacticBot.instance().getEventWaiter().waitForEvent(ButtonInteractionEvent.class, e -> e.getComponentId().equals("confirm"), e -> this.runDeleteEvent(suggestion, db, e), 1, TimeUnit.MINUTES, null);
+        //@noformat
+        MessageCreateData data = new MessageCreateBuilder()
+            .addEmbeds(
+                Embed.descriptionEmbed(
+                    "Are you sure you want to delete your suggestion with the title of:\n\n`" + suggestion.getTitle() + 
+                    "`\n\n**THIS ACTION IS FINAL AND CANNOT BE REVERSED**\n\nClick the Confirm button below to confim suggestion deletion", RGB.ORANGE).toEmbed()
+                )
+            .addActionRow(Button.danger("confirm", "Confirm Delete"))
+            .build();
+        
+        event.reply(data).queue(reply -> {
+            reply.retrieveOriginal().queue(s -> {
+                GalacticBot.instance().getEventWaiter().waitForEvent(
+                    ButtonInteractionEvent.class, 
+                    e -> e.getComponentId().equals("confirm"), 
+                    e -> this.runDeleteEvent(suggestion, db, s), 
+                    1, TimeUnit.MINUTES, 
+                    () -> reply.deleteOriginal().queue()
+                );
+            });
+        });
     }
 
-    private void runDeleteEvent(Suggestion suggestion, DBGalacticBot db, ButtonInteractionEvent event)
+    private void runDeleteEvent(Suggestion suggestion, DBGalacticBot db, Message m)
     {
         try
         {
@@ -70,12 +91,12 @@ public class DeleteSuggestion extends GalacticSlashCommand
             TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
             txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s ->
             {
-                event.editMessage(MessageEditBuilder.fromMessage(event.getMessage()).setContent("Suggestion sucessfully deleted").setReplace(true).build()).queue();
+                m.editMessage(MessageEditBuilder.fromMessage(m).setComponents().setContent("Sucessfully deleted Suggestion").setReplace(true).build()).queue();
                 return;
             });
         } catch (Exception e)
         {
-            event.editMessage(MessageEditBuilder.fromMessage(event.getMessage()).setContent("An error occoured when attempting to delete suggestion").setReplace(true).build()).queue();
+            m.editMessage(MessageEditBuilder.fromMessage(m).setComponents().setContent("An error occoured when attempting to delete suggestion").setReplace(true).build()).queue();
             return;
         }
     }
