@@ -8,6 +8,7 @@ import io.github.readonly.command.option.RequiredOption;
 import io.github.readonly.common.util.KeyValueSupplier;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
+import io.github.romvoid95.Servers;
 import io.github.romvoid95.commands.core.EditType;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.impl.Suggestion;
@@ -63,10 +64,16 @@ public class EditSuggestion extends GalacticSlashCommand
             return;
         }
 
+        if(!Servers.galacticraftCentral.getGuild().isMember(event.getAuthor()))
+        {
+            Reply.Error(event, "Sorry, you must be a member of the Galacticraft Central server to edit any suggestions you have posted");
+            return;
+        }
+        
         boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getAuthor().getId());
         if (isBlacklisted)
         {
-            Reply.EphemeralReply(event, ResultLevel.ERROR, "You have been blacklisted and cannot edit your suggestions, Contact staff if you believe this is an error");
+            Reply.Error(event, "You have been blacklisted and cannot edit your suggestions, Contact staff if you believe this is an error");
             return;
         }
 

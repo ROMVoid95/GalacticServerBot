@@ -25,6 +25,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 @Slf4j
 public class GalacticBot extends DiscordBot<GalacticBot>
@@ -68,6 +69,7 @@ public class GalacticBot extends DiscordBot<GalacticBot>
 
 		this.jda = JDABuilder.create(Conf.Bot().getToken(), BotData.JDA.INTENTS)
 			.disableCache(BotData.JDA.DISABLED_CACHE_FLAGS)
+			.setMemberCachePolicy(MemberCachePolicy.ALL)
 			.setActivity(Activity.playing("Init Stage"))
 			.addEventListeners(this.getEventWaiter(), this.buildClient(), new GalacticEventListener())
 			.build();

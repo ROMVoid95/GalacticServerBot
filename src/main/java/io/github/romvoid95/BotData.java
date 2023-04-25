@@ -53,13 +53,33 @@ public class BotData
 	public static class JDA
 	{
 
-		//@format:off
-		public static final Set<GatewayIntent> INTENTS = Set.of(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MODERATION, GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT);
+		//@noformat
+		public static final Set<GatewayIntent> INTENTS = Set.of(
+		    GatewayIntent.DIRECT_MESSAGES, 
+		    GatewayIntent.GUILD_MODERATION, 
+		    GatewayIntent.GUILD_MESSAGE_REACTIONS, 
+		    GatewayIntent.GUILD_PRESENCES, 
+		    GatewayIntent.GUILD_MESSAGES,
+		    GatewayIntent.GUILD_MEMBERS, 
+		    GatewayIntent.MESSAGE_CONTENT
+		);
 
-		public static final Set<CacheFlag> DISABLED_CACHE_FLAGS = EnumSet.of(CacheFlag.SCHEDULED_EVENTS, CacheFlag.CLIENT_STATUS, CacheFlag.VOICE_STATE);
+		public static final Set<CacheFlag> DISABLED_CACHE_FLAGS = EnumSet.of(
+		    CacheFlag.SCHEDULED_EVENTS, 
+		    CacheFlag.CLIENT_STATUS, 
+		    CacheFlag.VOICE_STATE
+		);
 
-		public static final Set<Message.MentionType> DEFAULT_MENTIONS = EnumSet.of(Message.MentionType.EMOJI, Message.MentionType.CHANNEL);
+		public static final Set<Message.MentionType> DEFAULT_MENTIONS = EnumSet.of(
+		    Message.MentionType.EMOJI, 
+		    Message.MentionType.CHANNEL
+		);
 
-		public static final Set<Permission> PERMISSIONS = EnumSet.of(Permission.MESSAGE_MANAGE, Permission.MANAGE_WEBHOOKS, Permission.MANAGE_THREADS, Permission.MANAGE_ROLES);
+		public static final Set<Permission> PERMISSIONS = EnumSet.of(
+		    Permission.MESSAGE_MANAGE, 
+		    Permission.MANAGE_WEBHOOKS, 
+		    Permission.MANAGE_THREADS, 
+		    Permission.MANAGE_ROLES
+		);
 	}
 }
