@@ -17,6 +17,8 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 public class DeleteSuggestion extends GalacticSlashCommand
 {
@@ -43,15 +45,10 @@ public class DeleteSuggestion extends GalacticSlashCommand
 
         event.replyEmbeds(Embed.descriptionEmbed("Are you sure you want to delete your suggestion with the title of:\n\n`" + suggestion.getTitle() + "`\n\n**THIS ACTION IS FINAL AND CANNOT BE REVERSED.\n\nClick the Confirm button below to confim suggestion deletion", RGB.ORANGE).toEmbed())
             .addActionRow(Button.danger("confirm", "Confirm Delete")).queue();
-        
-        GalacticBot.instance().getEventWaiter().waitForEvent(
-            ButtonInteractionEvent.class, 
-            e -> e.getComponentId().equals("confirm"), 
-            e -> this.runDeleteEvent(suggestion, db, e), 
-            1, TimeUnit.MINUTES, 
-            null);
+
+        GalacticBot.instance().getEventWaiter().waitForEvent(ButtonInteractionEvent.class, e -> e.getComponentId().equals("confirm"), e -> this.runDeleteEvent(suggestion, db, e), 1, TimeUnit.MINUTES, null);
     }
-    
+
     private void runDeleteEvent(Suggestion suggestion, DBGalacticBot db, ButtonInteractionEvent event)
     {
         try
@@ -73,12 +70,12 @@ public class DeleteSuggestion extends GalacticSlashCommand
             TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
             txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s ->
             {
-                event.editButton(null).and(event.editMessage("Suggestion sucessfully deleted")).queue();
+                event.editMessage(MessageEditBuilder.fromMessage(event.getMessage()).setContent("Suggestion sucessfully deleted").setReplace(true).build()).queue();
                 return;
             });
         } catch (Exception e)
         {
-            event.editButton(null).and(event.editMessage("An error occoured when attempting to delete suggestion")).queue();
+            event.editMessage(MessageEditBuilder.fromMessage(event.getMessage()).setContent("An error occoured when attempting to delete suggestion").setReplace(true).build()).queue();
             return;
         }
     }
