@@ -45,6 +45,7 @@ public class SuggestionSetStatus extends GalacticSlashCommand
 
         if (sucessfull != null)
         {
+            sucessfull.clearReactions().queue();
             suggestion.setStatus(status);
             suggestions.saveUpdating();
 
