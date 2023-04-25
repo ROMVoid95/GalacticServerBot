@@ -19,13 +19,11 @@ public class SuggestionSetStatus extends GalacticSlashCommand
 
     public SuggestionSetStatus()
     {
-        name( "set-status");
-        setOptions(
-        	RequiredOption.integer("number", "The Suggestion #"),
-        	RequiredOption.text("status", "Status to set", ChoiceList.toList(SuggestionStatus.class))
-        );
+        name("set-status");
+
+        setOptions(RequiredOption.integer("number", "The Suggestion #"), RequiredOption.text("status", "Status to set", ChoiceList.toList(SuggestionStatus.class)));
     }
-    
+
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
@@ -36,26 +34,26 @@ public class SuggestionSetStatus extends GalacticSlashCommand
             Reply.InvalidPermissions(event);
             return;
         }
-        
-        int suggestionNumber = event.getOption("number").getAsInt();
-        SuggestionStatus status = SuggestionStatus.valueOf(event.getOption("status").getAsString());
-        
+
+        int              suggestionNumber = event.getOption("number").getAsInt();
+        SuggestionStatus status           = SuggestionStatus.getStatus(event.getOption("status").getAsString());
+
         DBGalacticBot suggestions = BotData.database().galacticBot();
-        Suggestion suggestion = suggestions.getSuggestionFromNumber(suggestionNumber);
-        
+        Suggestion    suggestion  = suggestions.getSuggestionFromNumber(suggestionNumber);
+
         Message sucessfull = SuggestionsHelper.setStatus(status, suggestion);
-        
-        if(sucessfull != null)
+
+        if (sucessfull != null)
         {
             suggestion.setStatus(status);
             suggestions.saveUpdating();
-        
+
             String urlLink = sucessfull.getJumpUrl();
-            
+
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTitle("Suggestion " + status.getName());
             builder.setDescription("Suggestion [#" + suggestionNumber + "](" + urlLink + ") status set -> `" + status.getName() + "`");
-            
+
             Reply.Success(event, builder);
         }
     }

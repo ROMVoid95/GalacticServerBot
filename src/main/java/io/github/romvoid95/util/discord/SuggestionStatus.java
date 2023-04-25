@@ -105,4 +105,17 @@ public enum SuggestionStatus implements KeyValueSupplier
 	{
 		return NOT_EDITABLE.contains(status);
 	}
+	
+	public static SuggestionStatus getStatus(String status)
+	{
+	    for(SuggestionStatus s : SuggestionStatus.values())
+	    {
+	        if(s.name().equalsIgnoreCase(status))
+	        {
+	            return s;
+	        }
+	    }
+	    
+	    return SuggestionStatus.NONE;
+	}
 }
