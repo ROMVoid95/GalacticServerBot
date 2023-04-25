@@ -50,34 +50,6 @@ public class DeleteSuggestion extends GalacticSlashCommand
             e -> this.runDeleteEvent(suggestion, db, e), 
             1, TimeUnit.MINUTES, 
             null);
-
-        try
-        {
-            boolean isPopular = suggestion.getMessages().communityPopularMsg().isPresent();
-
-            if (isPopular)
-            {
-                String      popularMsgId            = suggestion.getMessages().getCommunityPopularMsgId();
-                TextChannel communityPopularChannel = db.getSuggestionOptions().getPopularChannel();
-
-                String      devPopularMsgId   = suggestion.getMessages().getDevPopularMsgId();
-                TextChannel devPopularChannel = db.getSuggestionOptions().getDevPopularChannel();
-
-                communityPopularChannel.deleteMessageById(popularMsgId).queue();
-                devPopularChannel.deleteMessageById(devPopularMsgId).queue();
-            }
-
-            TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
-            txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s ->
-            {
-                Reply.Success(event, "Suggestion sucessfully deleted");
-                return;
-            });
-        } catch (Exception e)
-        {
-            Reply.Error(event, "An error occoured when attempting to delete suggestion by ID: " + id + "\n\n" + e.getMessage());
-            return;
-        }
     }
     
     private void runDeleteEvent(Suggestion suggestion, DBGalacticBot db, ButtonInteractionEvent event)
