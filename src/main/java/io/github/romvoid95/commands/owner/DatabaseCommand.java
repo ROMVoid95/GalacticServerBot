@@ -41,11 +41,11 @@ public class DatabaseCommand extends GalacticSlashCommand
         String msgId = event.getOption("msgid").getAsString();
         if(event.hasOption("number"))
         {
-            int num = event.getOption("number").getAsInt();
-            LinkedHashMap<String, Integer> m = db.getManager().getMap();
-            m.remove(msgId, num);
-            db.getManager().setMap(m);
-            db.saveUpdating();
+//            int num = event.getOption("number").getAsInt();
+//            LinkedHashMap<String, Integer> m = db.getManager().getMap();
+//            m.remove(msgId, num);
+//            db.getManager().setMap(m);
+//            db.saveUpdating();
         }
         Reply.Success(event, "Done");
     }

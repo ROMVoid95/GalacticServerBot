@@ -7,7 +7,6 @@ import static io.github.romvoid95.util.ListUtils.toStringList;
 
 import java.beans.ConstructorProperties;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -172,8 +171,6 @@ public class DBGalacticBot implements ManagedObject
     {
         this.getManager().setCount(count);
         List<Suggestion> newList = this.getManager().getList();
-        LinkedHashMap<String, Integer> newMap = this.getManager().getMap();
-
         String returnId = null;
 
         if (newList.add(suggestion))
@@ -182,9 +179,7 @@ public class DBGalacticBot implements ManagedObject
             returnId = uuid[uuid.length - 1];
             suggestion.set_id(returnId);
 
-            newMap.put(suggestion.postMsgId(), newList.indexOf(suggestion));
             this.getManager().setList(newList);
-            this.getManager().setMap(newMap);
             this.saveUpdating();
         }
 
@@ -212,15 +207,10 @@ public class DBGalacticBot implements ManagedObject
         this.saveUpdating();
         return removed;
     }
-    
-    public int getSuggestionNumber(Suggestion suggestion)
-    {
-        return this.getManager().getMap().get(suggestion.getMessages().getPostMsgId());
-    }
 
     public Suggestion getSuggestionFromMessageId(String messageId)
     {
-        return (Suggestion) this.getManager().getList().get(this.getManager().getMap().get(messageId));
+        return this.getManager().getList().stream().filter(s -> s.getMessages().getPostMsgId().equals(messageId)).findFirst().get();
     }
 
     public Optional<Suggestion> getSuggestionFromUniqueId(String id)
@@ -246,17 +236,7 @@ public class DBGalacticBot implements ManagedObject
         this.saveUpdating();
     }
 
-    public void clearSuggestionDatabase()
-    {
-        SuggestionManager manager = this.getManager();
-        manager.setList(new LinkedList<>());
-        manager.setMap(new LinkedHashMap<>());
-        manager.setCount(0);
-        this.save();
-    }
-
     @Override
-    
     public String getId()
     {
         return "galacticbot";
@@ -264,7 +244,6 @@ public class DBGalacticBot implements ManagedObject
 
     @JsonIgnore
     @Override
-    
     public String getTableName()
     {
         return DB_TABLE;

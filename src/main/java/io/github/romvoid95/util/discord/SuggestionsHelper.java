@@ -137,7 +137,7 @@ public class SuggestionsHelper
                         database.addNewCommunityPopularMessage(success.getId(), suggestion);
                     }, 
                     failure -> {
-                        String conent = "Error occured sending new Popular Message for Suggestion #" + database.getSuggestionNumber(suggestion);
+                        String conent = "Error occured sending new Popular Message for Suggestion " + suggestion.get_id();
                         SettingsHelper.getRootLogChannel(popularChannel.getGuild()).sendMessage(conent, ResultLevel.ERROR);
                     });
             }
@@ -150,7 +150,7 @@ public class SuggestionsHelper
                         database.addNewDevServerPopularMessage(success.getId(), suggestion);
                     }, 
                     failure -> {
-                        String conent = "Error occured sending new Popular Message for Suggestion #" + database.getSuggestionNumber(suggestion);
+                        String conent = "Error occured sending new Popular Message for Suggestion #" + suggestion.get_id();
                         SettingsHelper.getRootLogChannel(devPopularChannel.getGuild()).sendMessage(conent, ResultLevel.ERROR);
                     });
             }
