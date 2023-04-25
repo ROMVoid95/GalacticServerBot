@@ -1,10 +1,9 @@
 package io.github.romvoid95.commands.owner;
 
 import io.github.readonly.command.event.SlashCommandEvent;
+import io.github.readonly.command.option.Option;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
-import io.github.romvoid95.database.entity.DBGalacticBot;
-import io.github.romvoid95.database.impl.SuggestionManager;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
 
@@ -13,7 +12,8 @@ public class DatabaseCommand extends GalacticSlashCommand
 
     public DatabaseCommand()
     {
-        name("clear-database");
+        name("database");
+        setOptions(Option.text("id", "The id"));
     }
 
     @Override
@@ -30,13 +30,9 @@ public class DatabaseCommand extends GalacticSlashCommand
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        DBGalacticBot database = BotData.database().galacticBot();
+        String id = event.getOption("id").getAsString();
 
-        database.clearSuggestionDatabase();
-
-        SuggestionManager manager = database.getManager();
-
-        if (manager.getList().isEmpty() && manager.getMap().isEmpty())
+        if (BotData.database().galacticBot().deleteSuggestion(id))
         {
             Reply.Success(event, "Sucessfully cleared Suggestions Database");
         }

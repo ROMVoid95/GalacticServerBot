@@ -55,11 +55,8 @@ public class DeleteSuggestion extends GalacticSlashCommand
             TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
             txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s ->
             {
-                if (BotData.database().galacticBot().deleteSuggestion(id))
-                {
-                    Reply.Success(event, "Suggestion sucessfully deleted");
-                    return;
-                }
+                Reply.Success(event, "Suggestion sucessfully deleted");
+                return;
             });
         } catch (Exception e)
         {
