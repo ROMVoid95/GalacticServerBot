@@ -1,6 +1,6 @@
 package io.github.romvoid95.database;
 
-import static io.github.romvoid95.database.Rethink.Rethink;
+import static com.rethinkdb.RethinkDB.r;
 
 import com.rethinkdb.net.Connection;
 
@@ -12,72 +12,42 @@ public class DatabaseManager
 {
 
     private Connection conn;
-
-    public DatabaseManager( Connection conn)
+    
+    public DatabaseManager(Connection connection)
     {
-        this.conn = conn;
+    	this.conn = connection;
     }
 
-    
-    
     public DBGalacticBot galacticBot()
     {
-    	this.checkConnection();
-    	if(this.conn.isOpen()) {
-            DBGalacticBot obj = Rethink.table(DBGalacticBot.DB_TABLE).get("galacticbot").runAtom(conn, DBGalacticBot.class);
-            return obj == null ? DBGalacticBot.create() : obj;
-    	}
-    	return null;
+        DBGalacticBot obj = r.table(DBGalacticBot.DB_TABLE).get("galacticbot").runAtom(conn, DBGalacticBot.class);
+        return obj == null ? DBGalacticBot.create() : obj;
     }
-
-    
     
     public DBBlacklist blacklist()
     {
-    	this.checkConnection();
-    	if(this.conn.isOpen()) {
-            DBBlacklist obj = Rethink.table(DBBlacklist.DB_TABLE).get("blacklist").runAtom(conn, DBBlacklist.class);
-            return obj == null ? DBBlacklist.create() : obj;
-    	}
-    	return null;
+        DBBlacklist obj = r.table(DBBlacklist.DB_TABLE).get("blacklist").runAtom(conn, DBBlacklist.class);
+        return obj == null ? DBBlacklist.create() : obj;
     }
-    
-    
     
     public DBUpdates updates()
     {
-    	this.checkConnection();
-    	if(this.conn.isOpen()) {
-            DBUpdates obj = Rethink.table(DBUpdates.DB_TABLE).get("updates").runAtom(conn, DBUpdates.class);
-            return obj == null ? DBUpdates.create() : obj;
-    	}
-    	return null;
+        DBUpdates obj = r.table(DBUpdates.DB_TABLE).get("updates").runAtom(conn, DBUpdates.class);
+        return obj == null ? DBUpdates.create() : obj;
     }
 
     public void save( ManagedObject object)
     {
-        Rethink.table(object.getTableName()).insert(object).optArg("conflict", "replace").runNoReply(conn);
+    	r.table(object.getTableName()).insert(object).optArg("conflict", "replace").runNoReply(conn);
     }
 
     public void saveUpdating( ManagedObject object)
     {
-        Rethink.table(object.getTableName()).insert(object).optArg("conflict", "update").runNoReply(conn);
+    	r.table(object.getTableName()).insert(object).optArg("conflict", "update").runNoReply(conn);
     }
 
     public void delete( ManagedObject object)
     {
-        Rethink.table(object.getTableName()).get(object.getId()).delete().runNoReply(conn);
-    }
-    
-    private void checkConnection()
-    {
-    	if(!this.conn.isOpen()) {
-    		this.conn = this.conn.reconnect();
-    	}
-    }
-
-    public Connection getConnection()
-    {
-        return conn;
+    	r.table(object.getTableName()).get(object.getId()).delete().runNoReply(conn);
     }
 }

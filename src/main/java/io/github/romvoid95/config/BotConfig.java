@@ -2,7 +2,6 @@ package io.github.romvoid95.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.rethinkdb.net.Connection;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -66,9 +65,5 @@ public class BotConfig
 		private String	user			= "USER";
 		private String	password		= "PASSWORD";
 
-		public Connection.Builder buildConnection(Connection.Builder builder)
-		{
-			return builder.hostname(getHostname()).port(getPort()).db(getDatabaseName()).user(getUser(), getPassword());
-		}
 	}
 }

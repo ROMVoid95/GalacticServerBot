@@ -116,7 +116,7 @@ public class GalacticBot extends DiscordBot<GalacticBot>
 	private static void shutdown()
 	{
 		BotData.galacticExecutor().shutdown();
-		BotData.database().getConnection().close();
+		BotData.conn().close();
 		GalacticBot.instance().getJda().shutdownNow();
 	}
 
