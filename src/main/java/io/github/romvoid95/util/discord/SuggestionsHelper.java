@@ -6,12 +6,14 @@ import java.util.stream.Collectors;
 
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
+import io.github.romvoid95.BusListener;
 import io.github.romvoid95.GalacticBot;
 import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.database.impl.Suggestion.LinkedMessages;
 import io.github.romvoid95.database.impl.options.SuggestionOptions;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -19,6 +21,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 
+@Slf4j
 @UtilityClass
 public class SuggestionsHelper
 {
@@ -36,7 +39,7 @@ public class SuggestionsHelper
 
         boolean isRevert = suggestion.getStatus() != SuggestionStatus.NONE && status == SuggestionStatus.NONE;
 
-        System.out.println("isRevert: " + isRevert);
+        log.info("isRevert: " + isRevert);
         
         if (messages.postMsg().isPresent())
         {
