@@ -65,6 +65,7 @@ public enum EvalEngine
 
     //@noformat
     public static final Collection<String> DEFAULT_IMPORTS = Arrays.asList(
+        "io.github.romvoid95.util",
         "net.dv8tion.jda.api.entities.impl", 
         "net.dv8tion.jda.api.managers", 
         "net.dv8tion.jda.api.entities", 
