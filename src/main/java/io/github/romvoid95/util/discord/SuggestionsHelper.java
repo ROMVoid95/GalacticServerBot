@@ -36,6 +36,8 @@ public class SuggestionsHelper
 
         boolean isRevert = suggestion.getStatus() != SuggestionStatus.NONE && status == SuggestionStatus.NONE;
 
+        System.out.println("isRevert: " + isRevert);
+        
         if (messages.postMsg().isPresent())
         {
             setStatusOnMessage(messages.postMsg().get(), status, isRevert);
