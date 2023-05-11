@@ -124,4 +124,9 @@ public enum Emojis
     {
         return Emoji.fromFormatted(unicode);
     }
+    
+    public static Emojis getEmoji(String name)
+    {
+        return Emojis.valueOf(name);
+    }
 }
