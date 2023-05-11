@@ -17,8 +17,8 @@ public class AddEmojiCommand extends GalacticSlashCommand
     {
         name("add-emoji");
         setOptions(
-            //RequiredOption.text("channel-id", "channel-id"),
-            //RequiredOption.text("msg-id", "msg-id"),
+            RequiredOption.text("channel-id", "channel-id"),
+            RequiredOption.text("msg-id", "msg-id"),
             RequiredOption.text("emoji", "emoji")
         );
     }
@@ -37,14 +37,12 @@ public class AddEmojiCommand extends GalacticSlashCommand
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        //String channelId = event.getOption("channel-id").getAsString();
-        //String msgId = event.getOption("msg-id").getAsString();
+        String channelId = event.getOption("channel-id").getAsString();
+        String msgId = event.getOption("msg-id").getAsString();
         
         String emoji = event.getOption("emoji").getAsString();
         Emoji.fromFormatted(emoji);
 
-        event.replyEmbeds(Reply.simpleEmbed(emoji)).queue(s -> {
-             s.retrieveOriginal().queue(m -> m.addReaction(Emoji.fromFormatted(emoji)).queue());
-        });
+        event.getJDA().getTextChannelById(channelId).retrieveMessageById(msgId).complete().addReaction(Emoji.fromFormatted(emoji)).queue();
     }
 }
