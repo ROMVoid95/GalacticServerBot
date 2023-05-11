@@ -8,6 +8,7 @@ import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.util.Check;
 import io.github.romvoid95.util.discord.Reply;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 public class AddEmojiCommand extends GalacticSlashCommand
 {
@@ -40,7 +41,10 @@ public class AddEmojiCommand extends GalacticSlashCommand
         String msgId = event.getOption("msg-id").getAsString();
         
         String emoji = event.getOption("emoji").getAsString();
+        Emoji.fromFormatted(emoji);
 
-        Reply.EphemeralReply(event, emoji);
+        event.replyEmbeds(Reply.simpleEmbed(emoji)).queue(s -> {
+             s.retrieveOriginal().queue(m -> m.addReaction(Emoji.fromFormatted(emoji)));
+        });
     }
 }
