@@ -6,14 +6,12 @@ import java.util.stream.Collectors;
 
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
-import io.github.romvoid95.BusListener;
 import io.github.romvoid95.GalacticBot;
 import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.database.impl.Suggestion.LinkedMessages;
 import io.github.romvoid95.database.impl.options.SuggestionOptions;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -21,7 +19,6 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 
-@Slf4j
 @UtilityClass
 public class SuggestionsHelper
 {
@@ -38,11 +35,6 @@ public class SuggestionsHelper
         Message        postMsg  = null;
 
         boolean isRevert = suggestion.getStatus() != SuggestionStatus.NONE && status == SuggestionStatus.NONE;
-
-        log.info("isRevert: " + isRevert);
-        log.info("suggestion.getStatus() != SuggestionStatus.NONE: " + (suggestion.getStatus() != SuggestionStatus.NONE));
-        log.info("suggestion.getStatus(): " + suggestion.getStatus().getName());
-        log.info("status == SuggestionStatus.NONE: " + (status == SuggestionStatus.NONE));
         
         if (messages.postMsg().isPresent())
         {
@@ -115,7 +107,12 @@ public class SuggestionsHelper
             Suggestion suggestion = database.getSuggestionFromMessageId(event.getMessageId());
             Message    message    = DiscordUtils.getMessageOrNull(event);
 
-            if (event.getUser().getId().equals(suggestion.getAuthorId()))
+            //noformat
+            if (
+                event.getUser().getId().equals(suggestion.getAuthorId()) || 
+                suggestion.getStatus().equals(SuggestionStatus.REJECTED) ||
+                suggestion.getStatus().equals(SuggestionStatus.IMPLEMENTED)
+               )
             {
                 event.retrieveMessage().flatMap((m) -> m.removeReaction(event.getEmoji(), event.getUser())).queue();
             }
