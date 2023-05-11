@@ -13,7 +13,7 @@ public class SetCountCommand extends GalacticSlashCommand
 
     public SetCountCommand()
     {
-        name("set-count");
+        name("override-status");
         setOptions(Option.integer("count", "count"));
     }
 
