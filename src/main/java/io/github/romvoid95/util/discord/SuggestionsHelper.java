@@ -40,6 +40,8 @@ public class SuggestionsHelper
         boolean isRevert = suggestion.getStatus() != SuggestionStatus.NONE && status == SuggestionStatus.NONE;
 
         log.info("isRevert: " + isRevert);
+        log.info("suggestion.getStatus() != SuggestionStatus.NONE: " + (suggestion.getStatus() != SuggestionStatus.NONE));
+        log.info("status == SuggestionStatus.NONE: " + (status == SuggestionStatus.NONE));
         
         if (messages.postMsg().isPresent())
         {
