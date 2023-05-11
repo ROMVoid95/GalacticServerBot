@@ -41,6 +41,7 @@ public class SuggestionsHelper
 
         log.info("isRevert: " + isRevert);
         log.info("suggestion.getStatus() != SuggestionStatus.NONE: " + (suggestion.getStatus() != SuggestionStatus.NONE));
+        log.info("suggestion.getStatus(): " + suggestion.getStatus().getName());
         log.info("status == SuggestionStatus.NONE: " + (status == SuggestionStatus.NONE));
         
         if (messages.postMsg().isPresent())
