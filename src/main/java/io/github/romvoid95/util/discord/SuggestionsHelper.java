@@ -32,20 +32,22 @@ public class SuggestionsHelper
     public static Message setStatus(SuggestionStatus status, Suggestion suggestion)
     {
         LinkedMessages messages = suggestion.getMessages();
-        Message postMsg = null;
+        Message        postMsg  = null;
+
+        boolean isRevert = suggestion.getStatus() != SuggestionStatus.NONE && status == SuggestionStatus.NONE;
 
         if (messages.postMsg().isPresent())
         {
-            setStatusOnMessage(messages.postMsg().get(), status);
+            setStatusOnMessage(messages.postMsg().get(), status, isRevert);
+            postMsg = messages.postMsg().get();
 
             if (messages.communityPopularMsg().isPresent())
             {
-                setStatusOnMessage(messages.communityPopularMsg().get(), status);
+                setStatusOnMessage(messages.communityPopularMsg().get(), status, isRevert);
 
                 if (messages.devPopularMsg().isPresent())
                 {
-                    setStatusOnMessage(messages.devPopularMsg().get(), status);
-                    postMsg = messages.postMsg().get();
+                    setStatusOnMessage(messages.devPopularMsg().get(), status, isRevert);
                 }
             }
         }
@@ -53,17 +55,23 @@ public class SuggestionsHelper
         return postMsg;
     }
 
-    private static void setStatusOnMessage(Message message, SuggestionStatus status)
+    private static void setStatusOnMessage(Message message, SuggestionStatus status, boolean isRevert)
     {
-        List<MessageEmbed> embeds = new ArrayList<>();
-        int statusColor = status.getRGB().getColor();
-        
+        List<MessageEmbed> embeds      = new ArrayList<>();
+        int                statusColor = status.getRGB().getColor();
+
         EmbedBuilder infoBuilder = new EmbedBuilder(message.getEmbeds().get(0));
-        infoBuilder.addField(status.getStatusEmbedField());
-        infoBuilder.setColor(status.getRGB().getColor());
+        if (isRevert)
+        {
+            infoBuilder.clearFields();
+        } else
+        {
+            infoBuilder.addField(status.getStatusEmbedField());
+        }
+        infoBuilder.setColor(statusColor);
         embeds.add(infoBuilder.build());
-        
-        for(MessageEmbed description : message.getEmbeds().stream().skip(1).toList())
+
+        for (MessageEmbed description : message.getEmbeds().stream().skip(1).toList())
         {
             EmbedBuilder descriptionBuilder = new EmbedBuilder(description);
             descriptionBuilder.setColor(statusColor);
@@ -79,7 +87,7 @@ public class SuggestionsHelper
         if (suggestions.getAllSuggestionMessageIds().contains(event.getMessageId()))
         {
             Suggestion suggestion = suggestions.getSuggestionFromMessageId(event.getMessageId());
-            Message message = DiscordUtils.getMessageOrNull(event);
+            Message    message    = DiscordUtils.getMessageOrNull(event);
 
             if (message != null)
             {
@@ -97,20 +105,21 @@ public class SuggestionsHelper
         if (database.getAllSuggestionMessageIds().contains(event.getMessageId()))
         {
             Suggestion suggestion = database.getSuggestionFromMessageId(event.getMessageId());
-            Message message = DiscordUtils.getMessageOrNull(event);
+            Message    message    = DiscordUtils.getMessageOrNull(event);
 
             if (event.getUser().getId().equals(suggestion.getAuthorId()))
             {
                 event.retrieveMessage().flatMap((m) -> m.removeReaction(event.getEmoji(), event.getUser())).queue();
             }
 
-            if(BotData.database().galacticBot().isMaintenanceMode())
+            if (BotData.database().galacticBot().isMaintenanceMode())
             {
                 if (message != null)
                 {
                     suggestionUpvote(suggestion, message, database);
                 }
-            } else {
+            } else
+            {
                 if (message != null && !event.getUser().getId().equals(suggestion.getAuthorId()))
                 {
                     suggestionUpvote(suggestion, message, database);
@@ -118,7 +127,7 @@ public class SuggestionsHelper
             }
         }
     }
-    
+
     private void suggestionUpvote(Suggestion suggestion, Message message, DBGalacticBot database)
     {
         int reactionCount = message.getReactions().get(0).getCount() - 1;
@@ -132,27 +141,27 @@ public class SuggestionsHelper
             if (suggestion.getMessages().getCommunityPopularMsgId().isEmpty())
             {
                 TextChannel popularChannel = GalacticBot.instance().getJda().getTextChannelById(options.getPopularChannelId());
-                popularChannel.sendMessageEmbeds(message.getEmbeds()).queue(
-                    success -> {
-                        database.addNewCommunityPopularMessage(success.getId(), suggestion);
-                    }, 
-                    failure -> {
-                        String conent = "Error occured sending new Popular Message for Suggestion " + suggestion.get_id();
-                        SettingsHelper.getRootLogChannel(popularChannel.getGuild()).sendMessage(conent, ResultLevel.ERROR);
-                    });
+                popularChannel.sendMessageEmbeds(message.getEmbeds()).queue(success ->
+                {
+                    database.addNewCommunityPopularMessage(success.getId(), suggestion);
+                }, failure ->
+                {
+                    String conent = "Error occured sending new Popular Message for Suggestion " + suggestion.get_id();
+                    SettingsHelper.getRootLogChannel(popularChannel.getGuild()).sendMessage(conent, ResultLevel.ERROR);
+                });
             }
-            
+
             if (suggestion.getMessages().getDevPopularMsgId().isEmpty())
             {
                 TextChannel devPopularChannel = GalacticBot.instance().getJda().getTextChannelById(options.getDevServerPopularChannelId());
-                devPopularChannel.sendMessageEmbeds(message.getEmbeds()).queue(
-                    success -> {
-                        database.addNewDevServerPopularMessage(success.getId(), suggestion);
-                    }, 
-                    failure -> {
-                        String conent = "Error occured sending new Popular Message for Suggestion #" + suggestion.get_id();
-                        SettingsHelper.getRootLogChannel(devPopularChannel.getGuild()).sendMessage(conent, ResultLevel.ERROR);
-                    });
+                devPopularChannel.sendMessageEmbeds(message.getEmbeds()).queue(success ->
+                {
+                    database.addNewDevServerPopularMessage(success.getId(), suggestion);
+                }, failure ->
+                {
+                    String conent = "Error occured sending new Popular Message for Suggestion #" + suggestion.get_id();
+                    SettingsHelper.getRootLogChannel(devPopularChannel.getGuild()).sendMessage(conent, ResultLevel.ERROR);
+                });
             }
         }
     }
