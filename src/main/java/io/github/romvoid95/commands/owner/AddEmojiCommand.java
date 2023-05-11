@@ -14,7 +14,7 @@ public class AddEmojiCommand extends GalacticSlashCommand
 
     public AddEmojiCommand()
     {
-        name("Add Emoji");
+        name("add-emoji");
         setOptions(
             RequiredOption.text("channel-id", "channel-id"),
             RequiredOption.text("msg-id", "msg-id"),
