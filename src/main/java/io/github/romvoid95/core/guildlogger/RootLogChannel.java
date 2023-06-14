@@ -37,7 +37,7 @@ public class RootLogChannel
     public final void sendLogMessage(SlashCommandEvent event)
     {
         StringBuilder sb = new StringBuilder();
-        sb.append("User: %s".formatted(event.getUser().getAsTag())).append("\n");
+        sb.append("User: %s".formatted(event.getUser().getGlobalName())).append("\n");
         sb.append("In Channel: %s".formatted(event.getChannel().getName()));
         
         EmbedBuilder builder = new EmbedBuilder();

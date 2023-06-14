@@ -41,7 +41,7 @@ public class NewSuggestion extends GalacticSlashCommand
     @Override
     protected void onExecute(SlashCommandEvent event)
     {
-        String mention = event.getMember().getAsMention();
+        String mention = event.getMember().getUser().getGlobalName();
 
         boolean isBlacklisted = BotData.database().blacklist().isBlacklisted(event.getMember().getId());
         if (isBlacklisted)

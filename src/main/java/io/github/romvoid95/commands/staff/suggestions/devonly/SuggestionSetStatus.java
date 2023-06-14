@@ -1,7 +1,5 @@
 package io.github.romvoid95.commands.staff.suggestions.devonly;
 
-import java.util.List;
-
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.lists.ChoiceList;
 import io.github.readonly.command.option.RequiredOption;
@@ -10,14 +8,11 @@ import io.github.romvoid95.commands.core.GalacticSlashCommand;
 import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.database.impl.Suggestion;
 import io.github.romvoid95.util.Check;
-import io.github.romvoid95.util.discord.Emojis;
 import io.github.romvoid95.util.discord.Reply;
 import io.github.romvoid95.util.discord.SuggestionStatus;
 import io.github.romvoid95.util.discord.SuggestionsHelper;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 
 public class SuggestionSetStatus extends GalacticSlashCommand
 {

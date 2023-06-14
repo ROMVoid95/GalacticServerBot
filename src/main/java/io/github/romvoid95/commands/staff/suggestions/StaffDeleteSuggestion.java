@@ -68,7 +68,7 @@ public class StaffDeleteSuggestion extends GalacticSlashCommand
         builder.setTitle("Suggestion Deleted");
         builder.setDescription(sb.toString());
         builder.setColor(Color.RED);
-        builder.addField("Deleted By", member.getUser().getAsTag(), false);
+        builder.addField("Deleted By", member.getUser().getGlobalName(), false);
         builder.addField("Reason", reason, false);
         builder.setFooter("If you feel this was done in error please contact the staff member listed");
 

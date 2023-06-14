@@ -91,7 +91,7 @@ public class Embed
 
 	public Embed setAuthor(User user)
 	{
-		this.builder.setAuthor(user.getAsTag(), null, user.getEffectiveAvatarUrl());
+		this.builder.setAuthor(user.getGlobalName(), null, user.getEffectiveAvatarUrl());
 		return this;
 	}
 
@@ -100,7 +100,7 @@ public class Embed
 		if (event != null)
 		{
 			User author = event.getAuthor();
-			this.builder.setAuthor(author.getAsTag(), null, author.getEffectiveAvatarUrl());
+			this.builder.setAuthor(author.getGlobalName(), null, author.getEffectiveAvatarUrl());
 		}
 		return this;
 	}

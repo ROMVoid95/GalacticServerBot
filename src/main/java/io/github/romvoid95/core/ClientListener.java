@@ -17,7 +17,7 @@ public class ClientListener implements CommandListener
     @Override
     public void onCompletedCommand(CommandEvent event, Command command)
     {
-        String asTag = DiscordUtils.getUser(event).getAsTag();
+        String asTag = DiscordUtils.getUser(event).getGlobalName();
         String id = event.getAuthor().getId();
         String content = event.getMessage().getContentRaw();
 
@@ -28,7 +28,7 @@ public class ClientListener implements CommandListener
     @Override
     public void onCompletedSlashCommand(SlashCommandEvent event, SlashCommand command)
     {
-        String asTag = DiscordUtils.getUser(event).getAsTag();
+        String asTag = DiscordUtils.getUser(event).getGlobalName();
         String id;
         String guild = "Private Channel";
         if(event.getChannelType().equals(ChannelType.PRIVATE))
