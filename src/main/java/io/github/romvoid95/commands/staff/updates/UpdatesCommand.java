@@ -8,6 +8,7 @@ public class UpdatesCommand extends ParentSlashCommand
 	{
 		super("updates");
 		subCommands(
+		    new ForceUpdates(),
 			new AddCommand(),
 			new RemoveCommand()
 		);
