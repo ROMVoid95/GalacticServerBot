@@ -14,7 +14,10 @@ repositories {
     maven {
         url "https://jitpack.io"
     }
-    mavenCentral()
+    maven {
+        name 'EzGradle'
+        url 'https://ezgradle.site/global'
+    }
 }
 
 ext {
@@ -74,6 +77,10 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
+
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
