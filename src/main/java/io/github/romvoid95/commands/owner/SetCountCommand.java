@@ -13,8 +13,8 @@ public class SetCountCommand extends GalacticSlashCommand
 
     public SetCountCommand()
     {
-        name("set-count");
-        setOptions(Option.integer("count", "count"));
+        super("set-count");
+        options(Option.integer("count", "count"));
     }
 
     @Override

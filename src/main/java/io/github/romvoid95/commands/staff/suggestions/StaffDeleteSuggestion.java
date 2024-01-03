@@ -20,9 +20,8 @@ public class StaffDeleteSuggestion extends GalacticSlashCommand
 
     public StaffDeleteSuggestion()
     {
-        name("delete");
-        description("Deletes the given Suggestion");
-        setOptions(RequiredOption.integer("number", "The Suggestion #"), RequiredOption.text("reason", "The reason for deleting this suggestion"));
+        super("delete", "Deletes the given Suggestion");
+        options(RequiredOption.integer("number", "The Suggestion #"), RequiredOption.text("reason", "The reason for deleting this suggestion"));
     }
 
     @Override

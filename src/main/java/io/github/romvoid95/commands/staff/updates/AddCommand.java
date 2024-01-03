@@ -3,10 +3,10 @@ package io.github.romvoid95.commands.staff.updates;
 import java.util.concurrent.ExecutionException;
 
 import de.erdbeerbaerlp.cfcore.CurseAPI;
-import io.github.readonly.command.OptionHelper;
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
 import io.github.readonly.command.option.RequiredOption;
+import io.github.readonly.common.OptionHelper;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
@@ -30,10 +30,9 @@ public class AddCommand extends GalacticSlashCommand
 
 	public AddCommand()
 	{
-		this.name("add-project");
-		this.description("Adds a project to update notifications");
+		super("add-project", "Adds a project to update notifications");
 		//@noformat
-		setOptions(
+		options(
 			RequiredOption.text("name", "The mods name"),
 			RequiredOption.integer("curseforge", "The CurseForge projectId"),
 			Option.text("modrinth", "The mods Modrinth projectId"),

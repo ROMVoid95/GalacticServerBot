@@ -16,8 +16,8 @@ public class MaintanenceModeCommand extends GalacticSlashCommand
 
     public MaintanenceModeCommand()
     {
-        name("maintanence-mode");
-        setOptions(RequiredOption.text("mode", "On or Off", ChoiceList.of(Choice.add("ON"), Choice.add("OFF"))));
+        super("maintanence-mode");
+        options(RequiredOption.text("mode", "On or Off", ChoiceList.of(Choice.add("ON"), Choice.add("OFF"))));
         this.ownerCommand = true;
     }
 

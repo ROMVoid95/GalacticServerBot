@@ -20,9 +20,8 @@ public class PostChannel extends GalacticSlashCommand
 
     public PostChannel()
     {
-        name("channel");
-        description("Display or change the channel new Suggestions are posted in");
-        setOptions(Option.channel("channel", "Guild Channel to use for new Suggestions"));
+        super("channel", "Display or change the channel new Suggestions are posted in");
+        options(Option.channel("channel", "Guild Channel to use for new Suggestions"));
     }
 
     @Override

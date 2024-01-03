@@ -15,8 +15,7 @@ public class CloseDiscussionThread extends GalacticSlashCommand
 
     public CloseDiscussionThread()
     {
-        name("close");
-        description("Closes the Discussion of the suggestion Thread called in");
+        super("close", "Closes the Discussion of the suggestion Thread called in");
     }
 
     @Override

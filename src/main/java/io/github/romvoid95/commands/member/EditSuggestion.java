@@ -48,9 +48,8 @@ public class EditSuggestion extends GalacticSlashCommand
 
     public EditSuggestion()
     {
-        name("edit");
-        description("[DM ONLY] Edit the description of title of your suggestions");
-        setOptions(RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"), RequiredOption.text("section", "Title or Description", ChoiceList.toList(Section.class)),
+        super("edit", "[DM ONLY] Edit the description of title of your suggestions");
+        options(RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"), RequiredOption.text("section", "Title or Description", ChoiceList.toList(Section.class)),
             RequiredOption.text("edit-type", "Replace, Append, or Prepend current value", ChoiceList.toList(EditType.class)), RequiredOption.text("content", "The content used in the action you chose"));
         this.directMessagesAllowed();
     }

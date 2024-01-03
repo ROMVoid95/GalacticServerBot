@@ -20,9 +20,8 @@ public class ListStaffRoles extends GalacticSlashCommand
 
     public ListStaffRoles()
     {
-        name("list");
-        description("shows roles currently in the Admins or Moderators list");
-        setOptions(RequiredOption.text("type", "Mod or Admin", ChoiceList.toList(RoleType.class)));
+        super("list","shows roles currently in the Admins or Moderators list");
+        options(RequiredOption.text("type", "Mod or Admin", ChoiceList.toList(RoleType.class)));
         this.subcommandGroup = new SubcommandGroupData("staff", "Manage Roles that are considered staff in the server");
     }
 

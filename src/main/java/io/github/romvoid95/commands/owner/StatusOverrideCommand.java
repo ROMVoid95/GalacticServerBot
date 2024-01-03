@@ -16,8 +16,8 @@ public class StatusOverrideCommand extends GalacticSlashCommand
 
     public StatusOverrideCommand()
     {
-        name("override-status");
-        setOptions(RequiredOption.integer("number", "The Suggestion #"), RequiredOption.text("status", "Status to set", ChoiceList.toList(SuggestionStatus.class)));
+        super("override-status");
+        options(RequiredOption.integer("number", "The Suggestion #"), RequiredOption.text("status", "Status to set", ChoiceList.toList(SuggestionStatus.class)));
     }
 
     @Override

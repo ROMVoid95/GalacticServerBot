@@ -22,9 +22,8 @@ public class RemoveStaffRole extends GalacticSlashCommand
 
     public RemoveStaffRole()
     {
-        name("remove");
-        description("Remove a role from Admins or Moderators list");
-        setOptions(RequiredOption.text("type", "Mod or Admin", ChoiceList.toList(RoleType.class)), RequiredOption.role("role", "the Role to remove"));
+        super("remove", "Remove a role from Admins or Moderators list");
+        options(RequiredOption.text("type", "Mod or Admin", ChoiceList.toList(RoleType.class)), RequiredOption.role("role", "the Role to remove"));
         this.subcommandGroup = new SubcommandGroupData("staff", "Manage Roles that are considered staff in the server");
     }
 

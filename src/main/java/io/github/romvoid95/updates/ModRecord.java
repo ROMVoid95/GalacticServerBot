@@ -9,7 +9,6 @@ import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
 import club.minnced.discord.webhook.send.WebhookMessageBuilder;
 import club.minnced.discord.webhook.send.component.ComponentElement;
 import club.minnced.discord.webhook.send.component.layout.ActionRow;
-import de.erdbeerbaerlp.cfcore.json.MinecraftVersion;
 import io.github.readonly.common.version.Version;
 import io.github.romvoid95.Conf;
 import io.github.romvoid95.GalacticBot;
@@ -53,11 +52,15 @@ public record ModRecord(String name, List<R_UpdateInfo> infoRecords, R_Platforms
 			var knownCurseId = cursePlatform.getProjectId();
 			var knownLastFileId = cursePlatform.getLatestFileId();
 			
+			log.info("knownLastFileId: " + knownLastFileId);
+			
 			var	cfMod			= curseApi.getModFromID(knownCurseId);
 			var cfFile			= cfMod.latestFiles[0];
 			var	latestFileId	= cfFile.id;
 			
-			if(latestFileId > knownLastFileId && !cfFile.getVersion().equals(MinecraftVersion.V1_7_10))
+			log.info("latestFileId: " + latestFileId);
+			
+			if(latestFileId > knownLastFileId)
 			{
 				log.info("Check - Found Update");
 				newCurseInfo.setProjectId(knownCurseId);

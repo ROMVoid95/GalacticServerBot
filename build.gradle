@@ -18,37 +18,38 @@ repositories {
 }
 
 ext {
-	jdatools		= '4.0.4'
+	jdatools		= '5.0.0-SNAPSHOT'
 	reflections 	= '0.10.2'
-	okhttp 			= '5.0.0-alpha.2'
-	webhooks 		= '0.8.2-buttons'
+	okhttp 			= '5.0.0-alpha.12'
+	webhooks 		= 'feature~components-SNAPSHOT'
     rethink 		= '2.4.4'
 	commons			= '2.11.0'
 	jsr223			= '3.0.12'
 	commonsText		= '1.10.0'
 	curseApi		= '65a3ec932d'
 	modrinth4j		= 'master-SNAPSHOT'
-	jda				= '5.0.0-beta.10'
+	jda				= '5.0.0-beta.19'
 	logback			= '1.2.11'
 	slf4j			= '1.7.36'
 	jsoup 			= '1.15.2'
 	fastutil 		= '8.5.8'
 	javax			= '1.3.2'
+	codec			= '1.16.0'
 }
 
 dependencies {
     implementation group: 'com.github.ReadOnlyDevelopment', name: 'JDATools', 	version: jdatools
-    implementation group: 'net.dv8tion', 			name: 'JDA', 				version: '5.0.0-beta.10'
+    implementation group: 'net.dv8tion', 			name: 'JDA', 				version: '5.0.0-beta.12'
 
     implementation group: 'org.slf4j', 				name: 'slf4j-api', 			version: slf4j
     implementation group: 'ch.qos.logback', 		name: 'logback-classic', 	version: logback
-	//implementation group: 'club.minnced', 			name: 'discord-webhooks', 	version: webhooks
-    implementation 'com.github.MinnDevelopment:discord-webhooks:feature~components-SNAPSHOT'
+	implementation group: 'com.github.MinnDevelopment', 			name: 'discord-webhooks', 	version: webhooks
     
     implementation group: 'com.rethinkdb', 			name: 'rethinkdb-driver', 	version: rethink
 	implementation group: 'commons-io', 			name: 'commons-io', 		version: commons
 	implementation group: 'org.codehaus.groovy', 	name: 'groovy-jsr223', 		version: jsr223
 	implementation group: 'org.apache.commons', 	name: 'commons-text', 		version: commonsText
+	implementation group: 'commons-codec', 			name: 'commons-codec', 		version: codec
 	implementation group: 'com.github.ROMVoid95', 	name: 'CurseCore', 			version: curseApi
 	implementation group: 'com.github.masecla22', 	name: 'Modrinth4J', 		version: modrinth4j
 	implementation group: 'org.jsoup', 				name: 'jsoup', 				version: jsoup
@@ -71,7 +72,6 @@ applicationName = 'galacticbot'
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
-        vendor = JvmVendorSpec.ADOPTOPENJDK
     }
 }
 
@@ -112,12 +112,12 @@ tasks.withType(JavaCompile) {
 }
 
 jar {
-    classifier = 'lite'
+    archiveClassifier = 'lite'
 }
 
 shadowJar {
     archiveFileName = 'galacticbot.jar'
-    classifier = ''
+    archiveClassifier = ''
 }
 
 task fullBuild {

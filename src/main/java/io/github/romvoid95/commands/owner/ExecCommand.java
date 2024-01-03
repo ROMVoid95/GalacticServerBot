@@ -19,8 +19,8 @@ public class ExecCommand extends GalacticSlashCommand
 
     public ExecCommand()
     {
-        name("exec");
-        setOptions(RequiredOption.text("cmd", "command to execute", 1024));
+        super("exec");
+        options(RequiredOption.text("cmd", "command to execute", 1024));
     }
 
     @Override

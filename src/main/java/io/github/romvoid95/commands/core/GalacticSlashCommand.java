@@ -11,6 +11,16 @@ import io.github.romvoid95.util.discord.Reply;
 public abstract class GalacticSlashCommand extends SlashCommand
 {
 
+    protected GalacticSlashCommand(String name)
+    {
+        super(name);
+    }
+    
+    protected GalacticSlashCommand(String name, String description)
+    {
+        super(name, description);
+    }
+
     @Override
     protected void execute(SlashCommandEvent event)
     {

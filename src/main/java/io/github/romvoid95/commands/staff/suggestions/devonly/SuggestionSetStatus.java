@@ -19,9 +19,9 @@ public class SuggestionSetStatus extends GalacticSlashCommand
 
     public SuggestionSetStatus()
     {
-        name("set-status");
+        super("set-status");
 
-        setOptions(RequiredOption.integer("number", "The Suggestion #"), RequiredOption.text("status", "Status to set", ChoiceList.toList(SuggestionStatus.class)));
+        options(RequiredOption.integer("number", "The Suggestion #"), RequiredOption.text("status", "Status to set", ChoiceList.toList(SuggestionStatus.class)));
     }
 
     @Override

@@ -12,8 +12,7 @@ public class ForceUpdates extends GalacticSlashCommand
 {
     public ForceUpdates()
     {
-        this.name("force-updates");
-        this.description("Forces a check on mod updates");
+        super("force-updates", "Forces a check on mod updates");
     }
     @Override
     protected void onExecute(SlashCommandEvent event)

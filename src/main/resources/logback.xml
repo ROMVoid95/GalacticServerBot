@@ -1,8 +1,7 @@
 <configuration scan="true" scanPeriod="30 seconds">
-	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- because logback is to stupid to add a proper filter for that -->
-        <filter class="com.readonlydev.logback.LogFilter">
+        <filter class="io.github.romvoid95.logging.InverseThresholdFilter">
             <level>WARN</level>
         </filter>
         <layout class="ch.qos.logback.classic.PatternLayout">

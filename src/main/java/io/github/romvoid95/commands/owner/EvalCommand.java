@@ -23,8 +23,8 @@ public class EvalCommand extends GalacticSlashCommand
 
     public EvalCommand()
     {
-        name("eval");
-        setOptions(RequiredOption.text("ev", "statement to evaluate", 1024));
+        super("eval");
+        options(RequiredOption.text("ev", "statement to evaluate", 1024));
     }
 
     @Override

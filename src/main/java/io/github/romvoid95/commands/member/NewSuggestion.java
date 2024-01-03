@@ -2,11 +2,11 @@ package io.github.romvoid95.commands.member;
 
 import java.util.UUID;
 
-import io.github.readonly.command.OptionHelper;
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.lists.ChoiceList;
 import io.github.readonly.command.option.Choice;
 import io.github.readonly.command.option.RequiredOption;
+import io.github.readonly.common.OptionHelper;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.Conf;
@@ -32,9 +32,8 @@ public class NewSuggestion extends GalacticSlashCommand
 
     public NewSuggestion()
     {
-        name("new-suggestion");
-        description("Create a new Suggestion");
-        setOptions(RequiredOption.text("type", "Suggestion Type", ChoiceList.of(Choice.add("Galacticraft 5", "[Galacticraft 5]"), Choice.add("Galacticraft-Legacy", "[Galacticraft-Legacy]"), Choice.add("Galacticraft [Both Versions]", "[Galacticraft - Both Versions]"),
+        super("new-suggestion", "Create a new Suggestion");
+        options(RequiredOption.text("type", "Suggestion Type", ChoiceList.of(Choice.add("Galacticraft 5", "[Galacticraft 5]"), Choice.add("Galacticraft-Legacy", "[Galacticraft-Legacy]"), Choice.add("Galacticraft [Both Versions]", "[Galacticraft - Both Versions]"),
             Choice.add("Idea For New Addon", "[Addon Idea]"), Choice.add("Do Not Make Suggestions For Existing Addons", "existing"))), RequiredOption.text("title", "Short generalized title for your suggestion", 64), RequiredOption.text("description", "Describe in detail your suggestion"));
     }
 

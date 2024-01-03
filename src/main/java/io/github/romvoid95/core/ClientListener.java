@@ -1,11 +1,8 @@
 package io.github.romvoid95.core;
 
-import io.github.readonly.command.Command;
-import io.github.readonly.command.CommandListener;
+import io.github.readonly.api.CommandListener;
 import io.github.readonly.command.SlashCommand;
-import io.github.readonly.command.event.CommandEvent;
 import io.github.readonly.command.event.SlashCommandEvent;
-
 import io.github.romvoid95.util.LogUtils;
 import io.github.romvoid95.util.discord.DiscordUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,17 +11,6 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 @Slf4j
 public class ClientListener implements CommandListener
 {
-    @Override
-    public void onCompletedCommand(CommandEvent event, Command command)
-    {
-        String asTag = DiscordUtils.getUser(event).getGlobalName();
-        String id = event.getAuthor().getId();
-        String content = event.getMessage().getContentRaw();
-
-        LogUtils.log("CommandEvent", webhookContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
-        log.info(logContent(event.getChannelType(), "Slash Command", event.getGuild().getName(), asTag, id, content, event.getChannel().getName()));
-    }
-
     @Override
     public void onCompletedSlashCommand(SlashCommandEvent event, SlashCommand command)
     {

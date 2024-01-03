@@ -1,7 +1,5 @@
 package io.github.romvoid95;
 
-import java.util.Optional;
-
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Logger;
@@ -9,13 +7,13 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.classic.filter.ThresholdFilter;
 import io.github.readonly.common.event.EventHandler;
-import io.github.readonly.discordbot.DiscordBot;
 import io.github.romvoid95.commands.SortInitialize;
 import io.github.romvoid95.commands.member.DeleteSuggestion;
 import io.github.romvoid95.commands.member.EditSuggestion;
 import io.github.romvoid95.core.ClientListener;
 import io.github.romvoid95.core.GalacticEventListener;
 import io.github.romvoid95.core.GuildSettings;
+import io.github.romvoid95.database.entity.DBGalacticBot;
 import io.github.romvoid95.logging.WebhookAppender;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -28,120 +26,116 @@ import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 @Slf4j
-public class GalacticBot extends DiscordBot<GalacticBot>
+public class GalacticBot extends DiscordBotImpl<DBGalacticBot>
 {
-	@Getter
-	private JDA					jda;
-	private static GalacticBot	_instance;
+    @Getter
+    private JDA					jda;
+    private static GalacticBot	_instance;
 
-	public static final GalacticBot instance()
-	{
-		return GalacticBot._instance;
-	}
+    public static boolean InDevEnv = false;
 
-	private void preStart()
-	{
-		log.info("Starting up %s {}, Git revision: {}", "GalacticBot", Info.VERSION, Info.GIT_REVISION);
-		log.info("Reporting UA {} for HTTP requests.", Info.USER_AGENT);
+    public static final GalacticBot instance()
+    {
+        return GalacticBot._instance;
+    }
 
-		RestAction.setPassContext(true);
-		RestAction.setDefaultFailure(ErrorResponseException.ignore(RestAction.getDefaultFailure(), ErrorResponse.UNKNOWN_MESSAGE));
+    private void preStart()
+    {
+        log.info("Starting up {}, Git revision: {}", "GalacticBot", Info.VERSION, Info.GIT_REVISION);
+        log.info("Reporting UA {} for HTTP requests.", Info.USER_AGENT);
 
-		BotData.database();
-	}
+        RestAction.setPassContext(true);
+        RestAction.setDefaultFailure(ErrorResponseException.ignore(RestAction.getDefaultFailure(), ErrorResponse.UNKNOWN_MESSAGE));
 
-	private GalacticBot()
-	{
-		preStart();
+        BotData.database();
+    }
 
-		Conf.saveBotConfigJson();
+    private GalacticBot()
+    {
+        preStart();
 
-		// @noformat
-		SortInitialize.perform(this.getClientBuilder());
-		this.getClientBuilder()
-			.setAllRepliesAsEmbed()
-			.addGlobalSlashCommands(new EditSuggestion(), new DeleteSuggestion())
-			.setOwnerId(Conf.Bot().getOwner())
-			.setActivity(Activity.watching("for Suggestion"))
-			.useHelpBuilder(false)
-			.setListener(new ClientListener())
-			.setGuildSettingsManager(new GuildSettings());
+        Conf.saveBotConfigJson();
 
-		this.jda = JDABuilder.create(Conf.Bot().getToken(), BotData.JDA.INTENTS)
-			.disableCache(BotData.JDA.DISABLED_CACHE_FLAGS)
-			.setMemberCachePolicy(MemberCachePolicy.ALL)
-			.setActivity(Activity.playing("Init Stage"))
-			.addEventListeners(this.getEventWaiter(), this.buildClient(), new GalacticEventListener())
-			.build();
-		// @format
+        // @noformat
+        SortInitialize.perform(this.getClientBuilder());
+        this.getClientBuilder()
+            .setAllRepliesAsEmbed()
+            .addSlashCommands(new EditSuggestion(), new DeleteSuggestion())
+            .setOwnerId(Conf.Bot().getOwner())
+            .setActivity(Activity.watching("for Suggestion"))
+            .useHelpBuilder(false)
+            .setListener(new ClientListener())
+            .setGuildSettingsManager(new GuildSettings());
 
-		EventHandler.instance().register(new BusListener());
+        this.jda = JDABuilder.create(Conf.Bot().getToken(), BotData.JDA.INTENTS)
+            .disableCache(BotData.JDA.DISABLED_CACHE_FLAGS)
+            .setMemberCachePolicy(MemberCachePolicy.ALL)
+            .setActivity(Activity.playing("Init Stage"))
+            .addEventListeners(this.getEventWaiter(), this.buildClient(), new GalacticEventListener())
+            .build();
+        // @format
 
-		GalacticBot._instance = this;
-		
-		this.handleLogger();
-	}
-	
-	private void handleLogger()
-	{
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        EventHandler.instance().register(new BusListener());
 
-        ThresholdFilter filter = new ThresholdFilter();
+        GalacticBot._instance = this;
+
+        this.handleLogger();
+    }
+
+    private void handleLogger()
+    {
+        var lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+        var filter = new ThresholdFilter();
         filter.setLevel("info");
         filter.setContext(lc);
         filter.start();
 
-        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+        var encoder = new PatternLayoutEncoder();
         encoder.setPattern("[%level] [%logger{0}]: `%msg%n`");
         encoder.setContext(lc);
         encoder.start();
 
-        WebhookAppender appender = new WebhookAppender();
+        var appender = new WebhookAppender();
         appender.setEncoder(encoder);
         appender.addFilter(filter);
         appender.setName("ERROR_WH");
         appender.setContext(lc);
         appender.start();
 
-        Logger root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        var root = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         root.addAppender(appender);
-	}
+    }
 
-	public static void main(String[] args)
-	{
-		new GalacticBot();
-		Runtime.getRuntime().addShutdownHook(new Thread(GalacticBot::shutdown));
-	}
+    public static void main(String[] args)
+    {
+        new GalacticBot();
+        Runtime.getRuntime().addShutdownHook(new Thread(GalacticBot::shutdown));
+    }
 
-	private static void shutdown()
-	{
-		BotData.galacticExecutor().shutdown();
-		BotData.conn().close();
-		GalacticBot.instance().getJda().shutdownNow();
-	}
+    private static void shutdown()
+    {
+        BotData.galacticExecutor().shutdown();
+        BotData.conn().close();
+        GalacticBot.instance().getJda().shutdownNow();
+    }
 
-	public boolean isDevBot()
-	{
-		return getJda().getSelfUser().getApplicationId().equals("1018818779276390401");
-	}
+    public boolean isDevBot()
+    {
+        return getJda().getSelfUser().getApplicationId().equals("1018818779276390401");
+    }
 
-	public static final class Info
-	{
-		public static final String	GITHUB_URL		= "https://github.com/ROMVoid95/GalacticBot";
-		public static final String	USER_AGENT		= "%s/@version@/DiscordBot (%s)".formatted("GalacticBot", GITHUB_URL);
-		public static final String	VERSION			= "@version@";
-		public static final String	GIT_REVISION	= "@revision@";
-	}
+    public static final class Info
+    {
+        public static final String	GITHUB_URL		= "https://github.com/ROMVoid95/GalacticBot";
+        public static final String	USER_AGENT		= "%s/@version@/DiscordBot (%s)".formatted("GalacticBot", GITHUB_URL);
+        public static final String	VERSION			= "@version@";
+        public static final String	GIT_REVISION	= "@revision@";
+    }
 
-	@Override
-	public String getId()
-	{
-		return "galacticbot";
-	}
-
-	@Override
-	public Optional<?> getInstance()
-	{
-		return Optional.of(_instance);
-	}
+    @Override
+    public String getId()
+    {
+        return "galacticbot";
+    }
 }

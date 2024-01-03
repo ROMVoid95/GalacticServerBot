@@ -2,8 +2,8 @@ package io.github.romvoid95.server;
 
 import java.util.Collection;
 
-import io.github.readonly.command.ServerCommands;
 import io.github.readonly.command.SlashCommand;
+import io.github.readonly.common.ServerCommands;
 import lombok.Getter;
 
 public class SlashCommandServer extends Server

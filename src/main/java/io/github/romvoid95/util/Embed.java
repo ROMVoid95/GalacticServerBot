@@ -3,7 +3,6 @@ package io.github.romvoid95.util;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import io.github.readonly.command.event.Event;
 import io.github.readonly.common.util.RGB;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -92,16 +91,6 @@ public class Embed
 	public Embed setAuthor(User user)
 	{
 		this.builder.setAuthor(user.getGlobalName(), null, user.getEffectiveAvatarUrl());
-		return this;
-	}
-
-	public <T extends Event<T>> Embed setAuthor(T event)
-	{
-		if (event != null)
-		{
-			User author = event.getAuthor();
-			this.builder.setAuthor(author.getGlobalName(), null, author.getEffectiveAvatarUrl());
-		}
 		return this;
 	}
 

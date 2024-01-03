@@ -8,7 +8,6 @@ import io.github.readonly.command.SlashCommand;
 import io.github.romvoid95.Servers;
 import io.github.romvoid95.commands.member.CloseDiscussionThread;
 import io.github.romvoid95.commands.member.NewSuggestion;
-import io.github.romvoid95.commands.owner.AddEmojiCommand;
 import io.github.romvoid95.commands.owner.DeleteFromListCommand;
 import io.github.romvoid95.commands.owner.EvalCommand;
 import io.github.romvoid95.commands.owner.ExecCommand;
@@ -42,9 +41,9 @@ public class SortInitialize
             new Suggestions(),
             new ServerStaff(),
             new NewSuggestion(),
-            new CloseDiscussionThread(), 
-           new UpdatesCommand()
-        );
+            new CloseDiscussionThread(),
+            new UpdatesCommand()
+            );
     }
 
     private static final List<SlashCommand> teamServerCommands()
@@ -53,7 +52,7 @@ public class SortInitialize
             new DevServerPopularChannel(),
             new SuggestionSetStatus(),
             new UpdatesCommand()
-        );
+            );
     }
 
     private static final List<SlashCommand> botServerCommands()
@@ -65,8 +64,7 @@ public class SortInitialize
             new MaintanenceModeCommand(),
             new UpdatesCommand(),
             new SetCountCommand(),
-            new StatusOverrideCommand(),
-            new AddEmojiCommand()
-        );
+            new StatusOverrideCommand()
+            );
     }
 }

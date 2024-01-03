@@ -23,11 +23,11 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 public class DeleteSuggestion extends GalacticSlashCommand
 {
+
     public DeleteSuggestion()
     {
-        name("delete");
-        description("[DM ONLY] Delete one of your suggestions");
-        setOptions(RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"));
+        super("delete", "[DM ONLY] Delete one of your suggestions");
+        options(RequiredOption.text("id", "The Unique ID provided to you by the Bot in DM's"));
         this.directMessagesAllowed();
     }
 
@@ -43,25 +43,18 @@ public class DeleteSuggestion extends GalacticSlashCommand
         DBGalacticBot db         = BotData.database().galacticBot();
         Suggestion    suggestion = db.getSuggestionFromUniqueId(id).get();
 
-        //@noformat
         MessageCreateData data = new MessageCreateBuilder()
-            .addEmbeds(
-                Embed.descriptionEmbed(
-                    "Are you sure you want to delete your suggestion with the title of:\n\n`" + suggestion.getTitle() + 
-                    "`\n\n**THIS ACTION IS FINAL AND CANNOT BE REVERSED**\n\nClick the Confirm button below to confim suggestion deletion", RGB.ORANGE).toEmbed()
-                )
-            .addActionRow(Button.danger("confirm", "Confirm Delete"))
-            .build();
-        
-        event.reply(data).queue(reply -> {
-            reply.retrieveOriginal().queue(s -> {
-                GalacticBot.instance().getEventWaiter().waitForEvent(
-                    ButtonInteractionEvent.class, 
-                    e -> e.getComponentId().equals("confirm"), 
-                    e -> this.runDeleteEvent(suggestion, db, s), 
-                    1, TimeUnit.MINUTES, 
-                    () -> reply.deleteOriginal().queue()
-                );
+            .addEmbeds(Embed
+                .descriptionEmbed("Are you sure you want to delete your suggestion with the title of:\n\n`" + suggestion.getTitle() +
+                    "`\n\n**THIS ACTION IS FINAL AND CANNOT BE REVERSED**\n\nClick the Confirm button below to confim suggestion deletion", RGB.ORANGE)
+                    .toEmbed())
+                .addActionRow(Button.danger("confirm", "Confirm Delete"))
+                .build();
+        event.reply(data).queue(reply ->
+        {
+            reply.retrieveOriginal().queue(s ->
+            {
+                GalacticBot.instance().getEventWaiter().waitForEvent(ButtonInteractionEvent.class, e -> e.getComponentId().equals("confirm"), e -> this.runDeleteEvent(suggestion, db, s), 1, TimeUnit.MINUTES, () -> reply.deleteOriginal().queue());
             });
         });
     }
@@ -71,19 +64,15 @@ public class DeleteSuggestion extends GalacticSlashCommand
         try
         {
             boolean isPopular = suggestion.getMessages().communityPopularMsg().isPresent();
-
             if (isPopular)
             {
                 String      popularMsgId            = suggestion.getMessages().getCommunityPopularMsgId();
                 TextChannel communityPopularChannel = db.getSuggestionOptions().getPopularChannel();
-
-                String      devPopularMsgId   = suggestion.getMessages().getDevPopularMsgId();
-                TextChannel devPopularChannel = db.getSuggestionOptions().getDevPopularChannel();
-
+                String      devPopularMsgId         = suggestion.getMessages().getDevPopularMsgId();
+                TextChannel devPopularChannel       = db.getSuggestionOptions().getDevPopularChannel();
                 communityPopularChannel.deleteMessageById(popularMsgId).queue();
                 devPopularChannel.deleteMessageById(devPopularMsgId).queue();
             }
-
             TextChannel txtChannel = db.getSuggestionOptions().getSuggestionChannel();
             txtChannel.deleteMessageById(suggestion.getMessages().getPostMsgId()).queue(s ->
             {

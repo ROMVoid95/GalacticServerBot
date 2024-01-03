@@ -1,9 +1,9 @@
 package io.github.romvoid95.commands.staff.updates;
 
-import io.github.readonly.command.OptionHelper;
 import io.github.readonly.command.event.SlashCommandEvent;
 import io.github.readonly.command.option.Option;
 import io.github.readonly.command.option.RequiredOption;
+import io.github.readonly.common.OptionHelper;
 import io.github.readonly.common.util.ResultLevel;
 import io.github.romvoid95.BotData;
 import io.github.romvoid95.commands.core.GalacticSlashCommand;
@@ -18,9 +18,8 @@ public class RemoveCommand extends GalacticSlashCommand
 {
 	public RemoveCommand()
 	{
-		this.name("rm-project");
-		this.description("Removes a project from update notifications");
-		setOptions(
+		super("rm-project", "Removes a project from update notifications");
+		options(
 			RequiredOption.text("name", "The mods name"),
 			Option.trueFalse("deleterole", "If `false` the ping-role will be deleted (Default: `true`)")
 		);

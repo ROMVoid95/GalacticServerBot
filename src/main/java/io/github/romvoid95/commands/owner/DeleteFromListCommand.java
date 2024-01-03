@@ -12,8 +12,8 @@ public class DeleteFromListCommand extends GalacticSlashCommand
 
     public DeleteFromListCommand()
     {
-        name("list-delete");
-        setOptions(Option.text("id", "The id"));
+        super("list-delete");
+        options(Option.text("id", "The id"));
     }
 
     @Override

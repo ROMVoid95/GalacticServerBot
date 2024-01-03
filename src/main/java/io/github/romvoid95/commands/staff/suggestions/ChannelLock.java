@@ -18,8 +18,7 @@ public class ChannelLock extends GalacticSlashCommand
 
     public ChannelLock()
     {
-        name("lock-channel");
-        description("Locks and prevents new Suggestions in the current Suggestions channel");
+        super("lock-channel", "Locks and prevents new Suggestions in the current Suggestions channel");
     }
 
     @Override

@@ -20,9 +20,8 @@ public class PopularChannel extends GalacticSlashCommand
 
     public PopularChannel()
     {
-        name("popular-channel");
-        description("Display or change the current channel Popular Suggestions are posted in");
-        setOptions(Option.channel("channel", "Guild Channel to use for Popular Suggestions"));
+        super("popular-channel", "Display or change the current channel Popular Suggestions are posted in");
+        options(Option.channel("channel", "Guild Channel to use for Popular Suggestions"));
     }
 
     @Override

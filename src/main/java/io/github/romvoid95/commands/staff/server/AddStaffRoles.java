@@ -23,9 +23,8 @@ public class AddStaffRoles extends GalacticSlashCommand
 
     public AddStaffRoles()
     {
-        name("add");
-        description("Add a role to Admins or Moderators list");
-        setOptions(RequiredOption.text("type", "Mod or Admin", ChoiceList.toList(RoleType.class)), RequiredOption.role("role", "the Role to add"), Option.role("role-2", "additional role"), Option.role("role-3", "additional role"), Option.role("role-4", "additional role"),
+        super("add","Add a role to Admins or Moderators list");
+        options(RequiredOption.text("type", "Mod or Admin", ChoiceList.toList(RoleType.class)), RequiredOption.role("role", "the Role to add"), Option.role("role-2", "additional role"), Option.role("role-3", "additional role"), Option.role("role-4", "additional role"),
             Option.role("role-5", "additional role"));
         this.subcommandGroup = new SubcommandGroupData("staff", "Manage Roles that are considered staff in the server");
     }

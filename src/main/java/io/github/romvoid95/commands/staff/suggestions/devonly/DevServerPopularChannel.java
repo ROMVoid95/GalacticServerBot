@@ -21,9 +21,8 @@ public class DevServerPopularChannel extends GalacticSlashCommand
 
     public DevServerPopularChannel()
     {
-        name("popular-channel");
-        description("Display or change the current channel Popular Suggestions are copy-posted in on the Dev Server");
-        setOptions(Option.channel("channel", "Guild Channel to use for Popular Suggestions"));
+        super("popular-channel", "Display or change the current channel Popular Suggestions are copy-posted in on the Dev Server");
+        options(Option.channel("channel", "Guild Channel to use for Popular Suggestions"));
         this.subcommandGroup = new SubcommandGroupData("dev-server", "Popular-Suggestions in the Development Server");
     }
 

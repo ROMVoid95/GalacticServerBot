@@ -21,9 +21,8 @@ public class SuggestionBlacklist extends GalacticSlashCommand
 
     public SuggestionBlacklist()
     {
-        name("blacklist");
-        description("Add or remove a member from suggestions blacklist");
-        setOptions(RequiredOption.text("action", "What action to take", ChoiceList.of(Choice.add("Add"), Choice.add("Remove"))), RequiredOption.user("user", "User"), RequiredOption.text("reason", "reason for the action taken"));
+        super("blacklist", "Add or remove a member from suggestions blacklist");
+        options(RequiredOption.text("action", "What action to take", ChoiceList.of(Choice.add("Add"), Choice.add("Remove"))), RequiredOption.user("user", "User"), RequiredOption.text("reason", "reason for the action taken"));
     }
 
     @Override

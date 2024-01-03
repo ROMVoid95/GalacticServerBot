@@ -18,8 +18,7 @@ public class ChannelUnlock extends GalacticSlashCommand
 
     public ChannelUnlock()
     {
-        name("unlock-channel");
-        description("Unlocks and sllows new Suggestions in the current Suggestions channel");
+        super("unlock-channel", "Unlocks and sllows new Suggestions in the current Suggestions channel");
     }
 
     @Override

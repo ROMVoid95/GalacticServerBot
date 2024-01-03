@@ -5,19 +5,14 @@ import io.github.readonly.command.event.SlashCommandEvent;
 
 public abstract class ParentSlashCommand extends SlashCommand
 {
-    
-    public ParentSlashCommand()
-    {
-    }
-    
     public ParentSlashCommand(String name)
     {
-        this.name = name;
+        super(name);
     }
     
     protected void subCommands(SlashCommand... children)
     {
-        this.children = children;
+        this.subCommands = children;
     }
 
     @Override

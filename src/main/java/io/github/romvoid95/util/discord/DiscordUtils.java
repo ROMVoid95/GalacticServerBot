@@ -6,9 +6,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import io.github.readonly.command.event.CommandEvent;
 import io.github.readonly.command.event.SlashCommandEvent;
-
 import io.github.romvoid95.GalacticBot;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
@@ -36,11 +34,6 @@ public class DiscordUtils
     public static User getUser(SlashCommandEvent event)
     {
         return (event.getChannelType() == ChannelType.PRIVATE) ? event.getUser() : event.getMember().getUser();
-    }
-    
-    public static User getUser(CommandEvent event)
-    {
-        return (event.getChannelType() == ChannelType.PRIVATE) ? event.getAuthor() : event.getMember().getUser();
     }
 
     public static Message getMessageOrNull(GenericMessageReactionEvent event)

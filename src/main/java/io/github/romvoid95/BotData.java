@@ -1,5 +1,7 @@
 package io.github.romvoid95;
 
+import static com.rethinkdb.RethinkDB.r;
+
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -14,24 +16,25 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
-import static com.rethinkdb.RethinkDB.r;
+public class BotData
+{
+    private static final ScheduledExecutorService galacticExec = Factory.newScheduledThreadPool(1, "GalacticBot", false);
+    private static final ScheduledExecutorService updateExec   = Factory.newScheduledThreadPool(1, "ModUpdates", true);
+    private static DatabaseManager                db;
+    private static Connection                     connection;
 
-public class BotData {
-
-	private static final ScheduledExecutorService galacticExec = Factory.newScheduledThreadPool(1, "GalacticBot",
-			false);
-	private static final ScheduledExecutorService updateExec = Factory.newScheduledThreadPool(1, "ModUpdates", true);
-	private static DatabaseManager db;
-	private static Connection connection;
-
-	public static Connection conn() {
-		var config = Conf.Bot().getDatabase();
-		if (connection == null) {
-			synchronized (BotData.class) {
-				if (connection != null) {
-					return connection;
-				}
-				//@noformat
+    public static Connection conn()
+    {
+        var config = Conf.Bot().getDatabase();
+        if (connection == null)
+        {
+            synchronized (BotData.class)
+            {
+                if (connection != null)
+                {
+                    return connection;
+                }
+                //@noformat
 				connection = r.connection()
 						.hostname(config.getHostname())
 						.port(config.getPort())
@@ -43,6 +46,26 @@ public class BotData {
 
 		return connection;
 	}
+	
+   public static Connection hasteConn() {
+        var config = Conf.Bot().getDatabase();
+        if (connection == null) {
+            synchronized (BotData.class) {
+                if (connection != null) {
+                    return connection;
+                }
+                //@noformat
+                connection = r.connection()
+                        .hostname(config.getHostname())
+                        .port(config.getPort())
+                        .db("haste")
+                        .user(config.getUser(), config.getPassword())
+                        .connect();
+            }
+        }
+
+        return connection;
+    }
 
 	public static DatabaseManager database() {
 		if (db == null) {
@@ -71,7 +94,7 @@ public class BotData {
 	public static class JDA {
 
 		// @noformat
-		public static final Set<GatewayIntent> INTENTS = Set.of(GatewayIntent.DIRECT_MESSAGES,
+		public static final Set<GatewayIntent> INTENTS = Set.of(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MEMBERS,
 				GatewayIntent.GUILD_MODERATION, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_PRESENCES,
 				GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT);
 
