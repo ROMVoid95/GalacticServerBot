@@ -70,7 +70,6 @@ public class GalacticBot extends DiscordBotImpl<DBGalacticBot>
         this.jda = JDABuilder.create(Conf.Bot().getToken(), BotData.JDA.INTENTS)
             .disableCache(BotData.JDA.DISABLED_CACHE_FLAGS)
             .setMemberCachePolicy(MemberCachePolicy.ALL)
-            .setActivity(Activity.playing("Init Stage"))
             .addEventListeners(this.getEventWaiter(), this.buildClient(), new GalacticEventListener())
             .build();
         // @format
