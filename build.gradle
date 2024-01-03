@@ -41,7 +41,9 @@ ext {
 }
 
 dependencies {
-    implementation group: 'com.github.ReadOnlyDevelopment', name: 'JDATools', 	version: jdatools
+    implementation("com.github.ReadOnlyDevelopment:JDATools:${jdatools}") {
+        exclude group: 'org.tinylog'
+    }
     implementation group: 'net.dv8tion', 			name: 'JDA', 				version: '5.0.0-beta.12'
 
     implementation group: 'org.slf4j', 				name: 'slf4j-api', 			version: slf4j
